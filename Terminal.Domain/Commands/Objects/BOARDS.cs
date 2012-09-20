@@ -82,7 +82,7 @@ namespace Terminal.Domain.Commands.Objects
                 this.CommandResult.ClearScreen = true;
                 this.CommandResult.WriteLine(DisplayMode.Inverted, "Available Discussion Boards");
                 var boards = _boardRepository.GetBoards(this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator);
-                foreach (var board in boards)
+                foreach (var board in boards.ToList())
                 {
                     this.CommandResult.WriteLine();
                     var displayMode = DisplayMode.DontType;
