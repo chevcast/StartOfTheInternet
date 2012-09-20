@@ -1,0 +1,40 @@
+﻿@using System.Collections.Generic
+@using CodeKicker.BBCode
+
+@functions {
+	static IList<BBTag> _AllowedTags = new List<BBTag> { 
+				new BBTag("b", "<b>", "</b>"), 
+				new BBTag("i", "<span style=\"font-style:italic;\">", "</span>"), 
+				new BBTag("u", "<span style=\"text-decoration:underline;\">", "</span>"), 
+				new BBTag("code", "<pre class=\"prettyprint\">", "</pre>"), 
+				new BBTag("img", "<img src=\"${content}\" />", "", false, true), 
+				new BBTag("quote", "<blockquote>", "</blockquote>"), 
+				new BBTag("list", "<ul>", "</ul>"), 
+				new BBTag("*", "<li>", "</li>", true, false), 
+				new BBTag("url", "<a href=\"${href}\">", "</a>", new BBAttribute("href", ""), new BBAttribute("href", "href"))
+	};
+	public static void Init(IList<CodeKicker.BBCode.BBTag> allowedTags, bool appendToDefaults = true)
+	{
+		if (appendToDefaults)
+			foreach (var bbTag in allowedTags)
+				_AllowedTags.Add(bbTag);
+		else
+			_AllowedTags = allowedTags;
+	}
+	
+	public static object ToHtml(string input, bool encode = false, string errorMode = "ErrorFree", IList<BBTag> allowedTags = null)
+	{
+		IList<BBTag> tags = _AllowedTags;
+		if (allowedTags != null)
+			tags = allowedTags;
+        
+		ErrorMode enErrorMode;
+		Enum.TryParse<ErrorMode>(errorMode, out enErrorMode);
+		CodeKicker.BBCode.BBCodeParser parser = new CodeKicker.BBCode.BBCodeParser(tags);
+		parser = new BBCodeParser(enErrorMode, parser.TextNodeHtmlTemplate, tags);
+        if(encode)
+            return parser.ToHtml(input);
+        else
+		    return new HtmlString(parser.ToHtml(input));
+	}
+}

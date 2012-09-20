@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A6220093-6743-497C-BD76-E3F2BC1A68D2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Terminal.Domain</RootNamespace>
+    <AssemblyName>Terminal.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Terminal.Domain.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CodeKicker.BBCode">
+      <HintPath>..\packages\BBCode.0.3.0\lib\CodeKicker.BBCode.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.4.3.1\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Mvc">
+      <HintPath>..\packages\Mvc3Futures.3.0.20105.0\lib\Microsoft.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Common">
+      <HintPath>..\packages\Ninject.Web.Common.3.0.0.7\lib\net40-full\Ninject.Web.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebActivator">
+      <HintPath>..\packages\WebActivator.1.5.1\lib\net40\WebActivator.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Commands\Objects\CLS.cs" />
+    <Compile Include="Commands\Interfaces\ICommand.cs" />
+    <Compile Include="Commands\Objects\BOARDS.cs" />
+    <Compile Include="Commands\Objects\BOARD.cs" />
+    <Compile Include="Commands\Objects\ALIAS.cs" />
+    <Compile Include="Commands\Objects\PROFILE.cs" />
+    <Compile Include="Commands\Objects\LINK.cs" />
+    <Compile Include="Commands\Objects\LINKS.cs" />
+    <Compile Include="Commands\Objects\MARKET.cs" />
+    <Compile Include="Commands\Objects\INITIALIZE.cs" />
+    <Compile Include="Commands\Objects\USER.cs" />
+    <Compile Include="Commands\Objects\STATS.cs" />
+    <Compile Include="Commands\Objects\SETTINGS.cs" />
+    <Compile Include="Commands\Objects\MESSAGE.cs" />
+    <Compile Include="Commands\Objects\MESSAGES.cs" />
+    <Compile Include="Commands\Objects\TOPIC.cs" />
+    <Compile Include="Commands\Objects\REGISTER.cs" />
+    <Compile Include="Commands\Objects\LOGOUT.cs" />
+    <Compile Include="Commands\Objects\LOGIN.cs" />
+    <Compile Include="Entities\Alias.cs" />
+    <Compile Include="Entities\Ban.cs" />
+    <Compile Include="Entities\Board.cs" />
+    <Compile Include="Entities\Ignore.cs" />
+    <Compile Include="Entities\InviteCode.cs" />
+    <Compile Include="Entities\Link.cs" />
+    <Compile Include="Entities\LinkClick.cs" />
+    <Compile Include="Entities\LinkComment.cs" />
+    <Compile Include="Entities\LinkVote.cs" />
+    <Compile Include="Entities\LUEser.cs" />
+    <Compile Include="Entities\MadlipTemplate.cs" />
+    <Compile Include="Entities\Message.cs" />
+    <Compile Include="Entities\Reply.cs" />
+    <Compile Include="Entities\Role.cs" />
+    <Compile Include="Entities\Tag.cs" />
+    <Compile Include="Entities\Topic.cs" />
+    <Compile Include="Entities\TopicFollow.cs" />
+    <Compile Include="Entities\TopicVisit.cs" />
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\UserActivityLogItem.cs" />
+    <Compile Include="Entities\Variable.cs" />
+    <Compile Include="Enums\DisplayMode.cs" />
+    <Compile Include="Enums\Month.cs" />
+    <Compile Include="ExtensionMethods\GenericExtensions.cs" />
+    <Compile Include="ExtensionMethods\ListExtentions.cs" />
+    <Compile Include="ExtensionMethods\IntExtensions.cs" />
+    <Compile Include="Migrations\201203020443380_InitialCreate.cs" />
+    <Compile Include="Migrations\201203020443380_InitialCreate.Designer.cs">
+      <DependentUpon>201203020443380_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Ninject\ScopeExtensions.cs" />
+    <Compile Include="Objects\ApiDisplayItem.cs" />
+    <Compile Include="Objects\ApiResult.cs" />
+    <Compile Include="Objects\CollectionPage.cs" />
+    <Compile Include="Objects\ForumStats.cs" />
+    <Compile Include="Objects\DisplayItem.cs" />
+    <Compile Include="Objects\TopicUpdate.cs" />
+    <Compile Include="Objects\UserStats.cs" />
+    <Compile Include="Repositories\Interfaces\ILinkRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IInviteCodeRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IVariableRepository.cs" />
+    <Compile Include="Repositories\Objects\InviteCodeRepository.cs" />
+    <Compile Include="Repositories\Objects\LinkRepository.cs" />
+    <Compile Include="Repositories\Objects\VariableRepository.cs" />
+    <Compile Include="Settings\AppSettings.cs" />
+    <Compile Include="Settings\DisplayTemplates.cs" />
+    <Compile Include="Settings\RoleTemplates.cs" />
+    <Compile Include="TerminalCore.cs" />
+    <Compile Include="Commands\Objects\EXIT.cs" />
+    <Compile Include="Enums\ContextStatus.cs" />
+    <Compile Include="ExtensionMethods\DateTimeExtensions.cs" />
+    <Compile Include="ExtensionMethods\StringExtensions.cs" />
+    <Compile Include="Ninject\TerminalBindings.cs" />
+    <Compile Include="Objects\CommandContext.cs" />
+    <Compile Include="Objects\CommandResult.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Interfaces\IAliasRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IBanRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IBoardRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IMessageRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IReplyRepository.cs" />
+    <Compile Include="Repositories\Interfaces\ITopicRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IUserRepository.cs" />
+    <Compile Include="Repositories\Objects\AliasRepository.cs" />
+    <Compile Include="Repositories\Objects\BanRepository.cs" />
+    <Compile Include="Repositories\Objects\BoardRepository.cs" />
+    <Compile Include="Repositories\Objects\MessageRepository.cs" />
+    <Compile Include="Repositories\Objects\ReplyRepository.cs" />
+    <Compile Include="Repositories\Objects\TopicRepository.cs" />
+    <Compile Include="Repositories\Objects\UserRepository.cs" />
+    <Compile Include="Settings\RegularExpressions.cs" />
+    <Compile Include="Utilities\BBCodeUtility.cs" />
+    <Compile Include="Utilities\HelpUtility.cs" />
+    <Compile Include="Utilities\Mono.Options.cs" />
+    <Compile Include="Utilities\PagingUtility.cs" />
+    <Compile Include="Utilities\ShortCodeUtility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="App_Code\BBCodeTags.cshtml" />
+    <Compile Include="Entities\Entities.Context.cs" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.SQL.Server.Compact.3.5">
+      <Visible>False</Visible>
+      <ProductName>SQL Server Compact 3.5 SP2</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
