@@ -168,9 +168,7 @@
     <Content Include="Views\Terminal\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\PublishProfiles\Live.pubxml" />
-    <None Include="Properties\PublishProfiles\SOTI - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\SOTI - Web Deploy.pubxml" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
