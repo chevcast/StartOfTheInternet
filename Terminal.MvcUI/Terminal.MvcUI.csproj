@@ -124,6 +124,7 @@
     <Content Include="Content\sounds\TheDarkeningGround.mp3" />
     <Content Include="Content\sounds\typewriter.mp3" />
     <Content Include="Content\stop.png" />
+    <Content Include="Content\umbrellacorp.jpg" />
     <Content Include="Styles\prettify.less" />
     <Content Include="Styles\Terminal_xmas.less" />
     <Content Include="Styles\Terminal.less" />
