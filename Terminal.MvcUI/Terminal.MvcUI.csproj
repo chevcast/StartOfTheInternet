@@ -114,6 +114,7 @@
     <Content Include="Content\background_xmas.jpg" />
     <Content Include="Content\background_halloween.jpg" />
     <Content Include="Content\play.png" />
+    <Content Include="Content\skull.jpg" />
     <Content Include="Content\soundmanager2\soundmanager2_debug.swf" />
     <Content Include="Content\soundmanager2\soundmanager2_flash9_debug.swf" />
     <Content Include="Content\sounds\Maenam.mp3" />
