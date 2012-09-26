@@ -95,11 +95,6 @@
 
     function Setup(soundFile)
     {
-        $(window).resize(function ()
-        {
-            $('#frame').height($(window).height() - 125);
-        }).resize();
-
         $.coolType.setup(
         {
             soundFile: soundFile,
@@ -109,7 +104,7 @@
             {
                 $('#commandForm').TerminalClient(
                 {
-                    elementToScroll: '#frame > .subFrame',
+                    elementToScroll: document,
                     apiUrl: '@Url.Action("Index", "Api")'
                 });
             }
@@ -132,7 +127,7 @@ else
     <div id="frame">
         <div class="opacityFrame">
         </div>
-        <div class="subFrame" style="overflow:auto;">
+        <div class="subFrame">
             @using (Html.BeginForm("Index", "Terminal", FormMethod.Post, new { id = "commandForm" }))
             {
                 <div>
