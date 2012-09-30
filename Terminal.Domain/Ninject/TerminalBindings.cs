@@ -66,7 +66,7 @@ namespace Terminal.Domain.Ninject
             this.Bind<ICommand>().To<INITIALIZE>();
             this.Bind<ICommand>().To<LOGIN>();
             this.Bind<ICommand>().To<LOGOUT>();
-            this.Bind<ICommand>().To<MARKET>();
+            //this.Bind<ICommand>().To<MARKET>();
             this.Bind<ICommand>().To<MESSAGE>();
             this.Bind<ICommand>().To<MESSAGES>();
             this.Bind<ICommand>().To<PROFILE>();
