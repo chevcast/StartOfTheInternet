@@ -381,22 +381,22 @@ namespace Terminal.Domain
                             commandResult.WriteLine(DisplayMode.DontType, "{0}{1}", command.Name.PadRight(15), command.Description);
                     commandResult.WriteLine();
                     commandResult.WriteLine("Type \"COMMAND -?\" for details on individual commands.");
-                    if (_currentUser != null)
+                    commandResult.WriteLine();
+                    commandResult.WriteLine(DisplayMode.Dim | DisplayMode.DontType, new string('-', AppSettings.DividerLength));
+                    commandResult.WriteLine();
+                    var aliases = _aliasRepository.GetAliases(_currentUser != null ? _currentUser.Username : "Admin");
+                    if (aliases.Count() > 0)
                     {
-                        commandResult.WriteLine();
-                        commandResult.WriteLine(DisplayMode.Dim | DisplayMode.DontType, new string('-', AppSettings.DividerLength));
-                        commandResult.WriteLine();
-                        var aliases = _aliasRepository.GetAliases(_currentUser.Username);
-                        if (aliases.Count() > 0)
-                        {
+                        if (_currentUser != null)
                             commandResult.WriteLine("You have the following aliases defined:");
-                            commandResult.WriteLine();
-                            foreach (var alias in aliases)
-                                commandResult.WriteLine(DisplayMode.DontType, "{0}'{1}'", alias.Shortcut.ToUpper().PadRight(15, ' '), alias.Command);
-                        }
                         else
-                            commandResult.WriteLine("You have no aliases defined.");
+                            commandResult.WriteLine("The following aliases are defined:");
+                        commandResult.WriteLine();
+                        foreach (var alias in aliases)
+                            commandResult.WriteLine(DisplayMode.DontType, "{0}'{1}'", alias.Shortcut.ToUpper().PadRight(15, ' '), alias.Command);
                     }
+                    else
+                        commandResult.WriteLine("You have no aliases defined.");
                 }
             }
             catch (OptionException ex)
