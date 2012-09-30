@@ -7,6 +7,8 @@ What you'll need:
 - [Visual Studio 2012 Express for Web](http://www.microsoft.com/visualstudio/eng/downloads)
 - If you want to clone the project with Git then you'll also need a Git client of your choosing. However, the instructions below show you how to download the source directly.
 
+---
+
  1. First install Visual Studio 2012 Express for Web if you haven't already.
 
  2. Download the SOTI project source code.
