@@ -189,7 +189,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="App_Code\BBCodeTags.cshtml" />
-    <Compile Include="Data\Entities\Entities.Context.cs" />
+    <Compile Include="Data\Entities\EntityContainer.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

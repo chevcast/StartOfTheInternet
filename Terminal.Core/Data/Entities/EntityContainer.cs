@@ -2,8 +2,6 @@
 {
     using System;
     using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Data.Entity.Infrastructure;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Collections.Generic;
     
