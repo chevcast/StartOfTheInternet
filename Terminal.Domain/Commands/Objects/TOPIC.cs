@@ -38,7 +38,7 @@ namespace Terminal.Domain.Commands.Objects
 
         public string[] Roles
         {
-            get { return RoleTemplates.AllLoggedIn; }
+            get { return RoleTemplates.Everyone; }
         }
 
         public string Name
@@ -83,52 +83,56 @@ namespace Terminal.Domain.Commands.Objects
                 x => showHelp = x != null
             );
             options.Add(
-                "r|reply:",
-                "Reply to the topic. Optionally quotes a reply if a {ReplyID} is specified.",
-                x => 
-                {
-                    replyToTopic = true;
-                    if (x.IsLong())
-                        replyId = x.ToLong();
-                }
-            );
-            options.Add(
                 "R|refresh",
                 "Refresh the current topic.",
                 x => refresh = x != null
             );
-            options.Add(
-                "e|edit:",
-                "Edits the topic or a reply if a {ReplyID} is specified.",
-                x =>
-                {
-                    edit = true;
-                    if (x.IsLong())
-                        replyId = x.ToLong();
-                }
-            );
-            options.Add(
-                "d|delete:",
-                "Deletes the topic or a reply if a {ReplyID} is specified.",
-                x =>
-                {
-                    delete = true;
-                    if (x.IsLong())
-                        replyId = x.ToLong();
-                }
-            );
-            options.Add(
-                "report:",
-                "Report abuse for the topic or a reply if a {ReplyID} is specified.",
-                x =>
-                {
-                    report = true;
-                    if (x.IsLong())
-                        replyId = x.ToLong();
-                }
-            );
 
-            if (this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator)
+            if (this.CommandResult.IsUserLoggedIn)
+            {
+                options.Add(
+                    "r|reply:",
+                    "Reply to the topic. Optionally quotes a reply if a {ReplyID} is specified.",
+                    x =>
+                    {
+                        replyToTopic = true;
+                        if (x.IsLong())
+                            replyId = x.ToLong();
+                    }
+                );
+                options.Add(
+                    "e|edit:",
+                    "Edits the topic or a reply if a {ReplyID} is specified.",
+                    x =>
+                    {
+                        edit = true;
+                        if (x.IsLong())
+                            replyId = x.ToLong();
+                    }
+                );
+                options.Add(
+                    "d|delete:",
+                    "Deletes the topic or a reply if a {ReplyID} is specified.",
+                    x =>
+                    {
+                        delete = true;
+                        if (x.IsLong())
+                            replyId = x.ToLong();
+                    }
+                );
+                options.Add(
+                    "report:",
+                    "Report abuse for the topic or a reply if a {ReplyID} is specified.",
+                    x =>
+                    {
+                        report = true;
+                        if (x.IsLong())
+                            replyId = x.ToLong();
+                    }
+                );
+            }
+
+            if (this.CommandResult.UserLoggedAndModOrAdmin())
             {
                 options.Add(
                     "mr|modReply",
@@ -233,7 +237,7 @@ namespace Terminal.Domain.Commands.Objects
                                     {
                                         if (!topic.Locked || (!topic.IsModsOnly() && modReply && this.CommandResult.CurrentUser.IsModerator) || this.CommandResult.CurrentUser.IsAdministrator)
                                         {
-                                            if (!topic.IsModsOnly() || this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator)
+                                            if (!topic.IsModsOnly() || this.CommandResult.CurrentUser.IsModeratorOrAdministrator())
                                             {
                                                 if (this.CommandResult.CommandContext.PromptData == null)
                                                 {
@@ -253,7 +257,7 @@ namespace Terminal.Domain.Commands.Objects
                                                         Body = BBCodeUtility.SimplifyComplexTags(
                                                             this.CommandResult.CommandContext.PromptData[0],
                                                             _replyRepository,
-                                                            this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator
+                                                            this.CommandResult.CurrentUser.IsModeratorOrAdministrator()
                                                         ),
                                                         ModsOnly = modReply && !topic.IsModsOnly()
                                                     });
@@ -315,7 +319,7 @@ namespace Terminal.Domain.Commands.Objects
                                                         topic.Body = BBCodeUtility.SimplifyComplexTags(
                                                             this.CommandResult.CommandContext.PromptData[1],
                                                             _replyRepository,
-                                                            this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator
+                                                            this.CommandResult.CurrentUser.IsModeratorOrAdministrator()
                                                         );
                                                         topic.LastEdit = DateTime.UtcNow;
                                                         topic.EditedBy = this.CommandResult.CurrentUser.Username;
@@ -344,7 +348,7 @@ namespace Terminal.Domain.Commands.Objects
                                                 if (!reply.Topic.Locked || (reply.ModsOnly && !reply.Topic.IsModsOnly()) || this.CommandResult.CurrentUser.IsAdministrator)
                                                 {
                                                     if (reply.Username.Is(this.CommandResult.CurrentUser.Username)
-                                                        || (this.CommandResult.CurrentUser.IsModerator && !reply.IsModsOnly() && !reply.User.IsModerator && !reply.User.IsAdministrator)
+                                                        || (this.CommandResult.CurrentUser.IsModerator && !reply.IsModsOnly() && !reply.User.IsModeratorOrAdministrator())
                                                         || this.CommandResult.CurrentUser.IsAdministrator)
                                                     {
                                                         if (this.CommandResult.CommandContext.PromptData == null)
@@ -358,7 +362,7 @@ namespace Terminal.Domain.Commands.Objects
                                                             reply.Body = BBCodeUtility.SimplifyComplexTags(
                                                                 this.CommandResult.CommandContext.PromptData[0],
                                                                 _replyRepository,
-                                                                this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator
+                                                                this.CommandResult.CurrentUser.IsModeratorOrAdministrator()
                                                             );
                                                             reply.LastEdit = DateTime.UtcNow;
                                                             reply.EditedBy = this.CommandResult.CurrentUser.Username;
@@ -453,7 +457,7 @@ namespace Terminal.Domain.Commands.Objects
                                                 if (!reply.Topic.Locked || (reply.ModsOnly && !reply.Topic.IsModsOnly()) || this.CommandResult.CurrentUser.IsAdministrator)
                                                 {
                                                     if (reply.Username.Is(this.CommandResult.CurrentUser.Username)
-                                                        || (this.CommandResult.CurrentUser.IsModerator && !reply.IsModsOnly() && !reply.User.IsModerator && !reply.User.IsAdministrator)
+                                                        || (this.CommandResult.CurrentUser.IsModerator && !reply.IsModsOnly() && !reply.User.IsModeratorOrAdministrator())
                                                         || this.CommandResult.CurrentUser.IsAdministrator)
                                                     {
                                                         _replyRepository.DeleteReply(reply);
@@ -650,11 +654,11 @@ namespace Terminal.Domain.Commands.Objects
             var topic = _topicRepository.GetTopic(topicId);
             if (topic != null)
             {
-                if (!topic.IsModsOnly() || this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator)
+                if (!topic.IsModsOnly() || this.CommandResult.UserLoggedAndModOrAdmin())
                 {
                     this.CommandResult.ScrollToBottom = false;
                     this.CommandResult.ClearScreen = true;
-                    var topicPage = _replyRepository.GetReplies(topicId, page, AppSettings.RepliesPerPage, this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator);
+                    var topicPage = _replyRepository.GetReplies(topicId, page, AppSettings.RepliesPerPage, this.CommandResult.UserLoggedAndModOrAdmin());
                     if (page > topicPage.TotalPages)
                         page = topicPage.TotalPages;
                     else if (page < 1)
@@ -669,11 +673,11 @@ namespace Terminal.Domain.Commands.Objects
                     if (topic.Locked)
                         status.Append("[LOCKED] ");
                     this.CommandResult.WriteLine(DisplayMode.Inverted | DisplayMode.DontType, "{{[transmit=BOARD][topicboardid={1}]{0}[/topicboardid][/transmit]}} > {{[transmit=TOPIC]{1}[/transmit]}} [topicstatus={1}]{2}[/topicstatus][topictitle={1}]{3}[/topictitle]", topic.BoardID, topic.TopicID, status, topic.Title);
-                    var topicAuthor = topic.Board.Anonymous && !this.CommandResult.CurrentUser.IsModerator && !this.CommandResult.CurrentUser.IsAdministrator && topic.Username != this.CommandResult.CurrentUser.Username ? "Anon" : topic.Username;
+                    var topicAuthor = topic.Board.Anonymous && (!this.CommandResult.IsUserLoggedIn || (!this.CommandResult.CurrentUser.IsModeratorOrAdministrator() && topic.Username != this.CommandResult.CurrentUser.Username)) ? "Anon" : topic.Username;
                     this.CommandResult.WriteLine(DisplayMode.Italics | DisplayMode.DontType, "Posted by [transmit=USER]{0}[/transmit] on {1} | [replycount={3}]{2}[/replycount] replies", topicAuthor, topic.PostedDate.TimePassed(), topicPage.TotalItems, topic.TopicID);
                     if (topic.EditedBy != null)
                     {
-                        var editedBy = topic.Board.Anonymous && !this.CommandResult.CurrentUser.IsModerator && !this.CommandResult.CurrentUser.IsAdministrator && topic.EditedBy != this.CommandResult.CurrentUser.Username ? "Anon" : topic.EditedBy;
+                        var editedBy = topic.Board.Anonymous && (!this.CommandResult.IsUserLoggedIn || (!this.CommandResult.CurrentUser.IsModeratorOrAdministrator() && topic.EditedBy != this.CommandResult.CurrentUser.Username)) ? "Anon" : topic.EditedBy;
                         this.CommandResult.WriteLine(DisplayMode.Italics | DisplayMode.DontType, "[Edited by [transmit=USER][editedbyuser={2}]{0}[/editedbyuser][/transmit] [editedbydate={2}]{1}[/editedbydate]]", editedBy, topic.LastEdit.TimePassed(), topic.TopicID);
                     }
                     this.CommandResult.WriteLine();
@@ -691,14 +695,14 @@ namespace Terminal.Domain.Commands.Objects
                         var displayMode = DisplayMode.DontType;
                         if (reply.ModsOnly && !topic.IsModsOnly())
                             displayMode |= DisplayMode.Dim;
-                        var replyAuthor = reply.Topic.Board.Anonymous && !this.CommandResult.CurrentUser.IsModerator && !this.CommandResult.CurrentUser.IsAdministrator && reply.Username != this.CommandResult.CurrentUser.Username ? "Anon" : reply.Username;
+                        var replyAuthor = reply.Topic.Board.Anonymous && (!this.CommandResult.IsUserLoggedIn || (!this.CommandResult.CurrentUser.IsModeratorOrAdministrator() && reply.Username != this.CommandResult.CurrentUser.Username)) ? "Anon" : reply.Username;
                         this.CommandResult.WriteLine(displayMode, "{{[transmit=-r=]{0}[/transmit]}} | Reply by [transmit=USER]{1}[/transmit] {2}", reply.ReplyID, replyAuthor, reply.PostedDate.TimePassed());
                         this.CommandResult.WriteLine();
                         this.CommandResult.WriteLine(displayMode | DisplayMode.Parse, "{0}", reply.Body);
                         this.CommandResult.WriteLine();
                         if (reply.EditedBy != null)
                         {
-                            var editedBy = reply.Topic.Board.Anonymous && !this.CommandResult.CurrentUser.IsModerator && !this.CommandResult.CurrentUser.IsAdministrator && reply.EditedBy != this.CommandResult.CurrentUser.Username ? "Anon" : reply.EditedBy;
+                            var editedBy = reply.Topic.Board.Anonymous && (!this.CommandResult.IsUserLoggedIn || (!this.CommandResult.CurrentUser.IsModeratorOrAdministrator() && reply.EditedBy != this.CommandResult.CurrentUser.Username)) ? "Anon" : reply.EditedBy;
                             this.CommandResult.WriteLine(displayMode | DisplayMode.Italics, "[Edited by [transmit=USER]{0}[/transmit] {1}]", editedBy, reply.LastEdit.TimePassed());
                             this.CommandResult.WriteLine();
                         }

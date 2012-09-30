@@ -47,6 +47,12 @@ using System.ComponentModel.DataAnnotations;
         public virtual ICollection<UserActivityLogItem> UserActivityLog { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
 
+
+        public bool IsModeratorOrAdministrator()
+        {
+            return this.IsModerator || this.IsAdministrator;
+        }
+        
         public bool IsModerator
         {
             get { return this.Roles.Any(x => x.Name.Is("Moderator")); }

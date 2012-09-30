@@ -38,7 +38,7 @@ namespace Terminal.Domain.Commands.Objects
 
         public string[] Roles
         {
-            get { return RoleTemplates.AllLoggedIn; }
+            get { return RoleTemplates.Everyone; }
         }
 
         public string Name
@@ -80,12 +80,15 @@ namespace Terminal.Domain.Commands.Objects
                 "Refresh the current board.",
                 x => refresh = x != null
             );
-            options.Add(
-                "nt|newTopic",
-                "Create new topic on the specified board.",
-                x => newTopic = x != null
-            );
-            if (this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator)
+            if (this.CommandResult.IsUserLoggedIn)
+            {
+                options.Add(
+                    "nt|newTopic",
+                    "Create new topic on the specified board.",
+                    x => newTopic = x != null
+                );
+            }
+            if (this.CommandResult.UserLoggedAndModOrAdmin())
             {
                 options.Add(
                     "mt|modTopic",
@@ -97,7 +100,7 @@ namespace Terminal.Domain.Commands.Objects
                     }
                 );
             }
-            if (this.CommandResult.CurrentUser.IsAdministrator)
+            if (this.CommandResult.UserLoggedAndAdmin())
             {
                 options.Add(
                     "l|lock",
@@ -177,9 +180,9 @@ namespace Terminal.Domain.Commands.Objects
                                     var board = _boardRepository.GetBoard(boardId);
                                     if (board != null)
                                     {
-                                        if (!board.Locked || this.CommandResult.CurrentUser.IsAdministrator)
+                                        if (!board.Locked || this.CommandResult.CurrentUser.IsModeratorOrAdministrator())
                                         {
-                                            if (!board.ModsOnly || this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator)
+                                            if (!board.ModsOnly || this.CommandResult.CurrentUser.IsModeratorOrAdministrator())
                                             {
                                                 if (this.CommandResult.CommandContext.PromptData == null)
                                                 {
@@ -200,7 +203,7 @@ namespace Terminal.Domain.Commands.Objects
                                                         Body = BBCodeUtility.SimplifyComplexTags(
                                                             this.CommandResult.CommandContext.PromptData[1],
                                                             _replyRepository,
-                                                            this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator    
+                                                            this.CommandResult.CurrentUser.IsModeratorOrAdministrator()
                                                         ),
                                                         Username = this.CommandResult.CurrentUser.Username,
                                                         PostedDate = DateTime.UtcNow,
@@ -286,11 +289,11 @@ namespace Terminal.Domain.Commands.Objects
             var board = _boardRepository.GetBoard(boardId);
             if (board != null)
             {
-                if (!board.ModsOnly || this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator)
+                if (!board.ModsOnly || this.CommandResult.UserLoggedAndModOrAdmin())
                 {
                     this.CommandResult.ClearScreen = true;
                     this.CommandResult.ScrollToBottom = true;
-                    var boardPage = _topicRepository.GetTopics(boardId, page, AppSettings.TopicsPerPage, this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator);
+                    var boardPage = _topicRepository.GetTopics(boardId, page, AppSettings.TopicsPerPage, this.CommandResult.UserLoggedAndModOrAdmin());
                     if (page > boardPage.TotalPages)
                         page = boardPage.TotalPages;
                     else if (page < 1)
@@ -306,7 +309,7 @@ namespace Terminal.Domain.Commands.Objects
                         var displayMode = DisplayMode.DontType;
                         if ((topic.IsModsOnly() && !board.ModsOnly) || (topic.Board.Hidden && boardId == 0))
                             displayMode |= DisplayMode.Dim;
-                        var replies = topic.GetReplies(CommandResult.CurrentUser.IsModerator);
+                        var replies = topic.GetReplies(this.CommandResult.UserLoggedAndModOrAdmin());
                         var lastReply = replies.LastOrDefault();
                         var status = new StringBuilder();
                         if (topic.Board.Hidden && !board.Hidden)
@@ -319,11 +322,11 @@ namespace Terminal.Domain.Commands.Objects
                             status.Append("[LOCKED] ");
                         string boardNumber = boardId == 0 ? string.Format("{{[transmit=BOARD]{0}[/transmit]}} > ", topic.BoardID) : string.Empty;
                         this.CommandResult.WriteLine(displayMode, "{0}{{[transmit=TOPIC]{1}[/transmit]}} {2}{3}", boardNumber, topic.TopicID, status, topic.Title);
-                        var topicAuthor = topic.Board.Anonymous && !this.CommandResult.CurrentUser.IsModerator && !this.CommandResult.CurrentUser.IsAdministrator && topic.Username != this.CommandResult.CurrentUser.Username ? "Anon" : topic.Username;
+                        var topicAuthor = topic.Board.Anonymous && (!this.CommandResult.IsUserLoggedIn || (!this.CommandResult.CurrentUser.IsModeratorOrAdministrator() && topic.Username != this.CommandResult.CurrentUser.Username)) ? "Anon" : topic.Username;
                         this.CommandResult.WriteLine(displayMode, "   by [transmit=USER]{0}[/transmit] {1} | {2} replies", topicAuthor, topic.PostedDate.TimePassed(), replies.Count());
                         if (lastReply != null)
                         {
-                            var lastReplyAuthor = topic.Board.Anonymous && !this.CommandResult.CurrentUser.IsModerator && !this.CommandResult.CurrentUser.IsAdministrator && lastReply.Username != this.CommandResult.CurrentUser.Username ? "Anon" : lastReply.Username;
+                            var lastReplyAuthor = topic.Board.Anonymous && (!this.CommandResult.IsUserLoggedIn || (!this.CommandResult.CurrentUser.IsModeratorOrAdministrator() && lastReply.Username != this.CommandResult.CurrentUser.Username)) ? "Anon" : lastReply.Username;
                             this.CommandResult.WriteLine(displayMode, "   last reply by [transmit=USER]{0}[/transmit] {1}", lastReplyAuthor, lastReply.PostedDate.TimePassed());
                         }
                         this.CommandResult.WriteLine();

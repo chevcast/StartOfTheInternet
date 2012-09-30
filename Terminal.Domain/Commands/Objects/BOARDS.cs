@@ -34,7 +34,7 @@ namespace Terminal.Domain.Commands.Objects
 
         public string[] Roles
         {
-            get { return RoleTemplates.AllLoggedIn; }
+            get { return RoleTemplates.Everyone; }
         }
 
         public string Name
@@ -81,7 +81,7 @@ namespace Terminal.Domain.Commands.Objects
                 this.CommandResult.CommandContext.Deactivate();
                 this.CommandResult.ClearScreen = true;
                 this.CommandResult.WriteLine(DisplayMode.Inverted, "Available Discussion Boards");
-                var boards = _boardRepository.GetBoards(this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator);
+                var boards = _boardRepository.GetBoards(this.CommandResult.UserLoggedAndModOrAdmin());
                 foreach (var board in boards.ToList())
                 {
                     this.CommandResult.WriteLine();
@@ -89,8 +89,8 @@ namespace Terminal.Domain.Commands.Objects
                     if (board.ModsOnly || board.Hidden)
                         displayMode |= DisplayMode.Dim;
                     long topicCount = board.BoardID == 0
-                        ? _topicRepository.AllTopicsCount(this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator)
-                        : board.TopicCount(this.CommandResult.CurrentUser.IsModerator || this.CommandResult.CurrentUser.IsAdministrator);
+                        ? _topicRepository.AllTopicsCount(this.CommandResult.UserLoggedAndModOrAdmin())
+                        : board.TopicCount(this.CommandResult.UserLoggedAndModOrAdmin());
                     this.CommandResult.WriteLine(displayMode, "{{[transmit=BOARD]{0}[/transmit]}} {1}{2}{3}{4} | {5} topics",
                         board.BoardID,
                         board.Hidden ? "[HIDDEN] " : string.Empty,

@@ -79,6 +79,26 @@ namespace Terminal.Domain.Objects
 
         #region Shortcut Methods
 
+        public bool IsUserLoggedIn
+        {
+            get { return this.CurrentUser != null; }
+        }
+
+        public bool UserLoggedAndModOrAdmin()
+        {
+            return this.IsUserLoggedIn && (this.CurrentUser.IsModeratorOrAdministrator());
+        }
+
+        public bool UserLoggedAndMod()
+        {
+            return this.IsUserLoggedIn && (this.CurrentUser.IsModerator);
+        }
+
+        public bool UserLoggedAndAdmin()
+        {
+            return this.IsUserLoggedIn && (this.CurrentUser.IsAdministrator);
+        }
+
         /// <summary>
         /// Writes a blank line to the display.
         /// </summary>
