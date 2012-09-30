@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Web
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terminal.ConsoleUI", "Terminal.ConsoleUI\Terminal.ConsoleUI.csproj", "{23F8E563-6011-41A2-876D-FDBAE6500CE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terminal.Core", "Terminal.Domain\Terminal.Core.csproj", "{A6220093-6743-497C-BD76-E3F2BC1A68D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terminal.Core", "Terminal.Core\Terminal.Core.csproj", "{A6220093-6743-497C-BD76-E3F2BC1A68D2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terminal.MvcUI", "Terminal.MvcUI\Terminal.MvcUI.csproj", "{B2FD6242-5A88-48C6-AFEE-5988A0132CC1}"
 EndProject
