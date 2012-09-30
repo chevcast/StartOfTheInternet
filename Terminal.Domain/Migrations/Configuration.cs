@@ -41,8 +41,6 @@ namespace Terminal.Domain.Migrations
                             new Alias { Shortcut = "t", Command = "TOPIC" },
                             new Alias { Shortcut = "lm", Command = "MESSAGES" },
                             new Alias { Shortcut = "m", Command = "MESSAGE" },
-                            new Alias { Shortcut = "ll", Command = "LINKS" },
-                            new Alias { Shortcut = "l", Command = "LINK" }
                         }
                     }
                 );

@@ -64,8 +64,6 @@ namespace Terminal.Domain.Ninject
             this.Bind<ICommand>().To<CLS>();
             this.Bind<ICommand>().To<EXIT>();
             this.Bind<ICommand>().To<INITIALIZE>();
-            this.Bind<ICommand>().To<LINK>();
-            this.Bind<ICommand>().To<LINKS>();
             this.Bind<ICommand>().To<LOGIN>();
             this.Bind<ICommand>().To<LOGOUT>();
             this.Bind<ICommand>().To<MARKET>();

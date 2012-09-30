@@ -33,6 +33,12 @@ namespace Terminal.Domain
         private IUserRepository _userRepository;
         private IAliasRepository _aliasRepository;
         private IMessageRepository _messageRepository;
+        private List<Alias> defaultAliases = new List<Alias>
+        {
+            new Alias { Shortcut = "b", Command = "BOARD" },
+            new Alias { Shortcut = "lb", Command = "BOARDS" },
+            new Alias { Shortcut = "t", Command = "TOPIC" }
+        };
 
         /// <summary>
         /// The current user. Use this for desktop applications where the User object can stay in memory the whole time.
@@ -160,7 +166,9 @@ namespace Terminal.Domain
             // Check for alias. Replace command name with alias.
             if ((_commandContext.Status & ContextStatus.Forced) == 0)
             {
-                var alias = _aliasRepository.GetAlias(_currentUser != null ? _currentUser.Username : "Admin", commandName);
+                var alias = defaultAliases.SingleOrDefault(x => x.Shortcut == commandName);
+                if (_currentUser != null)    
+                    alias = _aliasRepository.GetAlias(_currentUser.Username, commandName);
                 if (alias != null)
                 {
                     commandString = hasSpace ? alias.Command + commandString.Remove(0, spaceIndex) : alias.Command;
@@ -384,7 +392,9 @@ namespace Terminal.Domain
                     commandResult.WriteLine();
                     commandResult.WriteLine(DisplayMode.Dim | DisplayMode.DontType, new string('-', AppSettings.DividerLength));
                     commandResult.WriteLine();
-                    var aliases = _aliasRepository.GetAliases(_currentUser != null ? _currentUser.Username : "Admin");
+                    var aliases = defaultAliases;
+                    if (_currentUser != null)
+                        aliases = _aliasRepository.GetAliases(_currentUser.Username).ToList();
                     if (aliases.Count() > 0)
                     {
                         if (_currentUser != null)
