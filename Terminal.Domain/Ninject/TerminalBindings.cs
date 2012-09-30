@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Ninject.Modules;
-using Terminal.Domain.Commands.Objects;
-using Terminal.Domain.Commands.Interfaces;
-using Terminal.Domain.Data.Entities;
-using Terminal.Domain.Settings;
+using Terminal.Core.Commands.Objects;
+using Terminal.Core.Commands.Interfaces;
+using Terminal.Core.Data.Entities;
+using Terminal.Core.Settings;
 using System.Data.EntityClient;
 using System.Web;
 using Ninject.Web.Common;
-using Terminal.Domain.Data;
+using Terminal.Core.Data;
 
-namespace Terminal.Domain.Ninject
+namespace Terminal.Core.Ninject
 {
     /// <summary>
-    /// This module will automatically register all Terminal.Domain related bindings.
+    /// This module will automatically register all Terminal.Core related bindings.
     /// </summary>
     public class TerminalBindings : NinjectModule
     {
@@ -35,9 +35,9 @@ namespace Terminal.Domain.Ninject
             BindCommands();
 
             if (_isWebApplication)
-                Bind<TerminalCore>().ToSelf().InRequestScope();
+                Bind<TerminalApi>().ToSelf().InRequestScope();
             else
-                Bind<TerminalCore>().ToSelf().InSingletonScope();
+                Bind<TerminalApi>().ToSelf().InSingletonScope();
 
             Bind<IDataBucket>().To<DataBucket>();
         }

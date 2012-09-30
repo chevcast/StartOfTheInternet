@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terminal.Domain.Data.Entities;
-using Terminal.Domain.Enums;
-using Terminal.Domain.ExtensionMethods;
-using Terminal.Domain.Settings;
+using Terminal.Core.Data.Entities;
+using Terminal.Core.Enums;
+using Terminal.Core.ExtensionMethods;
+using Terminal.Core.Settings;
 
-namespace Terminal.Domain.Objects
+namespace Terminal.Core.Objects
 {
     /// <summary>
     /// This object contains information that is usable by a UI project in determining what and how to display the results of the terminal core.

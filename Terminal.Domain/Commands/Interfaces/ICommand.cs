@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terminal.Domain.Objects;
-using Terminal.Domain.Enums;
-using Terminal.Domain.Data.Entities;
+using Terminal.Core.Objects;
+using Terminal.Core.Enums;
+using Terminal.Core.Data.Entities;
 
-namespace Terminal.Domain.Commands.Interfaces
+namespace Terminal.Core.Commands.Interfaces
 {
     /// <summary>
     /// A command that is available for execution by the terminal core.

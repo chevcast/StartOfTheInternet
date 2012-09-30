@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terminal.Domain.Commands.Interfaces;
-using Terminal.Domain.Objects;
-using Terminal.Domain.Enums;
+using Terminal.Core.Commands.Interfaces;
+using Terminal.Core.Objects;
+using Terminal.Core.Enums;
 using Mono.Options;
 using System.IO;
 
-namespace Terminal.Domain.Utilities
+namespace Terminal.Core.Utilities
 {
     public static class HelpUtility
     {

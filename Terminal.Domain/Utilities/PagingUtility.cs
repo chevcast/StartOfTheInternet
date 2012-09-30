@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terminal.Domain.ExtensionMethods;
+using Terminal.Core.ExtensionMethods;
 
-namespace Terminal.Domain.Utilities
+namespace Terminal.Core.Utilities
 {
     public static class PagingUtility
     {

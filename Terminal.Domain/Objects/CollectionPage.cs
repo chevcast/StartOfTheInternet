@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Terminal.Domain.Objects
+namespace Terminal.Core.Objects
 {
     /// <summary>
     /// Holds relevant information related to a page of a collection of information.

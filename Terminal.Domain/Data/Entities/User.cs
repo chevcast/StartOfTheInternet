@@ -1,9 +1,9 @@
-﻿namespace Terminal.Domain.Data.Entities
+﻿namespace Terminal.Core.Data.Entities
 {
     using System;
     using System.Linq;
     using System.Collections.Generic;
-    using Terminal.Domain.ExtensionMethods;
+    using Terminal.Core.ExtensionMethods;
     using System.ComponentModel.DataAnnotations;
 
     public class User

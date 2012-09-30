@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Text.RegularExpressions;
-using Terminal.Domain.ExtensionMethods;
-using Terminal.Domain.Settings;
-using Terminal.Domain.Data.Entities;
+using Terminal.Core.ExtensionMethods;
+using Terminal.Core.Settings;
+using Terminal.Core.Data.Entities;
 using System.Drawing;
 using System.Net;
 using System.IO;
 using CodeKicker.BBCode;
-using Terminal.Domain.Data.Repositories.Interfaces;
+using Terminal.Core.Data.Repositories.Interfaces;
 
-namespace Terminal.Domain.Utilities
+namespace Terminal.Core.Utilities
 {
     /// <summary>
     /// Utilities for handling tag conversion. The UI can utilize this utility when parsing text containing BBCode tags.

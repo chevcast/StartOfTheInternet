@@ -1,4 +1,4 @@
-﻿namespace Terminal.Domain.Enums
+﻿namespace Terminal.Core.Enums
 {
     /// <summary>
     /// Represents the available options for a command context object.

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terminal.Domain.Data.Repositories.Interfaces;
+using Terminal.Core.Data.Repositories.Interfaces;
 
-namespace Terminal.Domain.Data
+namespace Terminal.Core.Data
 {
     public interface IDataBucket
     {

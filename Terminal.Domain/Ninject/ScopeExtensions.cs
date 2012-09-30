@@ -6,7 +6,7 @@ using Ninject.Syntax;
 using Ninject.Activation;
 using System.Web;
 
-namespace Terminal.Domain.Ninject
+namespace Terminal.Core.Ninject
 {
     public static class ScopeExtensions
     {

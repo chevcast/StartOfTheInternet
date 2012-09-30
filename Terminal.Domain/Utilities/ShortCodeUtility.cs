@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Terminal.Domain.Utilities
+namespace Terminal.Core.Utilities
 {
     /// <summary>
     /// Utility used to generate alpha-numeric short codes representing 64-bit integer IDs.

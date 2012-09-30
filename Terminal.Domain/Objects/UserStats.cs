@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Terminal.Domain.Objects
+namespace Terminal.Core.Objects
 {
     public class UserStats
     {

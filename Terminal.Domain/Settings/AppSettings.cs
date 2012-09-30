@@ -5,7 +5,7 @@ using System.Text;
 using System.Data.EntityClient;
 using System.Data.SqlClient;
 
-namespace Terminal.Domain.Settings
+namespace Terminal.Core.Settings
 {
     /// <summary>
     /// Various static application settings.

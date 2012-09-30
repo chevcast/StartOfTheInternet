@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Terminal.Domain.Data.Entities;
-using Terminal.Domain.Objects;
+using Terminal.Core.Data.Entities;
+using Terminal.Core.Objects;
 
-namespace Terminal.Domain.Data.Repositories.Interfaces
+namespace Terminal.Core.Data.Repositories.Interfaces
 {
     /// <summary>
     /// A repository to store messages.

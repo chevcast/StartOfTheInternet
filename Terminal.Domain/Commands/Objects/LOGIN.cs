@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terminal.Domain.Commands.Interfaces;
-using Terminal.Domain.Objects;
-using Terminal.Domain.Data.Entities;
-using Terminal.Domain.Settings;
-using Terminal.Domain.ExtensionMethods;
+using Terminal.Core.Commands.Interfaces;
+using Terminal.Core.Objects;
+using Terminal.Core.Data.Entities;
+using Terminal.Core.Settings;
+using Terminal.Core.ExtensionMethods;
 using Mono.Options;
 using System.IO;
-using Terminal.Domain.Enums;
-using Terminal.Domain.Utilities;
-using Terminal.Domain.Data;
+using Terminal.Core.Enums;
+using Terminal.Core.Utilities;
+using Terminal.Core.Data;
 
-namespace Terminal.Domain.Commands.Objects
+namespace Terminal.Core.Commands.Objects
 {
     public class LOGIN : ICommand
     {

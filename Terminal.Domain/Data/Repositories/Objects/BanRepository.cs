@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terminal.Domain.Data.Repositories.Interfaces;
-using Terminal.Domain.Data.Entities;
+using Terminal.Core.Data.Repositories.Interfaces;
+using Terminal.Core.Data.Entities;
 
-namespace Terminal.Domain.Data.Repositories.Objects
+namespace Terminal.Core.Data.Repositories.Objects
 {
     /// <summary>
     /// A repository for persisting bans to the Entity Framework data context.

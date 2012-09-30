@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terminal.Domain.Data.Repositories.Interfaces;
-using Terminal.Domain.Data.Entities;
-using Terminal.Domain.ExtensionMethods;
+using Terminal.Core.Data.Repositories.Interfaces;
+using Terminal.Core.Data.Entities;
+using Terminal.Core.ExtensionMethods;
 
-namespace Terminal.Domain.Data.Repositories.Objects
+namespace Terminal.Core.Data.Repositories.Objects
 {
     public class VariableRepository : IVariableRepository
     {

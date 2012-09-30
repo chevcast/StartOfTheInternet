@@ -4,8 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Terminal.Domain.Settings;
-using Terminal.Domain.Data.Entities;
+using Terminal.Core.Settings;
+using Terminal.Core.Data.Entities;
 using System.Configuration;
 using System.Data.Entity;
 
@@ -34,7 +34,7 @@ namespace Terminal.MvcUI
 
         protected void Application_Start()
         {
-            Database.SetInitializer<EntityContainer>(new MigrateDatabaseToLatestVersion<EntityContainer, Terminal.Domain.Migrations.Configuration>());
+            Database.SetInitializer<EntityContainer>(new MigrateDatabaseToLatestVersion<EntityContainer, Terminal.Core.Migrations.Configuration>());
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);

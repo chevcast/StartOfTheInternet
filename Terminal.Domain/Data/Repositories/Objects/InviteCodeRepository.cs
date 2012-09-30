@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Terminal.Domain;
-using Terminal.Domain.Data.Repositories.Interfaces;
-using Terminal.Domain.Data.Entities;
+using Terminal.Core;
+using Terminal.Core.Data.Repositories.Interfaces;
+using Terminal.Core.Data.Entities;
 
-namespace Terminal.Domain.Data.Repositories.Objects
+namespace Terminal.Core.Data.Repositories.Objects
 {
     public class InviteCodeRepository : IInviteCodeRepository
     {

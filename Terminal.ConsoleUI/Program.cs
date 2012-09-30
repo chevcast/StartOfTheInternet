@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using Terminal.Domain.Utilities;
-using Terminal.Domain.Enums;
-using Terminal.Domain;
-using Terminal.Domain.Commands.Objects;
+using Terminal.Core.Utilities;
+using Terminal.Core.Enums;
+using Terminal.Core;
+using Terminal.Core.Commands.Objects;
 using Ninject;
-using Terminal.Domain.Ninject;
-using Terminal.Domain.Data.Entities;
-using Terminal.Domain.Objects;
+using Terminal.Core.Ninject;
+using Terminal.Core.Data.Entities;
+using Terminal.Core.Objects;
 using System.Threading;
-using Terminal.Domain.Commands.Interfaces;
-using Terminal.Domain.Settings;
-using Terminal.Domain.ExtensionMethods;
+using Terminal.Core.Commands.Interfaces;
+using Terminal.Core.Settings;
+using Terminal.Core.ExtensionMethods;
 using System.Windows.Forms;
 using System.IO;
 using System.Windows.Media;
@@ -30,7 +30,7 @@ namespace Terminal.ConsoleUI
     {
         private static string _username;
         private static CommandContext _commandContext;
-        private static TerminalCore _terminalApi;
+        private static TerminalApi _terminalApi;
         private static bool _appRunning = true;
         private static bool _passwordField = false;
         private static ConsoleColor _foregroundColor;
@@ -74,7 +74,7 @@ namespace Terminal.ConsoleUI
         /// </summary>
         private static void SetupConsole()
         {
-            Database.SetInitializer<EntityContainer>(new MigrateDatabaseToLatestVersion<EntityContainer, Terminal.Domain.Migrations.Configuration>());
+            Database.SetInitializer<EntityContainer>(new MigrateDatabaseToLatestVersion<EntityContainer, Terminal.Core.Migrations.Configuration>());
             var typingSound = "Terminal.ConsoleUI.beeps.wav";
             _foregroundColor = ConsoleColor.Gray;
             _backgroundColor = ConsoleColor.Black;
@@ -124,7 +124,7 @@ namespace Terminal.ConsoleUI
         private static void InvokeCommand(string commandString)
         {
             var kernel = new StandardKernel(new TerminalBindings(false));
-            _terminalApi = kernel.Get<TerminalCore>();
+            _terminalApi = kernel.Get<TerminalApi>();
             _terminalApi.Username = _username;
             _terminalApi.CommandContext = _commandContext;
 
@@ -232,7 +232,7 @@ namespace Terminal.ConsoleUI
             if ((displayItem.DisplayMode & DisplayMode.Dim) != 0)
                 Console.ForegroundColor = _dimColor;
             if ((displayItem.DisplayMode & DisplayMode.Parse) != 0)
-                displayItem.Text = Terminal.Domain.Utilities.BBCodeUtility.ConvertTagsForConsole(displayItem.Text);
+                displayItem.Text = Terminal.Core.Utilities.BBCodeUtility.ConvertTagsForConsole(displayItem.Text);
 
             if ((displayItem.DisplayMode & DisplayMode.DontType) != 0)
                 Console.WriteLine(displayItem.Text);

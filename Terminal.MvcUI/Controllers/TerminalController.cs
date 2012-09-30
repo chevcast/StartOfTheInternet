@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Terminal.Domain;
-using Terminal.Domain.Objects;
+using Terminal.Core;
+using Terminal.Core.Objects;
 using Terminal.MvcUI.ViewModels;
-using Terminal.Domain.ExtensionMethods;
+using Terminal.Core.ExtensionMethods;
 using System.Web.Security;
-using Terminal.Domain.Settings;
+using Terminal.Core.Settings;
 using System.Text;
-using Terminal.Domain.Enums;
+using Terminal.Core.Enums;
 using System.Net;
 using System.Configuration;
 using Microsoft.Web.Mvc;
@@ -20,9 +20,9 @@ namespace Terminal.MvcUI.Controllers
     [ValidateInput(false)]
     public class TerminalController : Controller
     {
-        private TerminalCore _terminalCore;
+        private TerminalApi _terminalCore;
 
-        public TerminalController(TerminalCore terminalCore)
+        public TerminalController(TerminalApi terminalCore)
         {
             _terminalCore = terminalCore;
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Terminal.Domain.Objects;
+using Terminal.Core.Objects;
 
 namespace Terminal.MvcUI.ViewModels
 {

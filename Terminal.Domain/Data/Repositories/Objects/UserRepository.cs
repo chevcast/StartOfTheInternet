@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Terminal.Domain.Data.Repositories.Interfaces;
-using Terminal.Domain.Data.Entities;
-using Terminal.Domain.Objects;
-using Terminal.Domain.ExtensionMethods;
+using Terminal.Core.Data.Repositories.Interfaces;
+using Terminal.Core.Data.Entities;
+using Terminal.Core.Objects;
+using Terminal.Core.ExtensionMethods;
 
-namespace Terminal.Domain.Data.Repositories.Objects
+namespace Terminal.Core.Data.Repositories.Objects
 {
     /// <summary>
     /// Repository for persisting users to the Entity Framework data context.

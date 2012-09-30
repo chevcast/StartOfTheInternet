@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terminal.Domain.Enums;
+using Terminal.Core.Enums;
 
-namespace Terminal.Domain.Objects
+namespace Terminal.Core.Objects
 {
     public class DisplayItem
     {

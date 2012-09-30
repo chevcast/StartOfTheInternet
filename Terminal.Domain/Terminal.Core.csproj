@@ -8,8 +8,8 @@
     <ProjectGuid>{A6220093-6743-497C-BD76-E3F2BC1A68D2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Terminal.Domain</RootNamespace>
-    <AssemblyName>Terminal.Domain</AssemblyName>
+    <RootNamespace>Terminal.Core</RootNamespace>
+    <AssemblyName>Terminal.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
@@ -46,7 +46,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Terminal.Domain.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\Terminal.Core.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CodeKicker.BBCode">
@@ -153,7 +153,7 @@
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Settings\DisplayTemplates.cs" />
     <Compile Include="Settings\RoleTemplates.cs" />
-    <Compile Include="TerminalCore.cs" />
+    <Compile Include="TerminalApi.cs" />
     <Compile Include="Commands\Objects\EXIT.cs" />
     <Compile Include="Enums\ContextStatus.cs" />
     <Compile Include="ExtensionMethods\DateTimeExtensions.cs" />

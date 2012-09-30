@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Terminal.Domain.Data.Entities;
+using Terminal.Core.Data.Entities;
 
-namespace Terminal.Domain.Data.Repositories.Interfaces
+namespace Terminal.Core.Data.Repositories.Interfaces
 {
     /// <summary>
     /// A repository for storing boards.

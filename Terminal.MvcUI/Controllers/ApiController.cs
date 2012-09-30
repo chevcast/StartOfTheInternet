@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Terminal.Domain;
+using Terminal.Core;
 using System.Net.Mime;
-using Terminal.Domain.Objects;
-using Terminal.Domain.Enums;
-using Terminal.Domain.ExtensionMethods;
+using Terminal.Core.Objects;
+using Terminal.Core.Enums;
+using Terminal.Core.ExtensionMethods;
 using System.Web.Script.Serialization;
 using System.Web.Security;
 using Microsoft.Web.Mvc;
@@ -17,10 +17,10 @@ namespace Terminal.MvcUI.Controllers
     [ValidateInput(false)]
     public class ApiController : Controller
     {
-        private TerminalCore _terminalApi;
+        private TerminalApi _terminalApi;
         private CommandContext _commandContext;
 
-        public ApiController(TerminalCore terminalApi)
+        public ApiController(TerminalApi terminalApi)
         {
             _terminalApi = terminalApi;
         }

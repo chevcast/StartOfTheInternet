@@ -3,29 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using Terminal.Domain.Data.Entities;
-using Terminal.Domain.Objects;
-using Terminal.Domain.Utilities;
-using Terminal.Domain.Enums;
-using Terminal.Domain.Commands.Interfaces;
-using Terminal.Domain.Commands.Objects;
-using Terminal.Domain.ExtensionMethods;
+using Terminal.Core.Data.Entities;
+using Terminal.Core.Objects;
+using Terminal.Core.Utilities;
+using Terminal.Core.Enums;
+using Terminal.Core.Commands.Interfaces;
+using Terminal.Core.Commands.Objects;
+using Terminal.Core.ExtensionMethods;
 using System.IO;
 using Mono.Options;
 using System.Web;
-using Terminal.Domain.Settings;
+using Terminal.Core.Settings;
 using CodeKicker.BBCode;
-using Terminal.Domain.Data;
+using Terminal.Core.Data;
 
-namespace Terminal.Domain
+namespace Terminal.Core
 {
     /// <summary>
-    /// The terminal core is the entry point to Terminal.Domain.
-    /// Pass in a command string adn Terminal.Domain will parse it and execute it.
-    /// Set a command context first and Terminal.Domain will handle the command context as well.
-    /// Set a user and Terminal.Domain will automatically determine which commands are avialable based on the user's roles.
+    /// The terminal core is the entry point to Terminal.Core.
+    /// Pass in a command string adn Terminal.Core will parse it and execute it.
+    /// Set a command context first and Terminal.Core will handle the command context as well.
+    /// Set a user and Terminal.Core will automatically determine which commands are avialable based on the user's roles.
     /// </summary>
-    public class TerminalCore
+    public class TerminalApi
     {
         #region Fields & Properties
 
@@ -46,7 +46,7 @@ namespace Terminal.Domain
         private CommandContext _commandContext;
 
         /// <summary>
-        /// If set to true then Terminal.Domain will automatically parse the display results for HTML viewing.
+        /// If set to true then Terminal.Core will automatically parse the display results for HTML viewing.
         /// Line-breaks will be turned into <br /> tags.
         /// BBCode tags will be parsed and turned into their HTML equivalents.
         /// </summary>
@@ -116,13 +116,13 @@ namespace Terminal.Domain
 
         /// <summary>
         /// Creates a new instance of the core. Ideally this should be created by Ninject to ensure all dependencies are handled appropriately.
-        /// Note: A TerminalBindings class lives in the Terminal.Domain.Ninject.BindingModules namespace. Use this when building your Ninject kernel to ensure proper dependency injection.
+        /// Note: A TerminalBindings class lives in the Terminal.Core.Ninject.BindingModules namespace. Use this when building your Ninject kernel to ensure proper dependency injection.
         /// 
         /// Sampel: IKernel kernel = new StandardKernel(new TerminalBindings());
         /// </summary>
         /// <param name="commands">A list of all commands available to the application.</param>
         /// <param name="userRepository">The user repository used to retrieve the current user from the database.</param>
-        public TerminalCore(List<ICommand> commands, IDataBucket dataBucket)
+        public TerminalApi(List<ICommand> commands, IDataBucket dataBucket)
         {
             _commands = commands;
             _dataBucket = dataBucket;

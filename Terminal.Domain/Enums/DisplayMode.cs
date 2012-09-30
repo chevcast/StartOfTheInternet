@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Terminal.Domain.Enums
+namespace Terminal.Core.Enums
 {
     /// <summary>
     /// Represents the available display options for some text.

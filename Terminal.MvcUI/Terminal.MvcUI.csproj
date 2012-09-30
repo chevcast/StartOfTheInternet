@@ -158,9 +158,9 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Terminal.Domain\Terminal.Domain.csproj">
+    <ProjectReference Include="..\Terminal.Domain\Terminal.Core.csproj">
       <Project>{A6220093-6743-497C-BD76-E3F2BC1A68D2}</Project>
-      <Name>Terminal.Domain</Name>
+      <Name>Terminal.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

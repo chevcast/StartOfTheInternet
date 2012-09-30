@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 using System.IO;
 using Microsoft.Web.Mvc;
 
-namespace Terminal.Domain.ExtensionMethods
+namespace Terminal.Core.ExtensionMethods
 {
     public static class GenericExtensions
     {

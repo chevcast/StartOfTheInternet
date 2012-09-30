@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Terminal.Domain.Enums
+namespace Terminal.Core.Enums
 {
     public enum Month
     {

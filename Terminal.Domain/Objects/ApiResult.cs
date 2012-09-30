@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Terminal.Domain.Objects
+namespace Terminal.Core.Objects
 {
     public class ApiResult
     {

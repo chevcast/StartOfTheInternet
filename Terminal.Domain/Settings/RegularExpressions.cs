@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Terminal.Domain.Settings
+namespace Terminal.Core.Settings
 {
     /// <summary>
     /// Static class containing common regular expression strings.

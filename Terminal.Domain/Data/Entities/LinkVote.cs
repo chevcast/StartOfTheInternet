@@ -1,4 +1,4 @@
-﻿namespace Terminal.Domain.Data.Entities
+﻿namespace Terminal.Core.Data.Entities
 {
     using System;
     using System.Collections.Generic;
