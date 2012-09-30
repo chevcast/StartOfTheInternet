@@ -77,7 +77,7 @@ namespace Terminal.Domain.Commands.Objects
                     this.CommandResult.WriteLine(displayMode, "Bienvenue au début de l'Internet. Veuillez soumettre votre");
                     this.CommandResult.WriteLine(displayMode, "identification pour continuer.");
                     this.CommandResult.WriteLine();
-                    this.CommandResult.WriteLine(displayMode, "Welcome to the start of the internet. Please login to continue.");
+                    this.CommandResult.WriteLine(displayMode, "Welcome to the start of the internet. Please type 'HELP' to continue.");
                     this.CommandResult.WriteLine();
                     this.CommandResult.WriteLine(displayMode, "Добро пожаловать в начало интернета. Пожалуйста, войдите,");
                     this.CommandResult.WriteLine(displayMode, "чтобы продолжить.");
