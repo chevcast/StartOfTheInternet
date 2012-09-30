@@ -4,24 +4,24 @@ using System.Linq;
 using System.Text;
 using Terminal.Domain.Commands.Interfaces;
 using Terminal.Domain.Objects;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 using Terminal.Domain.Settings;
 using Terminal.Domain.ExtensionMethods;
 using Mono.Options;
 using System.IO;
 using Terminal.Domain.Enums;
-using Terminal.Domain.Repositories.Interfaces;
 using Terminal.Domain.Utilities;
+using Terminal.Domain.Data;
 
 namespace Terminal.Domain.Commands.Objects
 {
     public class LOGIN : ICommand
     {
-        private IUserRepository _userRepository;
+        private IDataBucket _dataBucket;
 
-        public LOGIN(IUserRepository userRepository)
+        public LOGIN(IDataBucket dataBucket)
         {
-            _userRepository = userRepository;
+            _dataBucket = dataBucket;
         }
 
         public CommandResult CommandResult { get; set; }
@@ -62,10 +62,10 @@ namespace Terminal.Domain.Commands.Objects
                 x =>
                 {
                     HelpUtility.WriteHelpInformation(
-                        this.CommandResult,
-                        this.Name,
-                        this.Parameters,
-                        this.Description,
+                        CommandResult,
+                        Name,
+                        Parameters,
+                        Description,
                         options
                     );
                 }
@@ -82,7 +82,7 @@ namespace Terminal.Domain.Commands.Objects
                 }
                 catch (OptionException ex)
                 {
-                    this.CommandResult.WriteLine(ex.Message);
+                    CommandResult.WriteLine(ex.Message);
                 }
             }
 
@@ -90,26 +90,26 @@ namespace Terminal.Domain.Commands.Objects
             {
                 if (args.IsNullOrEmpty())
                 {
-                    this.CommandResult.WriteLine("Enter your username.");
-                    this.CommandResult.CommandContext.Set(ContextStatus.Forced, this.Name, args, "Username");
+                    CommandResult.WriteLine("Enter your username.");
+                    CommandResult.CommandContext.Set(ContextStatus.Forced, Name, args, "Username");
                 }
                 else if (args.Length == 1)
                 {
-                    this.CommandResult.WriteLine("Enter your password.");
-                    this.CommandResult.PasswordField = true;
-                    this.CommandResult.CommandContext.Set(ContextStatus.Forced, this.Name, args, "Password");
+                    CommandResult.WriteLine("Enter your password.");
+                    CommandResult.PasswordField = true;
+                    CommandResult.CommandContext.Set(ContextStatus.Forced, Name, args, "Password");
                 }
                 else if (args.Length == 2)
                 {
-                    var user = this._userRepository.GetUser(args[0]);
+                    var user = _dataBucket.UserRepository.GetUser(args[0]);
                     if (user != null && args[1] == user.Password)
                     {
-                        this.CommandResult.CurrentUser = user;
-                        this.CommandResult.WriteLine("You are now logged in as {0}.", this.CommandResult.CurrentUser.Username);
+                        CommandResult.CurrentUser = user;
+                        CommandResult.WriteLine("You are now logged in as {0}.", CommandResult.CurrentUser.Username);
                     }
                     else
-                        this.CommandResult.WriteLine("Invalid username or password.");
-                    this.CommandResult.CommandContext.Deactivate();
+                        CommandResult.WriteLine("Invalid username or password.");
+                    CommandResult.CommandContext.Deactivate();
                 }
             }
         }

@@ -5,7 +5,7 @@ using System.Text;
 using Terminal.Domain.Enums;
 using Terminal.Domain.Objects;
 using Terminal.Domain.Commands.Interfaces;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 using Terminal.Domain.Settings;
 using System.IO;
 using Mono.Options;
@@ -53,10 +53,10 @@ namespace Terminal.Domain.Commands.Objects
                 x =>
                 {
                     HelpUtility.WriteHelpInformation(
-                        this.CommandResult,
-                        this.Name,
-                        this.Parameters,
-                        this.Description,
+                        CommandResult,
+                        Name,
+                        Parameters,
+                        Description,
                         options
                     );
                 }
@@ -64,8 +64,8 @@ namespace Terminal.Domain.Commands.Objects
 
             if (args == null)
             {
-                this.CommandResult.ClearScreen = true;
-                this.CommandResult.CommandContext.Deactivate();
+                CommandResult.ClearScreen = true;
+                CommandResult.CommandContext.Deactivate();
             }
             else
                 try
@@ -74,7 +74,7 @@ namespace Terminal.Domain.Commands.Objects
                 }
                 catch (OptionException ex)
                 {
-                    this.CommandResult.WriteLine(ex.Message);
+                    CommandResult.WriteLine(ex.Message);
                 }
         }
     }

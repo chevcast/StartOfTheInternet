@@ -5,27 +5,23 @@ using System.Text;
 using Terminal.Domain.Enums;
 using Terminal.Domain.Objects;
 using Terminal.Domain.Commands.Interfaces;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 using Terminal.Domain.Settings;
 using System.IO;
 using Mono.Options;
-using Terminal.Domain.Repositories.Interfaces;
 using Terminal.Domain.ExtensionMethods;
 using Terminal.Domain.Utilities;
+using Terminal.Domain.Data;
 
 namespace Terminal.Domain.Commands.Objects
 {
     public class BOARDS : ICommand
     {
-        private IBoardRepository _boardRepository;
-        private ITopicRepository _topicRepository;
+        private IDataBucket _dataBucket;
 
-        public BOARDS(
-            IBoardRepository boardRepository,
-            ITopicRepository topicRepository)
+        public BOARDS(IDataBucket dataBucket)
         {
-            _boardRepository = boardRepository;
-            _topicRepository = topicRepository;
+            _dataBucket = dataBucket;
         }
 
         public CommandResult CommandResult { get; set; }
@@ -66,10 +62,10 @@ namespace Terminal.Domain.Commands.Objects
                 x =>
                 {
                     HelpUtility.WriteHelpInformation(
-                        this.CommandResult,
-                        this.Name,
-                        this.Parameters,
-                        this.Description,
+                        CommandResult,
+                        Name,
+                        Parameters,
+                        Description,
                         options
                     );
                 }
@@ -77,21 +73,21 @@ namespace Terminal.Domain.Commands.Objects
 
             if (args == null)
             {
-                this.CommandResult.ScrollToBottom = false;
-                this.CommandResult.CommandContext.Deactivate();
-                this.CommandResult.ClearScreen = true;
-                this.CommandResult.WriteLine(DisplayMode.Inverted, "Available Discussion Boards");
-                var boards = _boardRepository.GetBoards(this.CommandResult.UserLoggedAndModOrAdmin());
+                CommandResult.ScrollToBottom = false;
+                CommandResult.CommandContext.Deactivate();
+                CommandResult.ClearScreen = true;
+                CommandResult.WriteLine(DisplayMode.Inverted, "Available Discussion Boards");
+                var boards = _dataBucket.BoardRepository.GetBoards(CommandResult.UserLoggedAndModOrAdmin());
                 foreach (var board in boards.ToList())
                 {
-                    this.CommandResult.WriteLine();
+                    CommandResult.WriteLine();
                     var displayMode = DisplayMode.DontType;
                     if (board.ModsOnly || board.Hidden)
                         displayMode |= DisplayMode.Dim;
                     long topicCount = board.BoardID == 0
-                        ? _topicRepository.AllTopicsCount(this.CommandResult.UserLoggedAndModOrAdmin())
-                        : board.TopicCount(this.CommandResult.UserLoggedAndModOrAdmin());
-                    this.CommandResult.WriteLine(displayMode, "{{[transmit=BOARD]{0}[/transmit]}} {1}{2}{3}{4} | {5} topics",
+                        ? _dataBucket.TopicRepository.AllTopicsCount(CommandResult.UserLoggedAndModOrAdmin())
+                        : board.TopicCount(CommandResult.UserLoggedAndModOrAdmin());
+                    CommandResult.WriteLine(displayMode, "{{[transmit=BOARD]{0}[/transmit]}} {1}{2}{3}{4} | {5} topics",
                         board.BoardID,
                         board.Hidden ? "[HIDDEN] " : string.Empty,
                         board.ModsOnly ? "[MODSONLY] " : string.Empty,
@@ -99,10 +95,10 @@ namespace Terminal.Domain.Commands.Objects
                         board.Name,
                         topicCount);
                     if (!board.Description.IsNullOrEmpty())
-                        this.CommandResult.WriteLine(displayMode, "{0}", board.Description);
+                        CommandResult.WriteLine(displayMode, "{0}", board.Description);
                 }
                 if (boards.Count() == 0)
-                    this.CommandResult.WriteLine("There are no discussion boards.");
+                    CommandResult.WriteLine("There are no discussion boards.");
             }
             else
                 try
@@ -111,7 +107,7 @@ namespace Terminal.Domain.Commands.Objects
                 }
                 catch (OptionException ex)
                 {
-                    this.CommandResult.WriteLine(ex.Message);
+                    CommandResult.WriteLine(ex.Message);
                 }
         }
     }

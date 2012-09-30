@@ -70,8 +70,8 @@ namespace Terminal.Domain.Objects
         /// <param name="text">The custom text to display next to the command line.</param>
         public void SetPrompt(string command, string[] args, string text)
         {
-            this.Prompt = true;
-            this.Set(ContextStatus.Forced, command, args, text);
+            Prompt = true;
+            Set(ContextStatus.Forced, command, args, text);
         }
 
         /// <summary>
@@ -83,13 +83,13 @@ namespace Terminal.Domain.Objects
         /// <param name="text">The custom text to display next to the command line.</param>
         public void Set(ContextStatus status, string command, string[] args, string text)
         {
-            if (this.Status == ContextStatus.Passive)
+            if (Status == ContextStatus.Passive)
                 if (status == ContextStatus.Forced)
-                    this.Backup();
-            this.Status = status;
-            this.Command = command;
-            this.Args = args;
-            this.Text = text;
+                    Backup();
+            Status = status;
+            Command = command;
+            Args = args;
+            Text = text;
         }
 
         /// <summary>
@@ -97,15 +97,15 @@ namespace Terminal.Domain.Objects
         /// </summary>
         private void Backup()
         {
-            this.PreviousContext = new CommandContext
+            PreviousContext = new CommandContext
             {
-                Status = this.Status,
-                Command = this.Command,
-                Args = this.Args,
-                Text = this.Text,
-                Prompt = this.Prompt,
-                PromptData = this.PromptData,
-                PreviousContext = this.PreviousContext
+                Status = Status,
+                Command = Command,
+                Args = Args,
+                Text = Text,
+                Prompt = Prompt,
+                PromptData = PromptData,
+                PreviousContext = PreviousContext
             };
         }
 
@@ -114,15 +114,15 @@ namespace Terminal.Domain.Objects
         /// </summary>
         public void Restore()
         {
-            if (this.PreviousContext != null)
+            if (PreviousContext != null)
             {
-                this.Status = this.PreviousContext.Status;
-                this.Command = this.PreviousContext.Command;
-                this.Args = this.PreviousContext.Args;
-                this.Text = this.PreviousContext.Text;
-                this.Prompt = this.PreviousContext.Prompt;
-                this.PromptData = this.PreviousContext.PromptData;
-                this.PreviousContext = this.PreviousContext.PreviousContext;
+                Status = PreviousContext.Status;
+                Command = PreviousContext.Command;
+                Args = PreviousContext.Args;
+                Text = PreviousContext.Text;
+                Prompt = PreviousContext.Prompt;
+                PromptData = PreviousContext.PromptData;
+                PreviousContext = PreviousContext.PreviousContext;
             }
             else
             {
@@ -135,16 +135,16 @@ namespace Terminal.Domain.Objects
         /// </summary>
         public void Deactivate()
         {
-            this.Status = ContextStatus.Disabled;
-            this.Command = null;
-            this.Args = null;
-            this.Text = null;
-            this.Prompt = false;
-            this.PromptData = null;
-            this.CurrentPage = 0;
-            this.CurrentLinkTags = null;
-            this.CurrentSearchTerms = null;
-            this.CurrentSortOrder = null;
+            Status = ContextStatus.Disabled;
+            Command = null;
+            Args = null;
+            Text = null;
+            Prompt = false;
+            PromptData = null;
+            CurrentPage = 0;
+            CurrentLinkTags = null;
+            CurrentSearchTerms = null;
+            CurrentSortOrder = null;
         }
     }
 }

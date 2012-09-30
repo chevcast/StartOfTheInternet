@@ -5,25 +5,23 @@ using System.Text;
 using Terminal.Domain.Enums;
 using Terminal.Domain.Objects;
 using Terminal.Domain.Commands.Interfaces;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 using Terminal.Domain.Settings;
 using System.IO;
 using Mono.Options;
-using Terminal.Domain.Repositories.Interfaces;
 using Terminal.Domain.ExtensionMethods;
 using Terminal.Domain.Utilities;
+using Terminal.Domain.Data;
 
 namespace Terminal.Domain.Commands.Objects
 {
     public class MARKET : ICommand
     {
-        private IInviteCodeRepository _inviteCodeRepository;
-        private IUserRepository _userRepository;
+        private IDataBucket _dataBucket;
 
-        public MARKET(IInviteCodeRepository inviteCodeRepository, IUserRepository userRepository)
+        public MARKET(IDataBucket dataBucket)
         {
-            _inviteCodeRepository = inviteCodeRepository;
-            _userRepository = userRepository;
+            _dataBucket = dataBucket;
         }
 
         public CommandResult CommandResult { get; set; }
@@ -74,11 +72,11 @@ namespace Terminal.Domain.Commands.Objects
 
             if (args == null)
             {
-                this.CommandResult.WriteLine(DisplayMode.Inverted | DisplayMode.Bold, "Welcome to the marketplace!");
-                this.CommandResult.WriteLine();
-                this.CommandResult.WriteLine(DisplayMode.Bold, "The following items are available for purchase:");
-                this.CommandResult.WriteLine();
-                this.CommandResult.WriteLine("1) Invite Code (1000 Credits)");
+                CommandResult.WriteLine(DisplayMode.Inverted | DisplayMode.Bold, "Welcome to the marketplace!");
+                CommandResult.WriteLine();
+                CommandResult.WriteLine(DisplayMode.Bold, "The following items are available for purchase:");
+                CommandResult.WriteLine();
+                CommandResult.WriteLine("1) Invite Code (1000 Credits)");
             }
             else
             {
@@ -88,17 +86,17 @@ namespace Terminal.Domain.Commands.Objects
 
                     if (parsedArgs.Length == args.Length) // If no args matched mono options.
                     {
-                        this.CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
+                        CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
                     }
                     else
                     {
                         if (showHelp)
                         {
                             HelpUtility.WriteHelpInformation(
-                                this.CommandResult,
-                                this.Name,
-                                this.Parameters,
-                                this.Description,
+                                CommandResult,
+                                Name,
+                                Parameters,
+                                Description,
                                 options
                             );
                         }
@@ -109,7 +107,7 @@ namespace Terminal.Domain.Commands.Objects
                                 switch (buy.ToShort())
                                 {
                                     case 1:
-                                        if (this.CommandResult.CurrentUser.Credits >= 1000)
+                                        if (CommandResult.CurrentUser.Credits >= 1000)
                                         {
                                             var random = new Random();
                                             string code = null;
@@ -119,36 +117,36 @@ namespace Terminal.Domain.Commands.Objects
                                                     + random.Next(1 << 16).ToString("X4")
                                                     + random.Next(1 << 16).ToString("X4")
                                                     + random.Next(1 << 16).ToString("X4");
-                                                if (_inviteCodeRepository.GetInviteCode(code) == null)
+                                                if (_dataBucket.InviteCodeRepository.GetInviteCode(code) == null)
                                                     break;
                                             }
                                             var inviteCode = new InviteCode
                                             {
                                                 Code = code,
-                                                Username = this.CommandResult.CurrentUser.Username
+                                                Username = CommandResult.CurrentUser.Username
                                             };
-                                            _inviteCodeRepository.AddInviteCode(inviteCode);
-                                            _inviteCodeRepository.SaveChanges();
-                                            this.CommandResult.CurrentUser.Credits -= 1000;
-                                            _userRepository.UpdateUser(this.CommandResult.CurrentUser);
-                                            this.CommandResult.WriteLine("Invite purchased. 1000 credits subtracted from your account.");
+                                            _dataBucket.InviteCodeRepository.AddInviteCode(inviteCode);
+                                            CommandResult.CurrentUser.Credits -= 1000;
+                                            _dataBucket.UserRepository.UpdateUser(CommandResult.CurrentUser);
+                                            _dataBucket.SaveChanges();
+                                            CommandResult.WriteLine("Invite purchased. 1000 credits subtracted from your account.");
                                         }
                                         else
-                                            this.CommandResult.WriteLine("You do not have enough credits.");
+                                            CommandResult.WriteLine("You do not have enough credits.");
                                         break;
                                     default:
-                                        this.CommandResult.WriteLine("There is no item number {0} on the marketplace.", buy);
+                                        CommandResult.WriteLine("There is no item number {0} on the marketplace.", buy);
                                         break;
                                 }
                             }
                             else
-                                this.CommandResult.WriteLine("You must enter a valid item number.");
+                                CommandResult.WriteLine("You must enter a valid item number.");
                         }
                     }
                 }
                 catch (OptionException ex)
                 {
-                    this.CommandResult.WriteLine(ex.Message);
+                    CommandResult.WriteLine(ex.Message);
                 }
             }
         }

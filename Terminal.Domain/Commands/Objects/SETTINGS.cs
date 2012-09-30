@@ -5,25 +5,23 @@ using System.Text;
 using Terminal.Domain.Enums;
 using Terminal.Domain.Objects;
 using Terminal.Domain.Commands.Interfaces;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 using Terminal.Domain.Settings;
 using System.IO;
 using Mono.Options;
-using Terminal.Domain.Repositories.Interfaces;
 using Terminal.Domain.ExtensionMethods;
 using Terminal.Domain.Utilities;
+using Terminal.Domain.Data;
 
 namespace Terminal.Domain.Commands.Objects
 {
     public class SETTINGS : ICommand
     {
-        private IUserRepository _userRepository;
-        private IVariableRepository _variableRepository;
+        private IDataBucket _dataBucket;
 
-        public SETTINGS(IUserRepository userRepository, IVariableRepository variableRepository)
+        public SETTINGS(IDataBucket dataBucket)
         {
-            _userRepository = userRepository;
-            _variableRepository = variableRepository;
+            _dataBucket = dataBucket;
         }
 
         public CommandResult CommandResult { get; set; }
@@ -108,7 +106,7 @@ namespace Terminal.Domain.Commands.Objects
                 "Display notifications for unread messages in your inbox.",
                 x => messageNotify = x != null
             );
-            if (this.CommandResult.CurrentUser.IsAdministrator)
+            if (CommandResult.CurrentUser.IsAdministrator)
             {
                 options.Add(
                     "reg|registration=",
@@ -119,7 +117,7 @@ namespace Terminal.Domain.Commands.Objects
 
             if (args == null)
             {
-                this.CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
+                CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
             }
             else
             {
@@ -129,91 +127,93 @@ namespace Terminal.Domain.Commands.Objects
 
                     if (parsedArgs.Length == args.Length)
                     {
-                        this.CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
+                        CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
                     }
                     else
                     {
                         if (showHelp)
                         {
                             HelpUtility.WriteHelpInformation(
-                                this.CommandResult,
-                                this.Name,
-                                this.Parameters,
-                                this.Description,
+                                CommandResult,
+                                Name,
+                                Parameters,
+                                Description,
                                 options
                             );
                         }
                         else if (changePassword)
                         {
-                            if (this.CommandResult.CommandContext.PromptData == null)
+                            if (CommandResult.CommandContext.PromptData == null)
                             {
-                                this.CommandResult.WriteLine("Type your new password.");
-                                this.CommandResult.PasswordField = true;
-                                this.CommandResult.CommandContext.SetPrompt(this.Name, args, "NEW PASSWORD");
+                                CommandResult.WriteLine("Type your new password.");
+                                CommandResult.PasswordField = true;
+                                CommandResult.CommandContext.SetPrompt(Name, args, "NEW PASSWORD");
                             }
-                            else if (this.CommandResult.CommandContext.PromptData.Length == 1)
+                            else if (CommandResult.CommandContext.PromptData.Length == 1)
                             {
-                                this.CommandResult.WriteLine("Confirm your new password.");
-                                this.CommandResult.PasswordField = true;
-                                this.CommandResult.CommandContext.SetPrompt(this.Name, args, "CONFIRM PASSWORD");
+                                CommandResult.WriteLine("Confirm your new password.");
+                                CommandResult.PasswordField = true;
+                                CommandResult.CommandContext.SetPrompt(Name, args, "CONFIRM PASSWORD");
                             }
-                            else if (this.CommandResult.CommandContext.PromptData.Length == 2)
+                            else if (CommandResult.CommandContext.PromptData.Length == 2)
                             {
-                                string password = this.CommandResult.CommandContext.PromptData[0];
-                                string confirmPassword = this.CommandResult.CommandContext.PromptData[1];
+                                string password = CommandResult.CommandContext.PromptData[0];
+                                string confirmPassword = CommandResult.CommandContext.PromptData[1];
                                 if (password == confirmPassword)
                                 {
-                                    this.CommandResult.CurrentUser.Password = password;
-                                    _userRepository.UpdateUser(this.CommandResult.CurrentUser);
-                                    this.CommandResult.WriteLine("Password changed successfully.");
+                                    CommandResult.CurrentUser.Password = password;
+                                    _dataBucket.UserRepository.UpdateUser(CommandResult.CurrentUser);
+                                    _dataBucket.SaveChanges();
+                                    CommandResult.WriteLine("Password changed successfully.");
                                 }
                                 else
-                                    this.CommandResult.WriteLine("Passwords did not match.");
-                                this.CommandResult.CommandContext.Restore();
+                                    CommandResult.WriteLine("Passwords did not match.");
+                                CommandResult.CommandContext.Restore();
                             }
                         }
                         else if (setTimeZone)
                         {
                             var timeZones = TimeZoneInfo.GetSystemTimeZones();
-                            if (this.CommandResult.CommandContext.PromptData == null)
+                            if (CommandResult.CommandContext.PromptData == null)
                             {
                                 for (int index = 0; index < timeZones.Count; index++)
                                 {
                                     var timeZone = timeZones[index];
-                                    this.CommandResult.WriteLine(DisplayMode.DontType, "{{{0}}} {1}", index, timeZone.DisplayName);
+                                    CommandResult.WriteLine(DisplayMode.DontType, "{{{0}}} {1}", index, timeZone.DisplayName);
                                 }
-                                this.CommandResult.WriteLine();
-                                this.CommandResult.WriteLine("Enter time zone ID.");
-                                this.CommandResult.CommandContext.SetPrompt(this.Name, args, "CHANGE TIME ZONE");
+                                CommandResult.WriteLine();
+                                CommandResult.WriteLine("Enter time zone ID.");
+                                CommandResult.CommandContext.SetPrompt(Name, args, "CHANGE TIME ZONE");
                             }
-                            else if (this.CommandResult.CommandContext.PromptData.Length == 1)
+                            else if (CommandResult.CommandContext.PromptData.Length == 1)
                             {
-                                string promptData = this.CommandResult.CommandContext.PromptData[0];
+                                string promptData = CommandResult.CommandContext.PromptData[0];
                                 if (promptData.IsInt())
                                 {
                                     int timeZoneId = promptData.ToInt();
                                     if (timeZoneId >= 0 && timeZoneId < timeZones.Count)
                                     {
                                         var timeZone = timeZones[timeZoneId];
-                                        this.CommandResult.CurrentUser.TimeZone = timeZone.Id;
-                                        _userRepository.UpdateUser(this.CommandResult.CurrentUser);
-                                        this.CommandResult.WriteLine("'{0}' successfully set as your current time zone.", timeZone.Id);
-                                        this.CommandResult.CommandContext.Restore();
+                                        CommandResult.CurrentUser.TimeZone = timeZone.Id;
+                                        _dataBucket.UserRepository.UpdateUser(CommandResult.CurrentUser);
+                                        _dataBucket.SaveChanges();
+                                        CommandResult.WriteLine("'{0}' successfully set as your current time zone.", timeZone.Id);
+                                        CommandResult.CommandContext.Restore();
                                     }
                                     else
                                     {
-                                        this.CommandResult.WriteLine("'{0}' does not match any available time zone ID.", timeZoneId);
-                                        this.CommandResult.CommandContext.Restore();
-                                        this.CommandResult.WriteLine("Enter time zone ID.");
-                                        this.CommandResult.CommandContext.SetPrompt(this.Name, args, "CHANGE TIME ZONE");
+                                        CommandResult.WriteLine("'{0}' does not match any available time zone ID.", timeZoneId);
+                                        CommandResult.CommandContext.Restore();
+                                        CommandResult.WriteLine("Enter time zone ID.");
+                                        CommandResult.CommandContext.SetPrompt(Name, args, "CHANGE TIME ZONE");
                                     }
                                 }
                                 else
                                 {
-                                    this.CommandResult.WriteLine("'{0}' is not a valid time zone ID.", promptData);
-                                    this.CommandResult.CommandContext.Restore();
-                                    this.CommandResult.WriteLine("Enter time zone ID.");
-                                    this.CommandResult.CommandContext.SetPrompt(this.Name, args, "CHANGE TIME ZONE");
+                                    CommandResult.WriteLine("'{0}' is not a valid time zone ID.", promptData);
+                                    CommandResult.CommandContext.Restore();
+                                    CommandResult.WriteLine("Enter time zone ID.");
+                                    CommandResult.CommandContext.SetPrompt(Name, args, "CHANGE TIME ZONE");
                                 }
                             }
                         }
@@ -221,60 +221,61 @@ namespace Terminal.Domain.Commands.Objects
                         {
                             if (mute != null)
                             {
-                                this.CommandResult.CurrentUser.Sound = !(bool)mute;
-                                _userRepository.UpdateUser(this.CommandResult.CurrentUser);
-                                this.CommandResult.WriteLine("Sound successfully {0}.", (bool)mute ? "muted" : "unmuted");
+                                CommandResult.CurrentUser.Sound = !(bool)mute;
+                                _dataBucket.UserRepository.UpdateUser(CommandResult.CurrentUser);
+                                CommandResult.WriteLine("Sound successfully {0}.", (bool)mute ? "muted" : "unmuted");
                             }
                             if (timeStamps != null)
                             {
-                                this.CommandResult.CurrentUser.ShowTimestamps = (bool)timeStamps;
-                                _userRepository.UpdateUser(this.CommandResult.CurrentUser);
-                                this.CommandResult.WriteLine("Timestamps were successfully {0}.", (bool)timeStamps ? "enabled" : "disabled");
+                                CommandResult.CurrentUser.ShowTimestamps = (bool)timeStamps;
+                                _dataBucket.UserRepository.UpdateUser(CommandResult.CurrentUser);
+                                CommandResult.WriteLine("Timestamps were successfully {0}.", (bool)timeStamps ? "enabled" : "disabled");
                             }
                             if (autoFollow != null)
                             {
-                                this.CommandResult.CurrentUser.AutoFollow = (bool)autoFollow;
-                                _userRepository.UpdateUser(this.CommandResult.CurrentUser);
-                                this.CommandResult.WriteLine("Auto-follow {0}.", (bool)autoFollow ? "activated" : "deactivated");
+                                CommandResult.CurrentUser.AutoFollow = (bool)autoFollow;
+                                _dataBucket.UserRepository.UpdateUser(CommandResult.CurrentUser);
+                                CommandResult.WriteLine("Auto-follow {0}.", (bool)autoFollow ? "activated" : "deactivated");
                             }
                             if (replyNotify != null)
                             {
-                                this.CommandResult.CurrentUser.NotifyReplies = (bool)replyNotify;
-                                _userRepository.UpdateUser(this.CommandResult.CurrentUser);
-                                this.CommandResult.WriteLine("Reply notifications were successfully turned {0}.", (bool)replyNotify ? "on" : "off");
+                                CommandResult.CurrentUser.NotifyReplies = (bool)replyNotify;
+                                _dataBucket.UserRepository.UpdateUser(CommandResult.CurrentUser);
+                                CommandResult.WriteLine("Reply notifications were successfully turned {0}.", (bool)replyNotify ? "on" : "off");
                             }
                             if (messageNotify != null)
                             {
-                                this.CommandResult.CurrentUser.NotifyMessages = (bool)messageNotify;
-                                _userRepository.UpdateUser(this.CommandResult.CurrentUser);
-                                this.CommandResult.WriteLine("Message notifications were successfully turned {0}.", (bool)messageNotify ? "on" : "off");
+                                CommandResult.CurrentUser.NotifyMessages = (bool)messageNotify;
+                                _dataBucket.UserRepository.UpdateUser(CommandResult.CurrentUser);
+                                CommandResult.WriteLine("Message notifications were successfully turned {0}.", (bool)messageNotify ? "on" : "off");
                             }
                             if (registration != null)
                             {
-                                var registrationStatus = _variableRepository.GetVariable("Registration");
+                                var registrationStatus = _dataBucket.VariableRepository.GetVariable("Registration");
                                 if (registration == "1")
                                 {
                                     registrationStatus = "Open";
-                                    this.CommandResult.WriteLine("Registration opened successfully.");
+                                    CommandResult.WriteLine("Registration opened successfully.");
                                 }
                                 else if (registration == "2")
                                 {
                                     registrationStatus = "Invite-Only";
-                                    this.CommandResult.WriteLine("Registration set to invite only.");
+                                    CommandResult.WriteLine("Registration set to invite only.");
                                 }
                                 else if (registration == "3")
                                 {
                                     registrationStatus = "Closed";
-                                    this.CommandResult.WriteLine("Registration closed successfully.");
+                                    CommandResult.WriteLine("Registration closed successfully.");
                                 }
-                                _variableRepository.ModifyVariable("Registration", registrationStatus);
+                                _dataBucket.VariableRepository.ModifyVariable("Registration", registrationStatus);
                             }
+                            _dataBucket.SaveChanges();
                         }
                     }
                 }
                 catch (OptionException ex)
                 {
-                    this.CommandResult.WriteLine(ex.Message);
+                    CommandResult.WriteLine(ex.Message);
                 }
             }
         }
