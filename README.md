@@ -14,7 +14,5 @@ What you'll need:
  2. Download the SOTI project source code.
     ![](http://i.imgur.com/Ql7qd.gif)
 
- 3. Unzip the source and open the solution in Visual Studio 2012 Express.
-
- 4. Select the Terminal.MvcUI project and press F5 or click Start in the toolbar.
+ 3. Unzip the source, open the solution in Visual Studio 2012 Express, select the Terminal.MvcUI project, and press F5 or click Start in the toolbar.
     ![](http://i.imgur.com/RWY4I.gif)
