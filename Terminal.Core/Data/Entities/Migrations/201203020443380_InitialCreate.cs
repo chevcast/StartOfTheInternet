@@ -1,4 +1,4 @@
-namespace Terminal.Core.Migrations
+namespace Terminal.Core.Data.Entities.Migrations
 {
     using System.Data.Entity.Migrations;
     

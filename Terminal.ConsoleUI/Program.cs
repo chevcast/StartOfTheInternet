@@ -74,7 +74,7 @@ namespace Terminal.ConsoleUI
         /// </summary>
         private static void SetupConsole()
         {
-            Database.SetInitializer<EntityContainer>(new MigrateDatabaseToLatestVersion<EntityContainer, Terminal.Core.Migrations.Configuration>());
+            Database.SetInitializer<EntityContainer>(new MigrateDatabaseToLatestVersion<EntityContainer, Terminal.Core.Data.Entities.Migrations.Configuration>());
             var typingSound = "Terminal.ConsoleUI.beeps.wav";
             _foregroundColor = ConsoleColor.Gray;
             _backgroundColor = ConsoleColor.Black;

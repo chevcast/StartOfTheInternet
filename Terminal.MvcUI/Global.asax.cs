@@ -34,7 +34,7 @@ namespace Terminal.MvcUI
 
         protected void Application_Start()
         {
-            Database.SetInitializer<EntityContainer>(new MigrateDatabaseToLatestVersion<EntityContainer, Terminal.Core.Migrations.Configuration>());
+            Database.SetInitializer<EntityContainer>(new MigrateDatabaseToLatestVersion<EntityContainer, Terminal.Core.Data.Entities.Migrations.Configuration>());
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
