@@ -7,15 +7,15 @@
     <title>@ViewBag.Title</title>
     @if (DateTime.Now.Month == (int)Month.October)
     {
-        <link href="@Url.Content("~/Styles/Terminal_Halloween.less")" rel="stylesheet" type="text/css" />
+        <link href="@Url.Content("~/Styles/Terminal_Halloween.less?cacheToken=" + Guid.NewGuid())" rel="stylesheet" type="text/css" />
     }
     else if (DateTime.Now.Month == (int)Month.December)
     {
-        <link href="@Url.Content("~/Styles/Terminal_xmas.less")" rel="stylesheet" type="text/css" />
+        <link href="@Url.Content("~/Styles/Terminal_xmas.less?cacheToken=" + Guid.NewGuid())" rel="stylesheet" type="text/css" />
     }
     else
     {
-        <link href="@Url.Content("~/Styles/Terminal.less")" rel="stylesheet" type="text/css" />
+        <link href="@Url.Content("~/Styles/Terminal.less?cacheToken=" + Guid.NewGuid())" rel="stylesheet" type="text/css" />
     }
     <link href="@Url.Content("~/Styles/Prettify.less")" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="https://www.google.com/jsapi?key=ABQIAAAAwP0Xtu2qzWdkyAHs78XrqBSTibpMIyfoWuh352Yttd2WIWmGsRTB3MI2VDBRax_FPSNz39DY55Xh0g"></script>
