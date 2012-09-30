@@ -16,3 +16,7 @@ What you'll need:
 
  3. Unzip the source, open the solution in Visual Studio 2012 Express, select the Terminal.MvcUI project, and press F5 or click Start in the toolbar.
     ![](http://i.imgur.com/RWY4I.gif)
+
+---
+
+For more information about the SOTI project head on over to [the wiki](https://github.com/Chevex/StartOfTheInternet/wiki).
