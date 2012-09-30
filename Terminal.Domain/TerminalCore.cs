@@ -155,20 +155,20 @@ namespace Terminal.Domain
             {
                 _currentUser.LastLogin = DateTime.UtcNow;
                 _userRepository.UpdateUser(_currentUser);
+            }
 
-                // Check for alias. Replace command name with alias.
-                if ((_commandContext.Status & ContextStatus.Forced) == 0)
+            // Check for alias. Replace command name with alias.
+            if ((_commandContext.Status & ContextStatus.Forced) == 0)
+            {
+                var alias = _aliasRepository.GetAlias(_currentUser != null ? _currentUser.Username : "Admin", commandName);
+                if (alias != null)
                 {
-                    var alias = _aliasRepository.GetAlias(_currentUser.Username, commandName);
-                    if (alias != null)
-                    {
-                        commandString = hasSpace ? alias.Command + commandString.Remove(0, spaceIndex) : alias.Command;
-                        hasSpace = commandString.Contains(' ');
-                        spaceIndex = 0;
-                        if (hasSpace)
-                            spaceIndex = commandString.IndexOf(' ');
-                        commandName = hasSpace ? commandString.Remove(spaceIndex) : commandString;
-                    }
+                    commandString = hasSpace ? alias.Command + commandString.Remove(0, spaceIndex) : alias.Command;
+                    hasSpace = commandString.Contains(' ');
+                    spaceIndex = 0;
+                    if (hasSpace)
+                        spaceIndex = commandString.IndexOf(' ');
+                    commandName = hasSpace ? commandString.Remove(spaceIndex) : commandString;
                 }
             }
 
