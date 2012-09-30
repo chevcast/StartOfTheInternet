@@ -166,7 +166,7 @@ namespace Terminal.Domain
             // Check for alias. Replace command name with alias.
             if ((_commandContext.Status & ContextStatus.Forced) == 0)
             {
-                var alias = defaultAliases.SingleOrDefault(x => x.Shortcut == commandName);
+                var alias = defaultAliases.SingleOrDefault(x => x.Shortcut.Is(commandName));
                 if (_currentUser != null)    
                     alias = _aliasRepository.GetAlias(_currentUser.Username, commandName);
                 if (alias != null)
