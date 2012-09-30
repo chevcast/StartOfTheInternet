@@ -4,24 +4,24 @@ using System.Linq;
 using System.Text;
 using Terminal.Domain.Commands.Interfaces;
 using Terminal.Domain.Objects;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 using Terminal.Domain.Settings;
 using Terminal.Domain.ExtensionMethods;
 using Mono.Options;
 using System.IO;
 using Terminal.Domain.Enums;
-using Terminal.Domain.Repositories.Interfaces;
 using Terminal.Domain.Utilities;
+using Terminal.Domain.Data;
 
 namespace Terminal.Domain.Commands.Objects
 {
     public class LOGOUT : ICommand
     {
-        private IUserRepository _userRepository;
+        private IDataBucket _dataBucket;
 
-        public LOGOUT(IUserRepository userRepository)
+        public LOGOUT(IDataBucket dataBucket)
         {
-            _userRepository = userRepository;
+            _dataBucket = dataBucket;
         }
 
         public CommandResult CommandResult { get; set; }
@@ -62,10 +62,10 @@ namespace Terminal.Domain.Commands.Objects
                 x =>
                 {
                     HelpUtility.WriteHelpInformation(
-                        this.CommandResult,
-                        this.Name,
-                        this.Parameters,
-                        this.Description,
+                        CommandResult,
+                        Name,
+                        Parameters,
+                        Description,
                         options
                     );
                 }
@@ -82,7 +82,7 @@ namespace Terminal.Domain.Commands.Objects
                 }
                 catch (OptionException ex)
                 {
-                    this.CommandResult.WriteLine(ex.Message);
+                    CommandResult.WriteLine(ex.Message);
                 }
             }
 
@@ -90,11 +90,12 @@ namespace Terminal.Domain.Commands.Objects
             {
                 if (args.IsNullOrEmpty())
                 {
-                    this.CommandResult.CurrentUser.LastLogin = DateTime.UtcNow.AddMinutes(-10);
-                    _userRepository.UpdateUser(this.CommandResult.CurrentUser);
-                    this.CommandResult.WriteLine("You have been logged out.");
-                    this.CommandResult.CommandContext.Deactivate();
-                    this.CommandResult.CurrentUser = null;
+                    CommandResult.CurrentUser.LastLogin = DateTime.UtcNow.AddMinutes(-10);
+                    _dataBucket.UserRepository.UpdateUser(CommandResult.CurrentUser);
+                    _dataBucket.SaveChanges();
+                    CommandResult.WriteLine("You have been logged out.");
+                    CommandResult.CommandContext.Deactivate();
+                    CommandResult.CurrentUser = null;
                 }
             }
         }

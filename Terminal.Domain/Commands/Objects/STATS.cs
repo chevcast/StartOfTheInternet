@@ -5,28 +5,23 @@ using System.Text;
 using Terminal.Domain.Enums;
 using Terminal.Domain.Objects;
 using Terminal.Domain.Commands.Interfaces;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 using Terminal.Domain.Settings;
 using System.IO;
 using Mono.Options;
-using Terminal.Domain.Repositories.Interfaces;
 using Terminal.Domain.ExtensionMethods;
 using Terminal.Domain.Utilities;
+using Terminal.Domain.Data;
 
 namespace Terminal.Domain.Commands.Objects
 {
     public class STATS : ICommand
     {
-        private IUserRepository _userRepository;
-        private ITopicRepository _topicRepository;
+        private IDataBucket _dataBucket;
 
-        public STATS(
-            IUserRepository userRepository,
-            ITopicRepository topicRepository
-        )
+        public STATS(IDataBucket dataBucket)
         {
-            _userRepository = userRepository;
-            _topicRepository = topicRepository;
+            _dataBucket = dataBucket;
         }
 
         public CommandResult CommandResult { get; set; }
@@ -89,7 +84,7 @@ namespace Terminal.Domain.Commands.Objects
 
             if (args == null)
             {
-                this.CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
+                CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
             }
             else
             {
@@ -99,17 +94,17 @@ namespace Terminal.Domain.Commands.Objects
 
                     if (parsedArgs.Length == args.Length)
                     {
-                        this.CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
+                        CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
                     }
                     else
                     {
                         if (showHelp)
                         {
                             HelpUtility.WriteHelpInformation(
-                                this.CommandResult,
-                                this.Name,
-                                this.Parameters,
-                                this.Description,
+                                CommandResult,
+                                Name,
+                                Parameters,
+                                Description,
                                 options
                             );
                         }
@@ -117,41 +112,41 @@ namespace Terminal.Domain.Commands.Objects
                         {
                             if (users)
                             {
-                                var userStats = _userRepository.GetUserStatistics();
-                                var loggedInUsers = _userRepository.GetLoggedInUsers();
+                                var userStats = _dataBucket.UserRepository.GetUserStatistics();
+                                var loggedInUsers = _dataBucket.UserRepository.GetLoggedInUsers();
 
                                 var displayMode = DisplayMode.DontType;
-                                this.CommandResult.WriteLine(displayMode, "There are {0} users registered.", userStats.TotalRegisteredUsers);
-                                this.CommandResult.WriteLine(displayMode, "{0} users are currently banned for various acts of faggotry.", userStats.TotalBannedUsers);
-                                this.CommandResult.WriteLine();
-                                this.CommandResult.WriteLine(displayMode, "{0} users have registered within the last 24 hours.", userStats.NewUsersInTheLast24Hours);
-                                this.CommandResult.WriteLine(displayMode, "{0} users have registered within the last week.", userStats.NewUsersInTheLastWeek);
-                                this.CommandResult.WriteLine(displayMode, "{0} users have registered within the last month.", userStats.NewUsersInTheLastMonth);
-                                this.CommandResult.WriteLine(displayMode, "{0} users have registered within the last year.", userStats.NewUsersInTheLastYear);
-                                this.CommandResult.WriteLine();
-                                this.CommandResult.WriteLine(displayMode, "{0} users have logged in within the last 24 hours.", userStats.LoggedInWithinTheLast24Hours);
-                                this.CommandResult.WriteLine(displayMode, "{0} users have logged in within the last week.", userStats.LoggedInWithinTheLastWeek);
-                                this.CommandResult.WriteLine(displayMode, "{0} users have logged in within the last month.", userStats.LoggedInWithinTheLastMonth);
-                                this.CommandResult.WriteLine(displayMode, "{0} users have logged in within the last year.", userStats.LoggedInWithinTheLastYear);
-                                this.CommandResult.WriteLine();
-                                this.CommandResult.WriteLine(displayMode | DisplayMode.Dim, new string('-', AppSettings.DividerLength));
-                                this.CommandResult.WriteLine();
-                                this.CommandResult.WriteLine(displayMode, "There are currently {0} user(s) online.", loggedInUsers.Count());
-                                this.CommandResult.WriteLine();
+                                CommandResult.WriteLine(displayMode, "There are {0} users registered.", userStats.TotalRegisteredUsers);
+                                CommandResult.WriteLine(displayMode, "{0} users are currently banned for various acts of faggotry.", userStats.TotalBannedUsers);
+                                CommandResult.WriteLine();
+                                CommandResult.WriteLine(displayMode, "{0} users have registered within the last 24 hours.", userStats.NewUsersInTheLast24Hours);
+                                CommandResult.WriteLine(displayMode, "{0} users have registered within the last week.", userStats.NewUsersInTheLastWeek);
+                                CommandResult.WriteLine(displayMode, "{0} users have registered within the last month.", userStats.NewUsersInTheLastMonth);
+                                CommandResult.WriteLine(displayMode, "{0} users have registered within the last year.", userStats.NewUsersInTheLastYear);
+                                CommandResult.WriteLine();
+                                CommandResult.WriteLine(displayMode, "{0} users have logged in within the last 24 hours.", userStats.LoggedInWithinTheLast24Hours);
+                                CommandResult.WriteLine(displayMode, "{0} users have logged in within the last week.", userStats.LoggedInWithinTheLastWeek);
+                                CommandResult.WriteLine(displayMode, "{0} users have logged in within the last month.", userStats.LoggedInWithinTheLastMonth);
+                                CommandResult.WriteLine(displayMode, "{0} users have logged in within the last year.", userStats.LoggedInWithinTheLastYear);
+                                CommandResult.WriteLine();
+                                CommandResult.WriteLine(displayMode | DisplayMode.Dim, new string('-', AppSettings.DividerLength));
+                                CommandResult.WriteLine();
+                                CommandResult.WriteLine(displayMode, "There are currently {0} user(s) online.", loggedInUsers.Count());
+                                CommandResult.WriteLine();
                                 foreach (var user in loggedInUsers)
-                                    this.CommandResult.WriteLine(displayMode, user.Username);
+                                    CommandResult.WriteLine(displayMode, user.Username);
                             }
                             if (mods)
                             {
-                                var staff = _userRepository.GetModeratorsAndAdministrators();
+                                var staff = _dataBucket.UserRepository.GetModeratorsAndAdministrators();
                                 var displayMode = DisplayMode.DontType;
-                                this.CommandResult.WriteLine(displayMode, "There are {0} moderators.", staff.Count());
-                                this.CommandResult.WriteLine();
+                                CommandResult.WriteLine(displayMode, "There are {0} moderators.", staff.Count());
+                                CommandResult.WriteLine();
                                 foreach (var user in staff)
                                 {
                                     var tenMinutesAgo = DateTime.UtcNow.AddMinutes(-10);
                                     var isOnline = user.LastLogin > tenMinutesAgo;
-                                    this.CommandResult.WriteLine(
+                                    CommandResult.WriteLine(
                                         displayMode,
                                         "{0}{1}{2}",
                                         user.Username,
@@ -162,29 +157,29 @@ namespace Terminal.Domain.Commands.Objects
                             }
                             if (forum)
                             {
-                                var forumStats = _topicRepository.GetForumStats();
-                                int numReplies = _topicRepository.GetTopic(forumStats.MostPopularTopic).Replies.Count();
+                                var forumStats = _dataBucket.TopicRepository.GetForumStats();
+                                int numReplies = _dataBucket.TopicRepository.GetTopic(forumStats.MostPopularTopic).Replies.Count();
 
                                 var displayMode = DisplayMode.DontType;
-                                this.CommandResult.WriteLine(displayMode, "There are {0} total topics.", forumStats.TotalTopics);
-                                this.CommandResult.WriteLine(displayMode, "Topic {0} is the most popular topic with {1} replies.", forumStats.MostPopularTopic, numReplies);
-                                this.CommandResult.WriteLine(displayMode, "{0} topics have been created within the last 24 hours.", forumStats.TopicsInTheLast24Hours);
-                                this.CommandResult.WriteLine(displayMode, "{0} topics have been created within the last week.", forumStats.TopicsInTheLastWeek);
-                                this.CommandResult.WriteLine(displayMode, "{0} topics have been created within the last month.", forumStats.TopicsInTheLastMonth);
-                                this.CommandResult.WriteLine(displayMode, "{0} topics have been created within the last year.", forumStats.TopicsInTheLastYear);
-                                this.CommandResult.WriteLine();
-                                this.CommandResult.WriteLine(displayMode, "There are {0} total posts.", forumStats.TotalPosts);
-                                this.CommandResult.WriteLine(displayMode, "{0} posts have been made within the last 24 hours.", forumStats.PostsInTheLast24Hours);
-                                this.CommandResult.WriteLine(displayMode, "{0} posts have been made within the last week.", forumStats.PostsInTheLastWeek);
-                                this.CommandResult.WriteLine(displayMode, "{0} posts have been made within the last month.", forumStats.PostsInTheLastMonth);
-                                this.CommandResult.WriteLine(displayMode, "{0} posts have been made within the last year.", forumStats.PostsInTheLastYear);
+                                CommandResult.WriteLine(displayMode, "There are {0} total topics.", forumStats.TotalTopics);
+                                CommandResult.WriteLine(displayMode, "Topic {0} is the most popular topic with {1} replies.", forumStats.MostPopularTopic, numReplies);
+                                CommandResult.WriteLine(displayMode, "{0} topics have been created within the last 24 hours.", forumStats.TopicsInTheLast24Hours);
+                                CommandResult.WriteLine(displayMode, "{0} topics have been created within the last week.", forumStats.TopicsInTheLastWeek);
+                                CommandResult.WriteLine(displayMode, "{0} topics have been created within the last month.", forumStats.TopicsInTheLastMonth);
+                                CommandResult.WriteLine(displayMode, "{0} topics have been created within the last year.", forumStats.TopicsInTheLastYear);
+                                CommandResult.WriteLine();
+                                CommandResult.WriteLine(displayMode, "There are {0} total posts.", forumStats.TotalPosts);
+                                CommandResult.WriteLine(displayMode, "{0} posts have been made within the last 24 hours.", forumStats.PostsInTheLast24Hours);
+                                CommandResult.WriteLine(displayMode, "{0} posts have been made within the last week.", forumStats.PostsInTheLastWeek);
+                                CommandResult.WriteLine(displayMode, "{0} posts have been made within the last month.", forumStats.PostsInTheLastMonth);
+                                CommandResult.WriteLine(displayMode, "{0} posts have been made within the last year.", forumStats.PostsInTheLastYear);
                             }
                         }
                     }
                 }
                 catch (OptionException ex)
                 {
-                    this.CommandResult.WriteLine(ex.Message);
+                    CommandResult.WriteLine(ex.Message);
                 }
             }
         }

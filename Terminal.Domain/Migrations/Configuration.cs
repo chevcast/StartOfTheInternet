@@ -4,17 +4,17 @@ namespace Terminal.Domain.Migrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
-    using Terminal.Domain.Entities;
+    using Terminal.Domain.Data.Entities;
     using System.Collections.Generic;
 
-    public sealed class Configuration : DbMigrationsConfiguration<Terminal.Domain.Entities.EntityContainer>
+    public sealed class Configuration : DbMigrationsConfiguration<Terminal.Domain.Data.Entities.EntityContainer>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(Terminal.Domain.Entities.EntityContainer context)
+        protected override void Seed(Terminal.Domain.Data.Entities.EntityContainer context)
         {
             context.Variables.AddOrUpdate(
                 new Variable { Name = "Registration", Value = "Open" }

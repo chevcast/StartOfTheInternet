@@ -5,31 +5,23 @@ using System.Text;
 using Terminal.Domain.Enums;
 using Terminal.Domain.Objects;
 using Terminal.Domain.Commands.Interfaces;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 using Terminal.Domain.Settings;
 using System.IO;
 using Mono.Options;
-using Terminal.Domain.Repositories.Interfaces;
 using Terminal.Domain.ExtensionMethods;
 using Terminal.Domain.Utilities;
+using Terminal.Domain.Data;
 
 namespace Terminal.Domain.Commands.Objects
 {
     public class BOARD : ICommand
     {
-        private IBoardRepository _boardRepository;
-        private ITopicRepository _topicRepository;
-        private IReplyRepository _replyRepository;
+        private IDataBucket _dataBucket;
 
-        public BOARD(
-            IBoardRepository boardRepository,
-            ITopicRepository topicRepository,
-            IReplyRepository replyRepository
-        )
+        public BOARD(IDataBucket dataBucket)
         {
-            _boardRepository = boardRepository;
-            _topicRepository = topicRepository;
-            _replyRepository = replyRepository;
+            _dataBucket = dataBucket;
         }
 
         public CommandResult CommandResult { get; set; }
@@ -80,7 +72,7 @@ namespace Terminal.Domain.Commands.Objects
                 "Refresh the current board.",
                 x => refresh = x != null
             );
-            if (this.CommandResult.IsUserLoggedIn)
+            if (CommandResult.IsUserLoggedIn)
             {
                 options.Add(
                     "nt|newTopic",
@@ -88,7 +80,7 @@ namespace Terminal.Domain.Commands.Objects
                     x => newTopic = x != null
                 );
             }
-            if (this.CommandResult.UserLoggedAndModOrAdmin())
+            if (CommandResult.UserLoggedAndModOrAdmin())
             {
                 options.Add(
                     "mt|modTopic",
@@ -100,7 +92,7 @@ namespace Terminal.Domain.Commands.Objects
                     }
                 );
             }
-            if (this.CommandResult.UserLoggedAndAdmin())
+            if (CommandResult.UserLoggedAndAdmin())
             {
                 options.Add(
                     "l|lock",
@@ -111,7 +103,7 @@ namespace Terminal.Domain.Commands.Objects
 
             if (args == null)
             {
-                this.CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
+                CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
             }
             else
             {
@@ -130,7 +122,7 @@ namespace Terminal.Domain.Commands.Objects
                                 WriteTopics(boardId, page);
                             }
                             else
-                                this.CommandResult.WriteLine("'{0}' is not a valid board ID.", parsedArgs[0]);
+                                CommandResult.WriteLine("'{0}' is not a valid board ID.", parsedArgs[0]);
                         }
                         else if (parsedArgs.Length == 2)
                         {
@@ -144,29 +136,29 @@ namespace Terminal.Domain.Commands.Objects
                                 }
                                 else if (PagingUtility.Shortcuts.Any(x => parsedArgs[1].Is(x)))
                                 {
-                                    var page = PagingUtility.TranslateShortcut(parsedArgs[1], this.CommandResult.CommandContext.CurrentPage);
+                                    var page = PagingUtility.TranslateShortcut(parsedArgs[1], CommandResult.CommandContext.CurrentPage);
                                     WriteTopics(boardId, page);
                                     if (parsedArgs[1].Is("last") || parsedArgs[1].Is("prev"))
-                                        this.CommandResult.ScrollToBottom = false;
+                                        CommandResult.ScrollToBottom = false;
                                 }
                                 else
-                                    this.CommandResult.WriteLine("'{0}' is not a valid page number.", parsedArgs[1]);
+                                    CommandResult.WriteLine("'{0}' is not a valid page number.", parsedArgs[1]);
                             }
                             else
-                                this.CommandResult.WriteLine("'{0}' is not a valid board ID.", parsedArgs[0]);
+                                CommandResult.WriteLine("'{0}' is not a valid board ID.", parsedArgs[0]);
                         }
                         else
-                            this.CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
+                            CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
                     }
                     else
                     {
                         if (showHelp)
                         {
                             HelpUtility.WriteHelpInformation(
-                                this.CommandResult,
-                                this.Name,
-                                this.Parameters,
-                                this.Description,
+                                CommandResult,
+                                Name,
+                                Parameters,
+                                Description,
                                 options
                             );
                         }
@@ -177,61 +169,62 @@ namespace Terminal.Domain.Commands.Objects
                                 if (parsedArgs[0].IsShort())
                                 {
                                     var boardId = parsedArgs[0].ToShort();
-                                    var board = _boardRepository.GetBoard(boardId);
+                                    var board = _dataBucket.BoardRepository.GetBoard(boardId);
                                     if (board != null)
                                     {
-                                        if (!board.Locked || this.CommandResult.CurrentUser.IsModeratorOrAdministrator())
+                                        if (!board.Locked || CommandResult.CurrentUser.IsModeratorOrAdministrator())
                                         {
-                                            if (!board.ModsOnly || this.CommandResult.CurrentUser.IsModeratorOrAdministrator())
+                                            if (!board.ModsOnly || CommandResult.CurrentUser.IsModeratorOrAdministrator())
                                             {
-                                                if (this.CommandResult.CommandContext.PromptData == null)
+                                                if (CommandResult.CommandContext.PromptData == null)
                                                 {
-                                                    this.CommandResult.WriteLine("Create a title for your topic.");
-                                                    this.CommandResult.CommandContext.SetPrompt(this.Name, args, string.Format("{0} NEW TOPIC Title", boardId));
+                                                    CommandResult.WriteLine("Create a title for your topic.");
+                                                    CommandResult.CommandContext.SetPrompt(Name, args, string.Format("{0} NEW TOPIC Title", boardId));
                                                 }
-                                                else if (this.CommandResult.CommandContext.PromptData.Length == 1)
+                                                else if (CommandResult.CommandContext.PromptData.Length == 1)
                                                 {
-                                                    this.CommandResult.WriteLine("Create the body for your topic.");
-                                                    this.CommandResult.CommandContext.SetPrompt(this.Name, args, string.Format("{0} NEW TOPIC Body", boardId));
+                                                    CommandResult.WriteLine("Create the body for your topic.");
+                                                    CommandResult.CommandContext.SetPrompt(Name, args, string.Format("{0} NEW TOPIC Body", boardId));
                                                 }
-                                                else if (this.CommandResult.CommandContext.PromptData.Length == 2)
+                                                else if (CommandResult.CommandContext.PromptData.Length == 2)
                                                 {
                                                     var topic = new Topic
                                                     {
                                                         BoardID = boardId,
-                                                        Title = this.CommandResult.CommandContext.PromptData[0],
+                                                        Title = CommandResult.CommandContext.PromptData[0],
                                                         Body = BBCodeUtility.SimplifyComplexTags(
-                                                            this.CommandResult.CommandContext.PromptData[1],
-                                                            _replyRepository,
-                                                            this.CommandResult.CurrentUser.IsModeratorOrAdministrator()
+                                                            CommandResult.CommandContext.PromptData[1],
+                                                            _dataBucket.ReplyRepository,
+                                                            CommandResult.CurrentUser.IsModeratorOrAdministrator()
                                                         ),
-                                                        Username = this.CommandResult.CurrentUser.Username,
+                                                        Username = CommandResult.CurrentUser.Username,
                                                         PostedDate = DateTime.UtcNow,
                                                         LastEdit = DateTime.UtcNow,
                                                         ModsOnly = modTopic && !board.ModsOnly
                                                     };
-                                                    _topicRepository.AddTopic(topic);
-                                                    this.CommandResult.CommandContext.Restore();
-                                                    var TOPIC = this.AvailableCommands.SingleOrDefault(x => x.Name.Is("TOPIC"));
+                                                    _dataBucket.TopicRepository.AddTopic(topic);
+                                                    _dataBucket.SaveChanges();
+                                                    CommandResult.CommandContext.Restore();
+                                                    var TOPIC = AvailableCommands.SingleOrDefault(x => x.Name.Is("TOPIC"));
                                                     TOPIC.Invoke(new string[] { topic.TopicID.ToString() });
-                                                    this.CommandResult.WriteLine("New topic succesfully posted.");
+                                                    CommandResult.WriteLine("New topic succesfully posted.");
                                                 }
                                             }
                                             else
-                                                this.CommandResult.WriteLine("Board '{0}' is for moderators only.", boardId);
+                                                CommandResult.WriteLine("Board '{0}' is for moderators only.", boardId);
                                         }
                                         else
-                                            this.CommandResult.WriteLine("Board '{0}' is locked. You cannot create topics on this board.", boardId);
+                                            CommandResult.WriteLine("Board '{0}' is locked. You cannot create topics on this board.", boardId);
                                     }
                                     else
-                                        this.CommandResult.WriteLine("There is no board with ID '{0}'.", boardId);
+                                        CommandResult.WriteLine("There is no board with ID '{0}'.", boardId);
 
                                 }
                                 else
-                                    this.CommandResult.WriteLine("'{0}' is not a valid board ID.", parsedArgs[0]);
+                                    CommandResult.WriteLine("'{0}' is not a valid board ID.", parsedArgs[0]);
                             }
                             else
-                                this.CommandResult.WriteLine("You must supply a board ID.");
+                                CommandResult.WriteLine("You must supply a board ID.");
                         }
                         else
                         {
@@ -242,22 +235,23 @@ namespace Terminal.Domain.Commands.Objects
                                     if (parsedArgs[0].IsShort())
                                     {
                                         var boardId = parsedArgs[0].ToShort();
-                                        var board = _boardRepository.GetBoard(boardId);
+                                        var board = _dataBucket.BoardRepository.GetBoard(boardId);
                                         if (board != null)
                                         {
                                             board.Locked = (bool)lockBoard;
-                                            _boardRepository.UpdateBoard(board);
+                                            _dataBucket.BoardRepository.UpdateBoard(board);
+                                            _dataBucket.SaveChanges();
                                             string status = (bool)lockBoard ? "locked" : "unlocked";
-                                            this.CommandResult.WriteLine("Board '{0}' was successfully {1}.", boardId, status);
+                                            CommandResult.WriteLine("Board '{0}' was successfully {1}.", boardId, status);
                                         }
                                         else
-                                            this.CommandResult.WriteLine("There is no board with ID '{0}'.", boardId);
+                                            CommandResult.WriteLine("There is no board with ID '{0}'.", boardId);
                                     }
                                     else
-                                        this.CommandResult.WriteLine("'{0}' is not a valid board ID.", parsedArgs[0]);
+                                        CommandResult.WriteLine("'{0}' is not a valid board ID.", parsedArgs[0]);
                                 }
                                 else
-                                    this.CommandResult.WriteLine("You must supply a board ID.");
+                                    CommandResult.WriteLine("You must supply a board ID.");
                             }
                             if (refresh)
                             {
@@ -266,50 +260,50 @@ namespace Terminal.Domain.Commands.Objects
                                     if (parsedArgs[0].IsShort())
                                     {
                                         var boardId = parsedArgs[0].ToShort();
-                                        WriteTopics(boardId, this.CommandResult.CommandContext.CurrentPage);
+                                        WriteTopics(boardId, CommandResult.CommandContext.CurrentPage);
                                     }
                                     else
-                                        this.CommandResult.WriteLine("'{0}' is not a valid board ID.", parsedArgs[0]);
+                                        CommandResult.WriteLine("'{0}' is not a valid board ID.", parsedArgs[0]);
                                 }
                                 else
-                                    this.CommandResult.WriteLine("You must supply a board ID.");
+                                    CommandResult.WriteLine("You must supply a board ID.");
                             }
                         }
                     }
                 }
                 catch (OptionException ex)
                 {
-                    this.CommandResult.WriteLine(ex.Message);
+                    CommandResult.WriteLine(ex.Message);
                 }
             }
         }
 
         private void WriteTopics(short boardId, int page)
         {
-            var board = _boardRepository.GetBoard(boardId);
+            var board = _dataBucket.BoardRepository.GetBoard(boardId);
             if (board != null)
             {
-                if (!board.ModsOnly || this.CommandResult.UserLoggedAndModOrAdmin())
+                if (!board.ModsOnly || CommandResult.UserLoggedAndModOrAdmin())
                 {
-                    this.CommandResult.ClearScreen = true;
-                    this.CommandResult.ScrollToBottom = true;
-                    var boardPage = _topicRepository.GetTopics(boardId, page, AppSettings.TopicsPerPage, this.CommandResult.UserLoggedAndModOrAdmin());
+                    CommandResult.ClearScreen = true;
+                    CommandResult.ScrollToBottom = true;
+                    var boardPage = _dataBucket.TopicRepository.GetTopics(boardId, page, AppSettings.TopicsPerPage, CommandResult.UserLoggedAndModOrAdmin());
                     if (page > boardPage.TotalPages)
                         page = boardPage.TotalPages;
                     else if (page < 1)
                         page = 1;
-                    this.CommandResult.WriteLine(DisplayMode.Inverted | DisplayMode.DontType, "{{[transmit=BOARD]{0}[/transmit]}} {1}{2}", board.BoardID, board.Locked ? "[LOCKED] " : string.Empty, board.Name);
-                    this.CommandResult.WriteLine();
-                    this.CommandResult.WriteLine(DisplayMode.DontType, "Page {0}/{1}", page, boardPage.TotalPages);
-                    this.CommandResult.WriteLine();
-                    this.CommandResult.WriteLine(DisplayMode.Dim | DisplayMode.DontType, new string('-', AppSettings.DividerLength));
-                    this.CommandResult.WriteLine();
+                    CommandResult.WriteLine(DisplayMode.Inverted | DisplayMode.DontType, "{{[transmit=BOARD]{0}[/transmit]}} {1}{2}", board.BoardID, board.Locked ? "[LOCKED] " : string.Empty, board.Name);
+                    CommandResult.WriteLine();
+                    CommandResult.WriteLine(DisplayMode.DontType, "Page {0}/{1}", page, boardPage.TotalPages);
+                    CommandResult.WriteLine();
+                    CommandResult.WriteLine(DisplayMode.Dim | DisplayMode.DontType, new string('-', AppSettings.DividerLength));
+                    CommandResult.WriteLine();
                     foreach (var topic in boardPage.Items)
                     {
                         var displayMode = DisplayMode.DontType;
                         if ((topic.IsModsOnly() && !board.ModsOnly) || (topic.Board.Hidden && boardId == 0))
                             displayMode |= DisplayMode.Dim;
-                        var replies = topic.GetReplies(this.CommandResult.UserLoggedAndModOrAdmin());
+                        var replies = topic.GetReplies(CommandResult.UserLoggedAndModOrAdmin());
                         var lastReply = replies.LastOrDefault();
                         var status = new StringBuilder();
                         if (topic.Board.Hidden && !board.Hidden)
@@ -321,34 +315,34 @@ namespace Terminal.Domain.Commands.Objects
                         if (topic.Locked)
                             status.Append("[LOCKED] ");
                         string boardNumber = boardId == 0 ? string.Format("{{[transmit=BOARD]{0}[/transmit]}} > ", topic.BoardID) : string.Empty;
-                        this.CommandResult.WriteLine(displayMode, "{0}{{[transmit=TOPIC]{1}[/transmit]}} {2}{3}", boardNumber, topic.TopicID, status, topic.Title);
-                        var topicAuthor = topic.Board.Anonymous && (!this.CommandResult.IsUserLoggedIn || (!this.CommandResult.CurrentUser.IsModeratorOrAdministrator() && topic.Username != this.CommandResult.CurrentUser.Username)) ? "Anon" : topic.Username;
-                        this.CommandResult.WriteLine(displayMode, "   by [transmit=USER]{0}[/transmit] {1} | {2} replies", topicAuthor, topic.PostedDate.TimePassed(), replies.Count());
+                        CommandResult.WriteLine(displayMode, "{0}{{[transmit=TOPIC]{1}[/transmit]}} {2}{3}", boardNumber, topic.TopicID, status, topic.Title);
+                        var topicAuthor = topic.Board.Anonymous && (!CommandResult.IsUserLoggedIn || (!CommandResult.CurrentUser.IsModeratorOrAdministrator() && topic.Username != CommandResult.CurrentUser.Username)) ? "Anon" : topic.Username;
+                        CommandResult.WriteLine(displayMode, "   by [transmit=USER]{0}[/transmit] {1} | {2} replies", topicAuthor, topic.PostedDate.TimePassed(), replies.Count());
                         if (lastReply != null)
                         {
-                            var lastReplyAuthor = topic.Board.Anonymous && (!this.CommandResult.IsUserLoggedIn || (!this.CommandResult.CurrentUser.IsModeratorOrAdministrator() && lastReply.Username != this.CommandResult.CurrentUser.Username)) ? "Anon" : lastReply.Username;
-                            this.CommandResult.WriteLine(displayMode, "   last reply by [transmit=USER]{0}[/transmit] {1}", lastReplyAuthor, lastReply.PostedDate.TimePassed());
+                            var lastReplyAuthor = topic.Board.Anonymous && (!CommandResult.IsUserLoggedIn || (!CommandResult.CurrentUser.IsModeratorOrAdministrator() && lastReply.Username != CommandResult.CurrentUser.Username)) ? "Anon" : lastReply.Username;
+                            CommandResult.WriteLine(displayMode, "   last reply by [transmit=USER]{0}[/transmit] {1}", lastReplyAuthor, lastReply.PostedDate.TimePassed());
                         }
-                        this.CommandResult.WriteLine();
-                        this.CommandResult.WriteLine(DisplayMode.Dim | DisplayMode.DontType, new string('-', AppSettings.DividerLength));
-                        this.CommandResult.WriteLine();
+                        CommandResult.WriteLine();
+                        CommandResult.WriteLine(DisplayMode.Dim | DisplayMode.DontType, new string('-', AppSettings.DividerLength));
+                        CommandResult.WriteLine();
                     }
                     if (boardPage.TotalItems == 0)
                     {
-                        this.CommandResult.WriteLine("There are no topics on this board.");
-                        this.CommandResult.WriteLine();
-                        this.CommandResult.WriteLine(DisplayMode.Dim | DisplayMode.DontType, new string('-', AppSettings.DividerLength));
-                        this.CommandResult.WriteLine();
+                        CommandResult.WriteLine("There are no topics on this board.");
+                        CommandResult.WriteLine();
+                        CommandResult.WriteLine(DisplayMode.Dim | DisplayMode.DontType, new string('-', AppSettings.DividerLength));
+                        CommandResult.WriteLine();
                     }
-                    this.CommandResult.WriteLine(DisplayMode.DontType, "Page {0}/{1}", page, boardPage.TotalPages);
-                    this.CommandResult.CommandContext.CurrentPage = page;
-                    this.CommandResult.CommandContext.Set(ContextStatus.Passive, this.Name, new string[] { boardId.ToString() }, string.Format("{0}", boardId));
+                    CommandResult.WriteLine(DisplayMode.DontType, "Page {0}/{1}", page, boardPage.TotalPages);
+                    CommandResult.CommandContext.CurrentPage = page;
+                    CommandResult.CommandContext.Set(ContextStatus.Passive, Name, new string[] { boardId.ToString() }, string.Format("{0}", boardId));
                 }
                 else
-                    this.CommandResult.WriteLine("Board '{0}' is for moderators only.", boardId);
+                    CommandResult.WriteLine("Board '{0}' is for moderators only.", boardId);
             }
             else
-                this.CommandResult.WriteLine("There is no board with ID '{0}'.", boardId);
+                CommandResult.WriteLine("There is no board with ID '{0}'.", boardId);
         }
     }
 }

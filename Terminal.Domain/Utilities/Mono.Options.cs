@@ -248,7 +248,7 @@ namespace Mono.Options
 
         internal OptionValueCollection(OptionContext c)
         {
-            this.c = c;
+            c = c;
         }
 
         #region ICollection
@@ -344,8 +344,8 @@ namespace Mono.Options
 
         public OptionContext(OptionSet set)
         {
-            this.set = set;
-            this.c = new OptionValueCollection(this);
+            set = set;
+            c = new OptionValueCollection(this);
         }
 
         public Option Option
@@ -406,32 +406,32 @@ namespace Mono.Options
             if (maxValueCount < 0)
                 throw new ArgumentOutOfRangeException("maxValueCount");
 
-            this.prototype = prototype;
-            this.description = description;
-            this.count = maxValueCount;
-            this.names = (this is OptionSet.Category)
+            prototype = prototype;
+            description = description;
+            count = maxValueCount;
+            names = (this is OptionSet.Category)
                 // append GetHashCode() so that "duplicate" categories have distinct
                 // names, e.g. adding multiple "" categories should be valid.
-                ? new[] { prototype + this.GetHashCode() }
+                ? new[] { prototype + GetHashCode() }
                 : prototype.Split('|');
 
             if (this is OptionSet.Category)
                 return;
 
-            this.type = ParsePrototype();
+            type = ParsePrototype();
 
-            if (this.count == 0 && type != OptionValueType.None)
+            if (count == 0 && type != OptionValueType.None)
                 throw new ArgumentException(
                         "Cannot provide maxValueCount of 0 for OptionValueType.Required or " +
                             "OptionValueType.Optional.",
                         "maxValueCount");
-            if (this.type == OptionValueType.None && maxValueCount > 1)
+            if (type == OptionValueType.None && maxValueCount > 1)
                 throw new ArgumentException(
                         string.Format("Cannot provide maxValueCount of {0} for OptionValueType.None.", maxValueCount),
                         "maxValueCount");
             if (Array.IndexOf(names, "<>") >= 0 &&
-                    ((names.Length == 1 && this.type != OptionValueType.None) ||
-                     (names.Length > 1 && this.MaxValueCount > 1)))
+                    ((names.Length == 1 && type != OptionValueType.None) ||
+                     (names.Length > 1 && MaxValueCount > 1)))
                 throw new ArgumentException(
                         "The default option handler '<>' cannot require values.",
                         "prototype");
@@ -517,11 +517,11 @@ namespace Mono.Options
             if (count > 1)
             {
                 if (seps.Count == 0)
-                    this.separators = new string[] { ":", "=" };
+                    separators = new string[] { ":", "=" };
                 else if (seps.Count == 1 && seps[0].Length == 0)
-                    this.separators = null;
+                    separators = null;
                 else
-                    this.separators = seps.ToArray();
+                    separators = seps.ToArray();
             }
 
             return type == '=' ? OptionValueType.Required : OptionValueType.Optional;
@@ -690,24 +690,24 @@ namespace Mono.Options
         public OptionException(string message, string optionName)
             : base(message)
         {
-            this.option = optionName;
+            option = optionName;
         }
 
         public OptionException(string message, string optionName, Exception innerException)
             : base(message, innerException)
         {
-            this.option = optionName;
+            option = optionName;
         }
 
         protected OptionException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            this.option = info.GetString("OptionName");
+            option = info.GetString("OptionName");
         }
 
         public string OptionName
         {
-            get { return this.option; }
+            get { return option; }
         }
 
         [SecurityPermission(SecurityAction.LinkDemand, SerializationFormatter = true)]
@@ -729,8 +729,8 @@ namespace Mono.Options
 
         public OptionSet(Converter<string, string> localizer)
         {
-            this.localizer = localizer;
-            this.roSources = new ReadOnlyCollection<ArgumentSource>(sources);
+            localizer = localizer;
+            roSources = new ReadOnlyCollection<ArgumentSource>(sources);
         }
 
         Converter<string, string> localizer;
@@ -861,7 +861,7 @@ namespace Mono.Options
             {
                 if (action == null)
                     throw new ArgumentNullException("action");
-                this.action = action;
+                action = action;
             }
 
             protected override void OnParseComplete(OptionContext c)
@@ -909,7 +909,7 @@ namespace Mono.Options
             {
                 if (action == null)
                     throw new ArgumentNullException("action");
-                this.action = action;
+                action = action;
             }
 
             protected override void OnParseComplete(OptionContext c)
@@ -927,7 +927,7 @@ namespace Mono.Options
             {
                 if (action == null)
                     throw new ArgumentNullException("action");
-                this.action = action;
+                action = action;
             }
 
             protected override void OnParseComplete(OptionContext c)

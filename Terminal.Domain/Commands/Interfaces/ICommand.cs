@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Terminal.Domain.Objects;
 using Terminal.Domain.Enums;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 
 namespace Terminal.Domain.Commands.Interfaces
 {

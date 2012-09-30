@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Text.RegularExpressions;
-using Terminal.Domain.Repositories.Interfaces;
 using Terminal.Domain.ExtensionMethods;
 using Terminal.Domain.Settings;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 using System.Drawing;
 using System.Net;
 using System.IO;
 using CodeKicker.BBCode;
+using Terminal.Domain.Data.Repositories.Interfaces;
 
 namespace Terminal.Domain.Utilities
 {

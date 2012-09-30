@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 using Terminal.Domain.Enums;
 using Terminal.Domain.ExtensionMethods;
 using Terminal.Domain.Settings;
@@ -19,8 +19,8 @@ namespace Terminal.Domain.Objects
         /// </summary>
         public CommandResult()
         {
-            this.Display = new List<DisplayItem>();
-            this.ScrollToBottom = true;
+            Display = new List<DisplayItem>();
+            ScrollToBottom = true;
         }
 
         /// <summary>
@@ -81,22 +81,22 @@ namespace Terminal.Domain.Objects
 
         public bool IsUserLoggedIn
         {
-            get { return this.CurrentUser != null; }
+            get { return CurrentUser != null; }
         }
 
         public bool UserLoggedAndModOrAdmin()
         {
-            return this.IsUserLoggedIn && (this.CurrentUser.IsModeratorOrAdministrator());
+            return IsUserLoggedIn && (CurrentUser.IsModeratorOrAdministrator());
         }
 
         public bool UserLoggedAndMod()
         {
-            return this.IsUserLoggedIn && (this.CurrentUser.IsModerator);
+            return IsUserLoggedIn && (CurrentUser.IsModerator);
         }
 
         public bool UserLoggedAndAdmin()
         {
-            return this.IsUserLoggedIn && (this.CurrentUser.IsAdministrator);
+            return IsUserLoggedIn && (CurrentUser.IsAdministrator);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Terminal.Domain.Objects
         /// </summary>
         public void WriteLine()
         {
-            this.WriteLine("");
+            WriteLine("");
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Terminal.Domain.Objects
         /// <param name="args">An object or objects to write using format.</param>
         public void WriteLine(string text, params object[] args)
         {
-            this.WriteLine(DisplayMode.None, text, args);
+            WriteLine(DisplayMode.None, text, args);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Terminal.Domain.Objects
         {
             if (args.Length == 0)
                 text = text.Replace("{", "{{").Replace("}", "}}");
-            this.Display.Add(new DisplayItem
+            Display.Add(new DisplayItem
             {
                 Text = string.Format(text, args),
                 DisplayMode = displayMode

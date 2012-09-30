@@ -5,28 +5,26 @@ using System.Text;
 using Terminal.Domain.Enums;
 using Terminal.Domain.Objects;
 using Terminal.Domain.Commands.Interfaces;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 using Terminal.Domain.Settings;
 using System.IO;
 using Mono.Options;
-using Terminal.Domain.Repositories.Interfaces;
 using Terminal.Domain.ExtensionMethods;
 using Terminal.Domain.Utilities;
+using Terminal.Domain.Data;
 
 namespace Terminal.Domain.Commands.Objects
 {
     public class MESSAGE : ICommand
     {
-        private IMessageRepository _messageRepository;
-        private IUserRepository _userRepository;
+        private IDataBucket _dataBucket;
+
+        public MESSAGE(IDataBucket dataBucket)
+        {
+            _dataBucket = dataBucket;
+        }
 
         public IEnumerable<ICommand> AvailableCommands { get; set; }
-
-        public MESSAGE(IMessageRepository messageRepository, IUserRepository userRepository)
-        {
-            _messageRepository = messageRepository;
-            _userRepository = userRepository;
-        }
 
         public CommandResult CommandResult { get; set; }
 
@@ -92,7 +90,7 @@ namespace Terminal.Domain.Commands.Objects
 
             if (args == null)
             {
-                this.CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
+                CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
             }
             else
             {
@@ -110,20 +108,20 @@ namespace Terminal.Domain.Commands.Objects
                                 WriteMessage(messageId);
                             }
                             else
-                                this.CommandResult.WriteLine("'{0}' is not a valid board ID.", parsedArgs[0]);
+                                CommandResult.WriteLine("'{0}' is not a valid board ID.", parsedArgs[0]);
                         }
                         else
-                            this.CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
+                            CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
                     }
                     else
                     {
                         if (showHelp)
                         {
                             HelpUtility.WriteHelpInformation(
-                                this.CommandResult,
-                                this.Name,
-                                this.Parameters,
-                                this.Description,
+                                CommandResult,
+                                Name,
+                                Parameters,
+                                Description,
                                 options
                             );
                         }
@@ -134,46 +132,47 @@ namespace Terminal.Domain.Commands.Objects
                                 if (parsedArgs[0].IsLong())
                                 {
                                     var messageId = parsedArgs[0].ToLong();
-                                    var message = _messageRepository.GetMessage(messageId);
+                                    var message = _dataBucket.MessageRepository.GetMessage(messageId);
                                     if (message != null)
                                     {
-                                        if (message.Recipient.Is(this.CommandResult.CurrentUser.Username))
+                                        if (message.Recipient.Is(CommandResult.CurrentUser.Username))
                                         {
-                                            if (this.CommandResult.CommandContext.PromptData == null)
+                                            if (CommandResult.CommandContext.PromptData == null)
                                             {
-                                                this.CommandResult.WriteLine("Write the body of your message.");
-                                                this.CommandResult.CommandContext.SetPrompt(this.Name, args, string.Format("{0} REPLY Body", messageId));
+                                                CommandResult.WriteLine("Write the body of your message.");
+                                                CommandResult.CommandContext.SetPrompt(Name, args, string.Format("{0} REPLY Body", messageId));
                                             }
-                                            else if (this.CommandResult.CommandContext.PromptData.Length == 1)
+                                            else if (CommandResult.CommandContext.PromptData.Length == 1)
                                             {
-                                                _messageRepository.AddMessage(new Message
+                                                _dataBucket.MessageRepository.AddMessage(new Message
                                                 {
-                                                    Body = this.CommandResult.CommandContext.PromptData[0],
+                                                    Body = CommandResult.CommandContext.PromptData[0],
                                                     RecipientLocked = false,
                                                     SenderLocked = false,
                                                     MessageRead = false,
                                                     Recipient = message.Sender,
-                                                    Sender = this.CommandResult.CurrentUser.Username,
+                                                    Sender = CommandResult.CurrentUser.Username,
                                                     RecipientDeleted = false,
                                                     SenderDeleted = false,
                                                     Subject = string.Format("Re: {0}", message.Subject),
                                                     SentDate = DateTime.UtcNow
                                                 });
-                                                this.CommandResult.WriteLine("Reply sent succesfully.");
-                                                this.CommandResult.CommandContext.Restore();
+                                                _dataBucket.SaveChanges();
+                                                CommandResult.WriteLine("Reply sent succesfully.");
+                                                CommandResult.CommandContext.Restore();
                                             }
                                         }
                                         else
-                                            this.CommandResult.WriteLine("Message '{0}' was not sent to you.", messageId);
+                                            CommandResult.WriteLine("Message '{0}' was not sent to you.", messageId);
                                     }
                                     else
-                                        this.CommandResult.WriteLine("There is no message with ID '{0}'.", messageId);
+                                        CommandResult.WriteLine("There is no message with ID '{0}'.", messageId);
                                 }
                                 else
-                                    this.CommandResult.WriteLine("'{0}' is not a valid message ID.", parsedArgs[0]);
+                                    CommandResult.WriteLine("'{0}' is not a valid message ID.", parsedArgs[0]);
                             }
                             else
-                                this.CommandResult.WriteLine("You must supply a message ID.");
+                                CommandResult.WriteLine("You must supply a message ID.");
                         }
                         else if (delete)
                         {
@@ -182,83 +181,86 @@ namespace Terminal.Domain.Commands.Objects
                                 if (parsedArgs[0].IsLong())
                                 {
                                     var messageId = parsedArgs[0].ToLong();
-                                    var message = _messageRepository.GetMessage(messageId);
+                                    var message = _dataBucket.MessageRepository.GetMessage(messageId);
                                     if (message != null)
                                     {
-                                        if (message.Recipient.Is(this.CommandResult.CurrentUser.Username))
+                                        if (message.Recipient.Is(CommandResult.CurrentUser.Username))
                                         {
                                             if (!message.RecipientLocked)
                                             {
                                                 message.RecipientDeleted = true;
-                                                _messageRepository.UpdateMessage(message);
-                                                this.CommandResult.WriteLine("Message '{0}' deleted successfully.", messageId);
+                                                _dataBucket.MessageRepository.UpdateMessage(message);
+                                                _dataBucket.SaveChanges();
+                                                CommandResult.WriteLine("Message '{0}' deleted successfully.", messageId);
                                             }
                                             else
-                                                this.CommandResult.WriteLine("You have locked message '{0}' and cannot delete it.", messageId);
+                                                CommandResult.WriteLine("You have locked message '{0}' and cannot delete it.", messageId);
                                         }
-                                        else if (message.Sender.Is(this.CommandResult.CurrentUser.Username))
+                                        else if (message.Sender.Is(CommandResult.CurrentUser.Username))
                                         {
                                             if (!message.SenderLocked)
                                             {
                                                 message.SenderDeleted = true;
-                                                _messageRepository.UpdateMessage(message);
-                                                this.CommandResult.WriteLine("Message '{0}' deleted successfully.", messageId);
+                                                _dataBucket.MessageRepository.UpdateMessage(message);
+                                                _dataBucket.SaveChanges();
+                                                CommandResult.WriteLine("Message '{0}' deleted successfully.", messageId);
                                             }
                                             else
-                                                this.CommandResult.WriteLine("You have locked message '{0}' and cannot delete it.", messageId);
+                                                CommandResult.WriteLine("You have locked message '{0}' and cannot delete it.", messageId);
                                         }
                                         else
-                                            this.CommandResult.WriteLine("Message '{0}' does not belong to you.", messageId);
+                                            CommandResult.WriteLine("Message '{0}' does not belong to you.", messageId);
                                     }
                                     else
-                                        this.CommandResult.WriteLine("There is no message with ID '{0}'.", messageId);
+                                        CommandResult.WriteLine("There is no message with ID '{0}'.", messageId);
                                 }
                                 else
-                                    this.CommandResult.WriteLine("'{0}' is not a valid message ID.", parsedArgs[0]);
+                                    CommandResult.WriteLine("'{0}' is not a valid message ID.", parsedArgs[0]);
                             }
                             else
-                                this.CommandResult.WriteLine("You must supply a message ID.");
+                                CommandResult.WriteLine("You must supply a message ID.");
                         }
                         else if (newMessage)
                         {
-                            if (this.CommandResult.CommandContext.PromptData == null)
+                            if (CommandResult.CommandContext.PromptData == null)
                             {
-                                this.CommandResult.WriteLine("Type the name of the recipient.");
-                                this.CommandResult.CommandContext.SetPrompt(this.Name, args, "USERNAME");
+                                CommandResult.WriteLine("Type the name of the recipient.");
+                                CommandResult.CommandContext.SetPrompt(Name, args, "USERNAME");
                             }
-                            else if (this.CommandResult.CommandContext.PromptData.Length == 1)
+                            else if (CommandResult.CommandContext.PromptData.Length == 1)
                             {
-                                var user = _userRepository.GetUser(this.CommandResult.CommandContext.PromptData[0]);
+                                var user = _dataBucket.UserRepository.GetUser(CommandResult.CommandContext.PromptData[0]);
                                 if (user != null)
                                 {
-                                    this.CommandResult.WriteLine("Type the subject of your message.");
-                                    this.CommandResult.CommandContext.SetPrompt(this.Name, args, "SUBJECT");
+                                    CommandResult.WriteLine("Type the subject of your message.");
+                                    CommandResult.CommandContext.SetPrompt(Name, args, "SUBJECT");
                                 }
                                 else
                                 {
-                                    this.CommandResult.WriteLine("'{0}' is not a valid username.", this.CommandResult.CommandContext.PromptData[0]);
-                                    this.CommandResult.WriteLine("Re-type the name of the recipient.");
-                                    this.CommandResult.CommandContext.PromptData = null;
-                                    this.CommandResult.CommandContext.SetPrompt(this.Name, args, "USERNAME");
+                                    CommandResult.WriteLine("'{0}' is not a valid username.", CommandResult.CommandContext.PromptData[0]);
+                                    CommandResult.WriteLine("Re-type the name of the recipient.");
+                                    CommandResult.CommandContext.PromptData = null;
+                                    CommandResult.CommandContext.SetPrompt(Name, args, "USERNAME");
                                 }
                             }
-                            else if (this.CommandResult.CommandContext.PromptData.Length == 2)
+                            else if (CommandResult.CommandContext.PromptData.Length == 2)
                             {
-                                this.CommandResult.WriteLine("Type the body of your message.");
-                                this.CommandResult.CommandContext.SetPrompt(this.Name, args, "BODY");
+                                CommandResult.WriteLine("Type the body of your message.");
+                                CommandResult.CommandContext.SetPrompt(Name, args, "BODY");
                             }
-                            else if (this.CommandResult.CommandContext.PromptData.Length == 3)
+                            else if (CommandResult.CommandContext.PromptData.Length == 3)
                             {
-                                _messageRepository.AddMessage(new Message
+                                _dataBucket.MessageRepository.AddMessage(new Message
                                 {
-                                    Sender = this.CommandResult.CurrentUser.Username,
-                                    Recipient = this.CommandResult.CommandContext.PromptData[0],
-                                    Subject = this.CommandResult.CommandContext.PromptData[1],
-                                    Body = this.CommandResult.CommandContext.PromptData[2],
+                                    Sender = CommandResult.CurrentUser.Username,
+                                    Recipient = CommandResult.CommandContext.PromptData[0],
+                                    Subject = CommandResult.CommandContext.PromptData[1],
+                                    Body = CommandResult.CommandContext.PromptData[2],
                                     SentDate = DateTime.UtcNow
                                 });
-                                this.CommandResult.WriteLine("Message sent succesfully.");
-                                this.CommandResult.CommandContext.Restore();
+                                _dataBucket.SaveChanges();
+                                CommandResult.WriteLine("Message sent succesfully.");
+                                CommandResult.CommandContext.Restore();
                             }
                         }
                         else
@@ -269,70 +271,73 @@ namespace Terminal.Domain.Commands.Objects
                                     if (parsedArgs[0].IsLong())
                                     {
                                         var messageId = parsedArgs[0].ToLong();
-                                        var message = _messageRepository.GetMessage(messageId);
+                                        var message = _dataBucket.MessageRepository.GetMessage(messageId);
                                         if (message != null)
                                         {
-                                            if (message.Recipient.Is(this.CommandResult.CurrentUser.Username))
+                                            if (message.Recipient.Is(CommandResult.CurrentUser.Username))
                                             {
                                                 message.RecipientLocked = (bool)lockMessage;
-                                                _messageRepository.UpdateMessage(message);
-                                                this.CommandResult.WriteLine("Message '{0}' {1} successfully.", messageId, (bool)lockMessage ? "locked" : "unlocked");
+                                                _dataBucket.MessageRepository.UpdateMessage(message);
+                                                _dataBucket.SaveChanges();
+                                                CommandResult.WriteLine("Message '{0}' {1} successfully.", messageId, (bool)lockMessage ? "locked" : "unlocked");
                                             }
-                                            else if (message.Sender.Is(this.CommandResult.CurrentUser.Username))
+                                            else if (message.Sender.Is(CommandResult.CurrentUser.Username))
                                             {
                                                 message.SenderLocked = (bool)lockMessage;
-                                                _messageRepository.UpdateMessage(message);
-                                                this.CommandResult.WriteLine("Message '{0}' {1} successfully.", messageId, (bool)lockMessage ? "locked" : "unlocked");
+                                                _dataBucket.MessageRepository.UpdateMessage(message);
+                                                _dataBucket.SaveChanges();
+                                                CommandResult.WriteLine("Message '{0}' {1} successfully.", messageId, (bool)lockMessage ? "locked" : "unlocked");
                                             }
                                             else
-                                                this.CommandResult.WriteLine("Message '{0}' does not belong to you.", messageId);
+                                                CommandResult.WriteLine("Message '{0}' does not belong to you.", messageId);
                                         }
                                         else
-                                            this.CommandResult.WriteLine("There is no message with ID '{0}'.", messageId);
+                                            CommandResult.WriteLine("There is no message with ID '{0}'.", messageId);
                                     }
                                     else
-                                        this.CommandResult.WriteLine("'{0}' is not a valid message ID.", parsedArgs[0]);
+                                        CommandResult.WriteLine("'{0}' is not a valid message ID.", parsedArgs[0]);
                                 }
                                 else
-                                    this.CommandResult.WriteLine("You must supply a message ID.");
+                                    CommandResult.WriteLine("You must supply a message ID.");
                             }
                     }
                 }
                 catch (OptionException ex)
                 {
-                    this.CommandResult.WriteLine(ex.Message);
+                    CommandResult.WriteLine(ex.Message);
                 }
             }
         }
 
         private void WriteMessage(long messageId)
         {
-            var message = _messageRepository.GetMessage(messageId);
+            var message = _dataBucket.MessageRepository.GetMessage(messageId);
             if (message != null)
             {
-                var isRecipient = message.Recipient.Is(this.CommandResult.CurrentUser.Username);
-                var isSender = message.Sender.Is(this.CommandResult.CurrentUser.Username);
-                if (isRecipient || isSender || this.CommandResult.CurrentUser.IsAdministrator)
+                var isRecipient = message.Recipient.Is(CommandResult.CurrentUser.Username);
+                var isSender = message.Sender.Is(CommandResult.CurrentUser.Username);
+                if (isRecipient || isSender || CommandResult.CurrentUser.IsAdministrator)
                 {
                     var messageLocked = (isRecipient && message.RecipientLocked) || (isSender && message.SenderLocked);
-                    this.CommandResult.WriteLine(DisplayMode.Inverted | DisplayMode.DontType, "{{[transmit=MESSAGE]{0}[/transmit]}} {1}{2}", messageId, messageLocked ? "[LOCKED] " : null, message.Subject);
-                    this.CommandResult.WriteLine(DisplayMode.DontType, "sent to [transmit=USER]{0}[/transmit] from [transmit=USER]{1}[/transmit] on {2}", message.Recipient, message.Sender, message.SentDate);
-                    this.CommandResult.WriteLine();
-                    this.CommandResult.WriteLine(DisplayMode.Parse | DisplayMode.DontType, message.Body);
-                    this.CommandResult.ClearScreen = true;
-                    this.CommandResult.CommandContext.Set(ContextStatus.Passive, this.Name, new string[] { messageId.ToString() }, string.Format("{0}", messageId));
-                    if (message.Recipient.Is(this.CommandResult.CurrentUser.Username))
+                    CommandResult.WriteLine(DisplayMode.Inverted | DisplayMode.DontType, "{{[transmit=MESSAGE]{0}[/transmit]}} {1}{2}", messageId, messageLocked ? "[LOCKED] " : null, message.Subject);
+                    CommandResult.WriteLine(DisplayMode.DontType, "sent to [transmit=USER]{0}[/transmit] from [transmit=USER]{1}[/transmit] on {2}", message.Recipient, message.Sender, message.SentDate);
+                    CommandResult.WriteLine();
+                    CommandResult.WriteLine(DisplayMode.Parse | DisplayMode.DontType, message.Body);
+                    CommandResult.ClearScreen = true;
+                    CommandResult.CommandContext.Set(ContextStatus.Passive, Name, new string[] { messageId.ToString() }, string.Format("{0}", messageId));
+                    if (message.Recipient.Is(CommandResult.CurrentUser.Username))
                     {
                         message.MessageRead = true;
-                        _messageRepository.UpdateMessage(message);
+                        _dataBucket.MessageRepository.UpdateMessage(message);
+                        _dataBucket.SaveChanges();
                     }
-                    this.CommandResult.ScrollToBottom = false;
+                    CommandResult.ScrollToBottom = false;
                 }
                 else
-                    this.CommandResult.WriteLine("Message '{0}' does not belong to you.", messageId);
+                    CommandResult.WriteLine("Message '{0}' does not belong to you.", messageId);
             }
             else
-                this.CommandResult.WriteLine("There is no message with ID '{0}'.", messageId);
+                CommandResult.WriteLine("There is no message with ID '{0}'.", messageId);
         }
     }
 }

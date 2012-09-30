@@ -5,7 +5,7 @@ using System.Text;
 using Terminal.Domain.Enums;
 using Terminal.Domain.Objects;
 using Terminal.Domain.Commands.Interfaces;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 using Terminal.Domain.Settings;
 using System.IO;
 using Mono.Options;
@@ -53,10 +53,10 @@ namespace Terminal.Domain.Commands.Objects
                 x =>
                 {
                     HelpUtility.WriteHelpInformation(
-                        this.CommandResult,
-                        this.Name,
-                        this.Parameters,
-                        this.Description,
+                        CommandResult,
+                        Name,
+                        Parameters,
+                        Description,
                         options
                     );
                 }
@@ -64,33 +64,33 @@ namespace Terminal.Domain.Commands.Objects
 
             if (args == null)
             {
-                if (this.CommandResult.CurrentUser == null)
+                if (CommandResult.CurrentUser == null)
                 {
-                    this.CommandResult.CommandContext.Deactivate();
-                    //this.CommandResult.WriteLine(DisplayMode.DontType | DisplayMode.DontWrap, AppSettings.Logo);
-                    //this.CommandResult.WriteLine();
-                    //this.CommandResult.WriteLine("Type HELP to begin.");
+                    CommandResult.CommandContext.Deactivate();
+                    //CommandResult.WriteLine(DisplayMode.DontType | DisplayMode.DontWrap, AppSettings.Logo);
+                    //CommandResult.WriteLine();
+                    //CommandResult.WriteLine("Type HELP to begin.");
                     var displayMode = DisplayMode.Bold;
-                    this.CommandResult.WriteLine(displayMode, "Wilkommen zu dem Anfang des Internets. Bitte melden Sie sich");
-                    this.CommandResult.WriteLine(displayMode, "an, um fortzufahren.");
-                    this.CommandResult.WriteLine();
-                    this.CommandResult.WriteLine(displayMode, "Bienvenue au début de l'Internet. Veuillez soumettre votre");
-                    this.CommandResult.WriteLine(displayMode, "identification pour continuer.");
-                    this.CommandResult.WriteLine();
-                    this.CommandResult.WriteLine(displayMode, "Welcome to the start of the internet. Please type 'HELP' to continue.");
-                    this.CommandResult.WriteLine();
-                    this.CommandResult.WriteLine(displayMode, "Добро пожаловать в начало интернета. Пожалуйста, войдите,");
-                    this.CommandResult.WriteLine(displayMode, "чтобы продолжить.");
-                    this.CommandResult.WriteLine();
-                    this.CommandResult.WriteLine(displayMode, "Välkommen till början av internet. För att fortsätta, ange dina");
-                    this.CommandResult.WriteLine(displayMode, "inloggningsuppgifter.");
-                    this.CommandResult.WriteLine();
-                    this.CommandResult.WriteLine(displayMode, "インターネットの開始へようこそ。続行するにはログインしてください。");
-                    this.CommandResult.WriteLine();
-                    this.CommandResult.WriteLine(displayMode, "欢迎到互联网的开始。请登录继续。");
+                    CommandResult.WriteLine(displayMode, "Wilkommen zu dem Anfang des Internets. Bitte melden Sie sich");
+                    CommandResult.WriteLine(displayMode, "an, um fortzufahren.");
+                    CommandResult.WriteLine();
+                    CommandResult.WriteLine(displayMode, "Bienvenue au début de l'Internet. Veuillez soumettre votre");
+                    CommandResult.WriteLine(displayMode, "identification pour continuer.");
+                    CommandResult.WriteLine();
+                    CommandResult.WriteLine(displayMode, "Welcome to the start of the internet. Please type 'HELP' to continue.");
+                    CommandResult.WriteLine();
+                    CommandResult.WriteLine(displayMode, "Добро пожаловать в начало интернета. Пожалуйста, войдите,");
+                    CommandResult.WriteLine(displayMode, "чтобы продолжить.");
+                    CommandResult.WriteLine();
+                    CommandResult.WriteLine(displayMode, "Välkommen till början av internet. För att fortsätta, ange dina");
+                    CommandResult.WriteLine(displayMode, "inloggningsuppgifter.");
+                    CommandResult.WriteLine();
+                    CommandResult.WriteLine(displayMode, "インターネットの開始へようこそ。続行するにはログインしてください。");
+                    CommandResult.WriteLine();
+                    CommandResult.WriteLine(displayMode, "欢迎到互联网的开始。请登录继续。");
                     if (DateTime.Now.Month == (int)Month.October)
                     {
-                        this.CommandResult.WriteLine(DisplayMode.DontType | DisplayMode.DontWrap, @"
+                        CommandResult.WriteLine(DisplayMode.DontType | DisplayMode.DontWrap, @"
                           .,'
                        .'`.'
                       .' .'
@@ -106,11 +106,11 @@ namespace Terminal.Domain.Commands.Objects
     `?000b?00bo.   `?P'  `?P'   .od0Pd000P'
       `~?00b?000bo._  .db.  _.od000Pd0P~'
           `~?0b?0b?000b?0Pd0Pd000PdP~'");
-                        this.CommandResult.WriteLine(DisplayMode.Inverted, "                HAPPY HALLOWEEN!                ");
+                        CommandResult.WriteLine(DisplayMode.Inverted, "                HAPPY HALLOWEEN!                ");
                     }
                     else if (DateTime.Now.Month == (int)Month.December)
                     {
-                        this.CommandResult.WriteLine(DisplayMode.DontType | DisplayMode.DontWrap, @"
+                        CommandResult.WriteLine(DisplayMode.DontType | DisplayMode.DontWrap, @"
                             |                         _...._
                          \  _  /                    .::o:::::.
                           (\o/)                    .:::'''':o:.
@@ -132,13 +132,13 @@ namespace Terminal.Domain.Commands.Objects
   ''''|'.'.'.|~~|.*.*.*|     ____|_   =('.')=//   ,------------.      
   jgs |'.'.'.|   ^^^^^^|____|>>>>>>|  ( ~~~ )/   (((((((())))))))   
       ~~~~~~~~         '''''`------'  `w---w`     `------------'");
-                        this.CommandResult.WriteLine(DisplayMode.Inverted, "                                HAPPY HOLIDAYS!                                ");
+                        CommandResult.WriteLine(DisplayMode.Inverted, "                                HAPPY HOLIDAYS!                                ");
                     }
-                    //this.CommandResult.WriteLine();
-                    //this.CommandResult.WriteLine("Type 'HELP' to begin.");
+                    //CommandResult.WriteLine();
+                    //CommandResult.WriteLine("Type 'HELP' to begin.");
                 }
                 else
-                    this.CommandResult.WriteLine("You are currently logged in as {0}.", this.CommandResult.CurrentUser.Username);
+                    CommandResult.WriteLine("You are currently logged in as {0}.", CommandResult.CurrentUser.Username);
             }
             else
                 try
@@ -147,7 +147,7 @@ namespace Terminal.Domain.Commands.Objects
                 }
                 catch (OptionException ex)
                 {
-                    this.CommandResult.WriteLine(ex.Message);
+                    CommandResult.WriteLine(ex.Message);
                 }
         }
     }

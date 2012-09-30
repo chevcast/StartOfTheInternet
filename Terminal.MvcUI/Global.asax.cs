@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Terminal.Domain.Settings;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 using System.Configuration;
 using System.Data.Entity;
 

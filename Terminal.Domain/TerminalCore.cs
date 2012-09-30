@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 using Terminal.Domain.Objects;
 using Terminal.Domain.Utilities;
 using Terminal.Domain.Enums;
@@ -12,10 +12,10 @@ using Terminal.Domain.Commands.Objects;
 using Terminal.Domain.ExtensionMethods;
 using System.IO;
 using Mono.Options;
-using Terminal.Domain.Repositories.Interfaces;
 using System.Web;
 using Terminal.Domain.Settings;
 using CodeKicker.BBCode;
+using Terminal.Domain.Data;
 
 namespace Terminal.Domain
 {
@@ -30,9 +30,7 @@ namespace Terminal.Domain
         #region Fields & Properties
 
         private List<ICommand> _commands;
-        private IUserRepository _userRepository;
-        private IAliasRepository _aliasRepository;
-        private IMessageRepository _messageRepository;
+        private IDataBucket _dataBucket;
         private List<Alias> defaultAliases = new List<Alias>
         {
             new Alias { Shortcut = "b", Command = "BOARD" },
@@ -67,7 +65,7 @@ namespace Terminal.Domain
             }
             set
             {
-                _currentUser = value != null ? _userRepository.GetUser(value) : null;
+                _currentUser = value != null ? _dataBucket.UserRepository.GetUser(value) : null;
             }
         }
 
@@ -82,7 +80,8 @@ namespace Terminal.Domain
                 if (_currentUser != null)
                 {
                     _currentUser.IPAddress = value;
-                    _userRepository.UpdateUser(_currentUser);
+                    _dataBucket.UserRepository.UpdateUser(_currentUser);
+                    _dataBucket.SaveChanges();
                 }
                 _ipAddress = value;
             }
@@ -123,18 +122,11 @@ namespace Terminal.Domain
         /// </summary>
         /// <param name="commands">A list of all commands available to the application.</param>
         /// <param name="userRepository">The user repository used to retrieve the current user from the database.</param>
-        public TerminalCore(
-            List<ICommand> commands,
-            IUserRepository userRepository,
-            IAliasRepository aliasRepository,
-            IMessageRepository messageRepository
-        )
+        public TerminalCore(List<ICommand> commands, IDataBucket dataBucket)
         {
             _commands = commands;
-            _userRepository = userRepository;
-            _aliasRepository = aliasRepository;
-            _messageRepository = messageRepository;
-            this._commandContext = new CommandContext();
+            _dataBucket = dataBucket;
+            _commandContext = new CommandContext();
         }
 
         #endregion
@@ -160,7 +152,8 @@ namespace Terminal.Domain
             if (_currentUser != null)
             {
                 _currentUser.LastLogin = DateTime.UtcNow;
-                _userRepository.UpdateUser(_currentUser);
+                _dataBucket.UserRepository.UpdateUser(_currentUser);
+                _dataBucket.SaveChanges();
             }
 
             // Check for alias. Replace command name with alias.
@@ -168,7 +161,7 @@ namespace Terminal.Domain
             {
                 var alias = defaultAliases.SingleOrDefault(x => x.Shortcut.Is(commandName));
                 if (_currentUser != null)    
-                    alias = _aliasRepository.GetAlias(_currentUser.Username, commandName);
+                    alias = _dataBucket.AliasRepository.GetAlias(_currentUser.Username, commandName);
                 if (alias != null)
                 {
                     commandString = hasSpace ? alias.Command + commandString.Remove(0, spaceIndex) : alias.Command;
@@ -193,7 +186,7 @@ namespace Terminal.Domain
             {
                 Command = commandName.ToUpper(),
                 CurrentUser = _currentUser,
-                CommandContext = this._commandContext,
+                CommandContext = _commandContext,
                 IPAddress = _ipAddress
             };
 
@@ -213,18 +206,19 @@ namespace Terminal.Domain
                     return BanMessage(commandResult);
                 else
                 {
-                    _userRepository.UnbanUser(_currentUser.Username);
-                    _userRepository.UpdateUser(_currentUser);
+                    _dataBucket.UserRepository.UnbanUser(_currentUser.Username);
+                    _dataBucket.UserRepository.UpdateUser(_currentUser);
+                    _dataBucket.SaveChanges();
                 }
 
             // Obtain the command the user intends to execute from the list of available commands.
             var command = commands.SingleOrDefault(x => x.Name.Is(commandName));
 
             if (commandName.Is("INITIALIZE"))
-                this._commandContext.Deactivate();
+                _commandContext.Deactivate();
 
             // Perform different behaviors based on the current command context.
-            switch (this._commandContext.Status)
+            switch (_commandContext.Status)
             {
                 // Perform normal command execution.
                 case ContextStatus.Disabled:
@@ -245,12 +239,12 @@ namespace Terminal.Domain
                     }
                     else if (!commandName.Is("HELP"))
                     {
-                        command = commands.SingleOrDefault(x => x.Name.Is(this._commandContext.Command));
+                        command = commands.SingleOrDefault(x => x.Name.Is(_commandContext.Command));
                         if (command != null)
                         {
                             args = commandString.Contains(' ') ? commandString.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries) : new string[] { commandString };
                             var newArgs = new List<string>();
-                            if (this._commandContext.Args != null) newArgs.AddRange(this._commandContext.Args);
+                            if (_commandContext.Args != null) newArgs.AddRange(_commandContext.Args);
                             newArgs.AddRange(args);
                             command.CommandResult.Command = command.Name;
                             command.Invoke(newArgs.ToArray());
@@ -263,24 +257,24 @@ namespace Terminal.Domain
                 case ContextStatus.Forced:
                     if (!commandName.Is("CANCEL"))
                     {
-                        command = commands.SingleOrDefault(x => x.Name.Is(this._commandContext.Command));
+                        command = commands.SingleOrDefault(x => x.Name.Is(_commandContext.Command));
                         if (command != null)
                         {
                             command.CommandResult.Command = command.Name;
-                            if (this._commandContext.Prompt)
+                            if (_commandContext.Prompt)
                             {
                                 var newStrings = new List<string>();
-                                if (this._commandContext.PromptData != null)
-                                    newStrings.AddRange(this._commandContext.PromptData);
+                                if (_commandContext.PromptData != null)
+                                    newStrings.AddRange(_commandContext.PromptData);
                                 newStrings.Add(commandString);
-                                this._commandContext.PromptData = newStrings.ToArray();
-                                command.Invoke(this._commandContext.Args);
+                                _commandContext.PromptData = newStrings.ToArray();
+                                command.Invoke(_commandContext.Args);
                             }
                             else
                             {
                                 args = commandString.Contains(' ') ? commandString.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries) : new string[] { commandString };
                                 var newArgs = new List<string>();
-                                if (this._commandContext.Args != null) newArgs.AddRange(this._commandContext.Args);
+                                if (_commandContext.Args != null) newArgs.AddRange(_commandContext.Args);
                                 newArgs.AddRange(args);
                                 args = newArgs.ToArray();
                                 command.Invoke(args);
@@ -314,14 +308,15 @@ namespace Terminal.Domain
                     return BanMessage(commandResult);
                 else
                 {
-                    _userRepository.UnbanUser(_currentUser.Username);
-                    _userRepository.UpdateUser(_currentUser);
+                    _dataBucket.UserRepository.UnbanUser(_currentUser.Username);
+                    _dataBucket.UserRepository.UpdateUser(_currentUser);
+                    _dataBucket.SaveChanges();
                 }
 
             // Temporarily notify of messages on each command execution.
             if (_currentUser != null)
             {
-                var unreadMessageCount = _messageRepository.UnreadMessages(_currentUser.Username);
+                var unreadMessageCount = _dataBucket.MessageRepository.UnreadMessages(_currentUser.Username);
                 if (unreadMessageCount > 0)
                 {
                     commandResult.WriteLine();
@@ -394,7 +389,7 @@ namespace Terminal.Domain
                     commandResult.WriteLine();
                     var aliases = defaultAliases;
                     if (_currentUser != null)
-                        aliases = _aliasRepository.GetAliases(_currentUser.Username).ToList();
+                        aliases = _dataBucket.AliasRepository.GetAliases(_currentUser.Username).ToList();
                     if (aliases.Count() > 0)
                     {
                         if (_currentUser != null)

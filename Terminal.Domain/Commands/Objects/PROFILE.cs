@@ -5,11 +5,10 @@ using System.Text;
 using Terminal.Domain.Enums;
 using Terminal.Domain.Objects;
 using Terminal.Domain.Commands.Interfaces;
-using Terminal.Domain.Entities;
+using Terminal.Domain.Data.Entities;
 using Terminal.Domain.Settings;
 using System.IO;
 using Mono.Options;
-using Terminal.Domain.Repositories.Interfaces;
 using Terminal.Domain.ExtensionMethods;
 using Terminal.Domain.Utilities;
 
@@ -17,11 +16,6 @@ namespace Terminal.Domain.Commands.Objects
 {
     public class PROFILE : ICommand
     {
-        public PROFILE()
-        {
-            
-        }
-
         public CommandResult CommandResult { get; set; }
 
         public IEnumerable<ICommand> AvailableCommands { get; set; }
@@ -76,7 +70,7 @@ namespace Terminal.Domain.Commands.Objects
 
             if (args == null)
             {
-                this.CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
+                CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
             }
             else
             {
@@ -86,40 +80,40 @@ namespace Terminal.Domain.Commands.Objects
 
                     if (parsedArgs.Length == args.Length)
                     {
-                        this.CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
+                        CommandResult.WriteLine(DisplayTemplates.InvalidArguments);
                     }
                     else
                     {
                         if (showHelp)
                         {
                             HelpUtility.WriteHelpInformation(
-                                this.CommandResult,
-                                this.Name,
-                                this.Parameters,
-                                this.Description,
+                                CommandResult,
+                                Name,
+                                Parameters,
+                                Description,
                                 options
                             );
                         }
                         else if (showInvites)
                         {
-                            this.CommandResult.ClearScreen = true;
-                            var inviteCodes = this.CommandResult.CurrentUser.InviteCodes;
+                            CommandResult.ClearScreen = true;
+                            var inviteCodes = CommandResult.CurrentUser.InviteCodes;
                             foreach (var inviteCode in inviteCodes)
-                                this.CommandResult.WriteLine(DisplayMode.DontType, inviteCode.Code);
-                            this.CommandResult.WriteLine();
-                            this.CommandResult.WriteLine("You have {0} invite codes available", inviteCodes.Count);
-                            this.CommandResult.WriteLine();
+                                CommandResult.WriteLine(DisplayMode.DontType, inviteCode.Code);
+                            CommandResult.WriteLine();
+                            CommandResult.WriteLine("You have {0} invite codes available", inviteCodes.Count);
+                            CommandResult.WriteLine();
                         }
                         else if (showCredits)
                         {
-                            this.CommandResult.WriteLine("Total credits available: {0}", this.CommandResult.CurrentUser.Credits);
-                            this.CommandResult.WriteLine();
+                            CommandResult.WriteLine("Total credits available: {0}", CommandResult.CurrentUser.Credits);
+                            CommandResult.WriteLine();
                         }
                     }
                 }
                 catch (OptionException ex)
                 {
-                    this.CommandResult.WriteLine(ex.Message);
+                    CommandResult.WriteLine(ex.Message);
                 }
             }
         }
