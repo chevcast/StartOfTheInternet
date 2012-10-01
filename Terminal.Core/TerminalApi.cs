@@ -414,7 +414,7 @@ namespace Terminal.Core
 
         private CommandResult BanMessage(CommandResult commandResult)
         {
-            commandResult.Display.Clear();
+            commandResult.DisplayItems.Clear();
             commandResult.WriteLine("You were banned by {0}.", _currentUser.BanInfo.Creator);
             commandResult.WriteLine();
             commandResult.WriteLine("Reason: {0}", _currentUser.BanInfo.Reason);
@@ -426,7 +426,7 @@ namespace Terminal.Core
 
         private void FinalParsing(CommandResult commandResult)
         {
-            foreach (var displayItem in commandResult.Display)
+            foreach (var displayItem in commandResult.DisplayItems)
             {
                 if (_currentUser != null && !_currentUser.Sound)
                     displayItem.DisplayMode |= DisplayMode.Mute;

@@ -19,7 +19,7 @@ namespace Terminal.Core.Objects
         /// </summary>
         public CommandResult()
         {
-            Display = new List<DisplayItem>();
+            DisplayItems = new List<DisplayItem>();
             ScrollToBottom = true;
         }
 
@@ -75,7 +75,7 @@ namespace Terminal.Core.Objects
         /// string - should output directly to terminal.
         /// int - should pause for a specified time.
         /// </summary>
-        public List<DisplayItem> Display { get; set; }
+        public List<DisplayItem> DisplayItems { get; set; }
 
         #region Shortcut Methods
 
@@ -127,7 +127,7 @@ namespace Terminal.Core.Objects
         {
             if (args.Length == 0)
                 text = text.Replace("{", "{{").Replace("}", "}}");
-            Display.Add(new DisplayItem
+            DisplayItems.Add(new DisplayItem
             {
                 Text = string.Format(text, args),
                 DisplayMode = displayMode

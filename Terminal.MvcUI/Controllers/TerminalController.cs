@@ -51,7 +51,7 @@ namespace Terminal.MvcUI.Controllers
             }
 
             var display = new StringBuilder();
-            foreach (var displayItem in commandResult.Display)
+            foreach (var displayItem in commandResult.DisplayItems)
             {
                 display.Append(displayItem.Text);
                 display.Append("<br />");

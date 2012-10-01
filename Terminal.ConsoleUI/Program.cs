@@ -211,11 +211,11 @@ namespace Terminal.ConsoleUI
             Console.Title = commandResult.TerminalTitle;
 
             // Add a blank line to the console before displaying results.
-            if (commandResult.Display.Count > 0)
+            if (commandResult.DisplayItems.Count > 0)
                 Console.WriteLine();
 
             // Iterate over the display collection and perform relevant display actions based on the type of the object.
-            foreach (var displayInstruction in commandResult.Display)
+            foreach (var displayInstruction in commandResult.DisplayItems)
                 Display(displayInstruction);
 
             if (!commandResult.EditText.IsNullOrEmpty())

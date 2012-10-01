@@ -54,7 +54,7 @@ namespace Terminal.MvcUI.Controllers
             }
 
             var displayItems = new List<ApiDisplayItem>();
-            commandResult.Display.ForEach(x => displayItems.Add(new ApiDisplayItem
+            commandResult.DisplayItems.ForEach(x => displayItems.Add(new ApiDisplayItem
             {
                 Text = x.Text,
                 Bold = (x.DisplayMode & DisplayMode.Bold) != 0,
