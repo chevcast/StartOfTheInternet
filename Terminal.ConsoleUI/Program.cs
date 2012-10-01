@@ -44,8 +44,10 @@ namespace Terminal.ConsoleUI
         /// <param name="args">Arguments supplied from the command prompt when initializing this application.</param>
         static void Main(string[] args)
         {
+            // Setup some initial configuration settings for the console.
             SetupConsole();
 
+            // Enter program loop and await user input.
             while (_appRunning)
             {
                 Console.WriteLine();
@@ -196,7 +198,8 @@ namespace Terminal.ConsoleUI
         /// <param name="commandResult">The command result returned by the terminal core.</param>
         private static void InterpretResult(CommandResult commandResult)
         {
-            // Set the terminal core command context to the one returned in the result.
+            // Set the terminal core command context to the one returned in the result so that it can be passed
+            // in again on the next API request. This maintains certain state information.
             _commandContext = commandResult.CommandContext;
 
             // If the result calls for the screen to be cleared, clear it.
