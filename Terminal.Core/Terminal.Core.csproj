@@ -137,6 +137,10 @@
     <Compile Include="Data\Entities\Migrations\201210011406320_initial-create.Designer.cs">
       <DependentUpon>201210011406320_initial-create.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\Entities\Migrations\201210011420340_channel-status-entity.cs" />
+    <Compile Include="Data\Entities\Migrations\201210011420340_channel-status-entity.Designer.cs">
+      <DependentUpon>201210011420340_channel-status-entity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\Entities\Reply.cs" />
     <Compile Include="Data\Entities\Role.cs" />
     <Compile Include="Data\Entities\Tag.cs" />
@@ -247,6 +251,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Data\Entities\Migrations\201210011406320_initial-create.resx">
       <DependentUpon>201210011406320_initial-create.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\Entities\Migrations\201210011420340_channel-status-entity.resx">
+      <DependentUpon>201210011420340_channel-status-entity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
