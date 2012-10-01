@@ -136,7 +136,6 @@
       <DependentUpon>201203020443380_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\Entities\Migrations\Configuration.cs" />
-    <Compile Include="Ninject\ScopeExtensions.cs" />
     <Compile Include="Objects\ApiDisplayItem.cs" />
     <Compile Include="Objects\ApiResult.cs" />
     <Compile Include="Objects\CollectionPage.cs" />
@@ -176,7 +175,6 @@
     <Compile Include="Data\Repositories\Objects\ReplyRepository.cs" />
     <Compile Include="Data\Repositories\Objects\TopicRepository.cs" />
     <Compile Include="Data\Repositories\Objects\UserRepository.cs" />
-    <Compile Include="Settings\RegularExpressions.cs" />
     <Compile Include="Utilities\BBCodeUtility.cs" />
     <Compile Include="Utilities\HelpUtility.cs" />
     <Compile Include="Utilities\Mono.Options.cs" />
@@ -187,7 +185,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="App_Code\BBCodeTags.cshtml" />
     <Compile Include="Data\Entities\EntityContainer.cs" />
     <None Include="packages.config" />

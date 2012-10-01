@@ -39,7 +39,7 @@ namespace Terminal.MvcUI.Controllers
             _terminalApi.Username = User.Identity.IsAuthenticated ? User.Identity.Name : null;
             _terminalApi.IPAddress = Request.UserHostAddress;
             _terminalApi.CommandContext = commandContext;
-            _terminalApi.ParseAsHtml = true;//parseAsHtml;
+            _terminalApi.ParseAsHtml = parseAsHtml;
             var commandResult = _terminalApi.ExecuteCommand(cli);
 
             if (User.Identity.IsAuthenticated)

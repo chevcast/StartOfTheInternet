@@ -1,14 +1,8 @@
-﻿using System;
+﻿using Mono.Options;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Terminal.Core.Enums;
-using Terminal.Core.Objects;
 using Terminal.Core.Commands.Interfaces;
-using Terminal.Core.Data.Entities;
+using Terminal.Core.Objects;
 using Terminal.Core.Settings;
-using System.IO;
-using Mono.Options;
 using Terminal.Core.Utilities;
 
 namespace Terminal.Core.Commands.Objects

@@ -57,22 +57,6 @@ namespace Terminal.Core.Settings
             get { return 15; }
         }
 
-        /// <summary>
-        /// The number of links to display per page.
-        /// </summary>
-        public static int LinksPerPage
-        {
-            get { return 50; }
-        }
-
-        /// <summary>
-        /// The number of link comments to display per page.
-        /// </summary>
-        public static int LinkCommentsPerPage
-        {
-            get { return 15; }
-        }
-
         public static int MessagesPerPage
         {
             get { return 15; }

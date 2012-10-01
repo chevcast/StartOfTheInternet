@@ -129,29 +129,6 @@ namespace Terminal.Core.Utilities
         #region Private Methods
 
         /// <summary>
-        /// Match all tags in the text with a regular expression.
-        /// </summary>
-        /// <param name="input">The text to be matched against.</param>
-        /// <param name="handleTags">A function to interpret and transform tags.</param>
-        /// <returns>Text with transformed tags.</returns>
-        private static string TransformTags(string input, Func<string, string, string, string> handleTags)
-        {
-            var regexOptions = RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline;
-            input = Regex.Replace(input, RegularExpressions.BBCodeTags, new MatchEvaluator(match =>
-            {
-                var originalText = match.Groups[0].Value;
-                var tag = match.Groups[1].Value;
-                var optionalValue = match.Groups[2].Value;
-                var content = match.Groups[3].Value;
-                content = TransformTags(content, handleTags);
-                content = handleTags(content, optionalValue, tag) ?? originalText;
-                return content;
-            }), regexOptions);
-
-            return input;
-        }
-
-        /// <summary>
         /// Checks if a string begins with http. If not, it adds it.
         /// </summary>
         /// <param name="url">The URL to check.</param>
