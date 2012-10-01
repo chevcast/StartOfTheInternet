@@ -99,17 +99,17 @@ namespace Terminal.ConsoleUI
             Console.ForegroundColor = _foregroundColor;
             Console.BackgroundColor = _backgroundColor;
             Console.Clear();
-            if (Properties.Settings.Default.FirstLoad)
-            {
-                Console.WriteLine("Connecting...");
-                SoundPlayer dialUp = new SoundPlayer(Assembly.GetExecutingAssembly()
-                    .GetManifestResourceStream("Terminal.ConsoleUI.dialup.wav"));
-                dialUp.PlaySync();
-                Console.WriteLine("Connection established.");
-                Console.WriteLine();
-                Properties.Settings.Default.FirstLoad = false;
-                Properties.Settings.Default.Save();
-            }
+            //if (Properties.Settings.Default.FirstLoad)
+            //{
+            //    Console.WriteLine("Connecting...");
+            //    SoundPlayer dialUp = new SoundPlayer(Assembly.GetExecutingAssembly()
+            //        .GetManifestResourceStream("Terminal.ConsoleUI.dialup.wav"));
+            //    dialUp.PlaySync();
+            //    Console.WriteLine("Connection established.");
+            //    Console.WriteLine();
+            //    Properties.Settings.Default.FirstLoad = false;
+            //    Properties.Settings.Default.Save();
+            //}
             int width = Convert.ToInt32(Console.LargestWindowWidth * .75);
             int height = Convert.ToInt32(Console.LargestWindowHeight * .75);
             Console.SetWindowSize(width, height);
