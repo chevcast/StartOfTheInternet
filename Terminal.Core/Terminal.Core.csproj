@@ -133,6 +133,10 @@
     <Compile Include="Data\Entities\LUEser.cs" />
     <Compile Include="Data\Entities\MadlipTemplate.cs" />
     <Compile Include="Data\Entities\Message.cs" />
+    <Compile Include="Data\Entities\Migrations\201210011406320_initial-create.cs" />
+    <Compile Include="Data\Entities\Migrations\201210011406320_initial-create.Designer.cs">
+      <DependentUpon>201210011406320_initial-create.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\Entities\Reply.cs" />
     <Compile Include="Data\Entities\Role.cs" />
     <Compile Include="Data\Entities\Tag.cs" />
@@ -150,10 +154,6 @@
     <Compile Include="ExtensionMethods\GenericExtensions.cs" />
     <Compile Include="ExtensionMethods\ListExtentions.cs" />
     <Compile Include="ExtensionMethods\IntExtensions.cs" />
-    <Compile Include="Data\Entities\Migrations\201203020443380_InitialCreate.cs" />
-    <Compile Include="Data\Entities\Migrations\201203020443380_InitialCreate.Designer.cs">
-      <DependentUpon>201203020443380_InitialCreate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Data\Entities\Migrations\Configuration.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Objects\ApiDisplayItem.cs" />
@@ -243,6 +243,11 @@
     <Content Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Entities\Migrations\201210011406320_initial-create.resx">
+      <DependentUpon>201210011406320_initial-create.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

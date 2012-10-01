@@ -11,6 +11,7 @@ namespace Terminal.Core.Data.Entities.Migrations
     {
         public Configuration()
         {
+            this.MigrationsDirectory = @"Data\Entities\Migrations";
             AutomaticMigrationsEnabled = false;
         }
 

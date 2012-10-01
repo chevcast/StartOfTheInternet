@@ -1,13 +1,14 @@
 namespace Terminal.Core.Data.Entities.Migrations
 {
+    using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialCreate : DbMigration
+    public partial class initialcreate : DbMigration
     {
         public override void Up()
         {
             CreateTable(
-                "Aliases",
+                "dbo.Aliases",
                 c => new
                     {
                         Username = c.String(nullable: false, maxLength: 128),
@@ -15,11 +16,11 @@ namespace Terminal.Core.Data.Entities.Migrations
                         Command = c.String(),
                     })
                 .PrimaryKey(t => new { t.Username, t.Shortcut })
-                .ForeignKey("Users", t => t.Username, cascadeDelete: true)
+                .ForeignKey("dbo.Users", t => t.Username, cascadeDelete: true)
                 .Index(t => t.Username);
             
             CreateTable(
-                "Users",
+                "dbo.Users",
                 c => new
                     {
                         Username = c.String(nullable: false, maxLength: 128),
@@ -44,11 +45,11 @@ namespace Terminal.Core.Data.Entities.Migrations
                         BanInfo_Username = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Username)
-                .ForeignKey("Bans", t => t.BanInfo_Username)
+                .ForeignKey("dbo.Bans", t => t.BanInfo_Username)
                 .Index(t => t.BanInfo_Username);
             
             CreateTable(
-                "Bans",
+                "dbo.Bans",
                 c => new
                     {
                         Username = c.String(nullable: false, maxLength: 128),
@@ -61,15 +62,15 @@ namespace Terminal.Core.Data.Entities.Migrations
                         User_Username1 = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Username)
-                .ForeignKey("Users", t => t.User_Username)
-                .ForeignKey("Users", t => t.BanCreator_Username)
-                .ForeignKey("Users", t => t.User_Username1)
+                .ForeignKey("dbo.Users", t => t.User_Username)
+                .ForeignKey("dbo.Users", t => t.BanCreator_Username)
+                .ForeignKey("dbo.Users", t => t.User_Username1)
                 .Index(t => t.User_Username)
                 .Index(t => t.BanCreator_Username)
                 .Index(t => t.User_Username1);
             
             CreateTable(
-                "Ignores",
+                "dbo.Ignores",
                 c => new
                     {
                         IgnoreID = c.Long(nullable: false, identity: true),
@@ -81,28 +82,28 @@ namespace Terminal.Core.Data.Entities.Migrations
                         User_Username2 = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.IgnoreID)
-                .ForeignKey("Users", t => t.User_Username)
-                .ForeignKey("Users", t => t.Ignores_Username)
-                .ForeignKey("Users", t => t.User_Username1)
-                .ForeignKey("Users", t => t.User_Username2)
+                .ForeignKey("dbo.Users", t => t.User_Username)
+                .ForeignKey("dbo.Users", t => t.Ignores_Username)
+                .ForeignKey("dbo.Users", t => t.User_Username1)
+                .ForeignKey("dbo.Users", t => t.User_Username2)
                 .Index(t => t.User_Username)
                 .Index(t => t.Ignores_Username)
                 .Index(t => t.User_Username1)
                 .Index(t => t.User_Username2);
             
             CreateTable(
-                "InviteCodes",
+                "dbo.InviteCodes",
                 c => new
                     {
                         Code = c.String(nullable: false, maxLength: 128),
                         Username = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Code)
-                .ForeignKey("Users", t => t.Username)
+                .ForeignKey("dbo.Users", t => t.Username)
                 .Index(t => t.Username);
             
             CreateTable(
-                "LinkClicks",
+                "dbo.LinkClicks",
                 c => new
                     {
                         LinkID = c.Long(nullable: false),
@@ -110,13 +111,13 @@ namespace Terminal.Core.Data.Entities.Migrations
                         Count = c.Long(nullable: false),
                     })
                 .PrimaryKey(t => new { t.LinkID, t.Username })
-                .ForeignKey("Links", t => t.LinkID, cascadeDelete: true)
-                .ForeignKey("Users", t => t.Username, cascadeDelete: true)
+                .ForeignKey("dbo.Links", t => t.LinkID, cascadeDelete: true)
+                .ForeignKey("dbo.Users", t => t.Username, cascadeDelete: true)
                 .Index(t => t.LinkID)
                 .Index(t => t.Username);
             
             CreateTable(
-                "Links",
+                "dbo.Links",
                 c => new
                     {
                         LinkID = c.Long(nullable: false, identity: true),
@@ -127,11 +128,11 @@ namespace Terminal.Core.Data.Entities.Migrations
                         Title = c.String(),
                     })
                 .PrimaryKey(t => t.LinkID)
-                .ForeignKey("Users", t => t.Username)
+                .ForeignKey("dbo.Users", t => t.Username)
                 .Index(t => t.Username);
             
             CreateTable(
-                "LinkComments",
+                "dbo.LinkComments",
                 c => new
                     {
                         CommentID = c.Int(nullable: false, identity: true),
@@ -141,13 +142,13 @@ namespace Terminal.Core.Data.Entities.Migrations
                         Body = c.String(),
                     })
                 .PrimaryKey(t => t.CommentID)
-                .ForeignKey("Links", t => t.LinkID, cascadeDelete: true)
-                .ForeignKey("Users", t => t.Username)
+                .ForeignKey("dbo.Links", t => t.LinkID, cascadeDelete: true)
+                .ForeignKey("dbo.Users", t => t.Username)
                 .Index(t => t.LinkID)
                 .Index(t => t.Username);
             
             CreateTable(
-                "LinkVotes",
+                "dbo.LinkVotes",
                 c => new
                     {
                         LinkID = c.Long(nullable: false),
@@ -155,13 +156,13 @@ namespace Terminal.Core.Data.Entities.Migrations
                         Rating = c.Short(nullable: false),
                     })
                 .PrimaryKey(t => new { t.LinkID, t.Username })
-                .ForeignKey("Links", t => t.LinkID, cascadeDelete: true)
-                .ForeignKey("Users", t => t.Username, cascadeDelete: true)
+                .ForeignKey("dbo.Links", t => t.LinkID, cascadeDelete: true)
+                .ForeignKey("dbo.Users", t => t.Username, cascadeDelete: true)
                 .Index(t => t.LinkID)
                 .Index(t => t.Username);
             
             CreateTable(
-                "Tags",
+                "dbo.Tags",
                 c => new
                     {
                         Name = c.String(nullable: false, maxLength: 128),
@@ -169,7 +170,7 @@ namespace Terminal.Core.Data.Entities.Migrations
                 .PrimaryKey(t => t.Name);
             
             CreateTable(
-                "Messages",
+                "dbo.Messages",
                 c => new
                     {
                         MessageID = c.Long(nullable: false, identity: true),
@@ -189,17 +190,17 @@ namespace Terminal.Core.Data.Entities.Migrations
                         User_Username1 = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.MessageID)
-                .ForeignKey("Users", t => t.FromUser_Username)
-                .ForeignKey("Users", t => t.ToUser_Username)
-                .ForeignKey("Users", t => t.User_Username)
-                .ForeignKey("Users", t => t.User_Username1)
+                .ForeignKey("dbo.Users", t => t.FromUser_Username)
+                .ForeignKey("dbo.Users", t => t.ToUser_Username)
+                .ForeignKey("dbo.Users", t => t.User_Username)
+                .ForeignKey("dbo.Users", t => t.User_Username1)
                 .Index(t => t.FromUser_Username)
                 .Index(t => t.ToUser_Username)
                 .Index(t => t.User_Username)
                 .Index(t => t.User_Username1);
             
             CreateTable(
-                "Replies",
+                "dbo.Replies",
                 c => new
                     {
                         ReplyID = c.Long(nullable: false, identity: true),
@@ -212,13 +213,13 @@ namespace Terminal.Core.Data.Entities.Migrations
                         EditedBy = c.String(),
                     })
                 .PrimaryKey(t => t.ReplyID)
-                .ForeignKey("Topics", t => t.TopicID, cascadeDelete: true)
-                .ForeignKey("Users", t => t.Username)
+                .ForeignKey("dbo.Topics", t => t.TopicID, cascadeDelete: true)
+                .ForeignKey("dbo.Users", t => t.Username)
                 .Index(t => t.TopicID)
                 .Index(t => t.Username);
             
             CreateTable(
-                "Topics",
+                "dbo.Topics",
                 c => new
                     {
                         TopicID = c.Long(nullable: false, identity: true),
@@ -235,13 +236,13 @@ namespace Terminal.Core.Data.Entities.Migrations
                         EditedBy = c.String(),
                     })
                 .PrimaryKey(t => t.TopicID)
-                .ForeignKey("Boards", t => t.BoardID, cascadeDelete: true)
-                .ForeignKey("Users", t => t.Username)
+                .ForeignKey("dbo.Boards", t => t.BoardID, cascadeDelete: true)
+                .ForeignKey("dbo.Users", t => t.Username)
                 .Index(t => t.BoardID)
                 .Index(t => t.Username);
             
             CreateTable(
-                "Boards",
+                "dbo.Boards",
                 c => new
                     {
                         BoardID = c.Short(nullable: false),
@@ -256,7 +257,7 @@ namespace Terminal.Core.Data.Entities.Migrations
                 .PrimaryKey(t => t.BoardID);
             
             CreateTable(
-                "TopicFollows",
+                "dbo.TopicFollows",
                 c => new
                     {
                         Username = c.String(nullable: false, maxLength: 128),
@@ -264,13 +265,13 @@ namespace Terminal.Core.Data.Entities.Migrations
                         Saved = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => new { t.Username, t.TopicID })
-                .ForeignKey("Topics", t => t.TopicID, cascadeDelete: true)
-                .ForeignKey("Users", t => t.Username, cascadeDelete: true)
+                .ForeignKey("dbo.Topics", t => t.TopicID, cascadeDelete: true)
+                .ForeignKey("dbo.Users", t => t.Username, cascadeDelete: true)
                 .Index(t => t.TopicID)
                 .Index(t => t.Username);
             
             CreateTable(
-                "TopicVisits",
+                "dbo.TopicVisits",
                 c => new
                     {
                         Username = c.String(nullable: false, maxLength: 128),
@@ -278,13 +279,13 @@ namespace Terminal.Core.Data.Entities.Migrations
                         Count = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => new { t.Username, t.TopicID })
-                .ForeignKey("Topics", t => t.TopicID, cascadeDelete: true)
-                .ForeignKey("Users", t => t.Username, cascadeDelete: true)
+                .ForeignKey("dbo.Topics", t => t.TopicID, cascadeDelete: true)
+                .ForeignKey("dbo.Users", t => t.Username, cascadeDelete: true)
                 .Index(t => t.TopicID)
                 .Index(t => t.Username);
             
             CreateTable(
-                "UserActivityLogItems",
+                "dbo.UserActivityLogItems",
                 c => new
                     {
                         ID = c.Long(nullable: false, identity: true),
@@ -294,11 +295,11 @@ namespace Terminal.Core.Data.Entities.Migrations
                         Type = c.String(),
                     })
                 .PrimaryKey(t => t.ID)
-                .ForeignKey("Users", t => t.Username)
+                .ForeignKey("dbo.Users", t => t.Username)
                 .Index(t => t.Username);
             
             CreateTable(
-                "Roles",
+                "dbo.Roles",
                 c => new
                     {
                         Name = c.String(nullable: false, maxLength: 128),
@@ -306,7 +307,7 @@ namespace Terminal.Core.Data.Entities.Migrations
                 .PrimaryKey(t => t.Name);
             
             CreateTable(
-                "LUEsers",
+                "dbo.LUEsers",
                 c => new
                     {
                         Username = c.String(nullable: false, maxLength: 128),
@@ -314,7 +315,7 @@ namespace Terminal.Core.Data.Entities.Migrations
                 .PrimaryKey(t => t.Username);
             
             CreateTable(
-                "MadlibTemplates",
+                "dbo.MadlibTemplates",
                 c => new
                     {
                         ID = c.Int(nullable: false, identity: true),
@@ -324,7 +325,7 @@ namespace Terminal.Core.Data.Entities.Migrations
                 .PrimaryKey(t => t.ID);
             
             CreateTable(
-                "Variables",
+                "dbo.Variables",
                 c => new
                     {
                         Name = c.String(nullable: false, maxLength: 128),
@@ -333,28 +334,28 @@ namespace Terminal.Core.Data.Entities.Migrations
                 .PrimaryKey(t => t.Name);
             
             CreateTable(
-                "TagLinks",
+                "dbo.TagLinks",
                 c => new
                     {
                         Tag_Name = c.String(nullable: false, maxLength: 128),
                         Link_LinkID = c.Long(nullable: false),
                     })
                 .PrimaryKey(t => new { t.Tag_Name, t.Link_LinkID })
-                .ForeignKey("Tags", t => t.Tag_Name, cascadeDelete: true)
-                .ForeignKey("Links", t => t.Link_LinkID, cascadeDelete: true)
+                .ForeignKey("dbo.Tags", t => t.Tag_Name, cascadeDelete: true)
+                .ForeignKey("dbo.Links", t => t.Link_LinkID, cascadeDelete: true)
                 .Index(t => t.Tag_Name)
                 .Index(t => t.Link_LinkID);
             
             CreateTable(
-                "RoleUsers",
+                "dbo.RoleUsers",
                 c => new
                     {
                         Role_Name = c.String(nullable: false, maxLength: 128),
                         User_Username = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => new { t.Role_Name, t.User_Username })
-                .ForeignKey("Roles", t => t.Role_Name, cascadeDelete: true)
-                .ForeignKey("Users", t => t.User_Username, cascadeDelete: true)
+                .ForeignKey("dbo.Roles", t => t.Role_Name, cascadeDelete: true)
+                .ForeignKey("dbo.Users", t => t.User_Username, cascadeDelete: true)
                 .Index(t => t.Role_Name)
                 .Index(t => t.User_Username);
             
@@ -362,97 +363,97 @@ namespace Terminal.Core.Data.Entities.Migrations
         
         public override void Down()
         {
-            DropIndex("RoleUsers", new[] { "User_Username" });
-            DropIndex("RoleUsers", new[] { "Role_Name" });
-            DropIndex("TagLinks", new[] { "Link_LinkID" });
-            DropIndex("TagLinks", new[] { "Tag_Name" });
-            DropIndex("UserActivityLogItems", new[] { "Username" });
-            DropIndex("TopicVisits", new[] { "Username" });
-            DropIndex("TopicVisits", new[] { "TopicID" });
-            DropIndex("TopicFollows", new[] { "Username" });
-            DropIndex("TopicFollows", new[] { "TopicID" });
-            DropIndex("Topics", new[] { "Username" });
-            DropIndex("Topics", new[] { "BoardID" });
-            DropIndex("Replies", new[] { "Username" });
-            DropIndex("Replies", new[] { "TopicID" });
-            DropIndex("Messages", new[] { "User_Username1" });
-            DropIndex("Messages", new[] { "User_Username" });
-            DropIndex("Messages", new[] { "ToUser_Username" });
-            DropIndex("Messages", new[] { "FromUser_Username" });
-            DropIndex("LinkVotes", new[] { "Username" });
-            DropIndex("LinkVotes", new[] { "LinkID" });
-            DropIndex("LinkComments", new[] { "Username" });
-            DropIndex("LinkComments", new[] { "LinkID" });
-            DropIndex("Links", new[] { "Username" });
-            DropIndex("LinkClicks", new[] { "Username" });
-            DropIndex("LinkClicks", new[] { "LinkID" });
-            DropIndex("InviteCodes", new[] { "Username" });
-            DropIndex("Ignores", new[] { "User_Username2" });
-            DropIndex("Ignores", new[] { "User_Username1" });
-            DropIndex("Ignores", new[] { "Ignores_Username" });
-            DropIndex("Ignores", new[] { "User_Username" });
-            DropIndex("Bans", new[] { "User_Username1" });
-            DropIndex("Bans", new[] { "BanCreator_Username" });
-            DropIndex("Bans", new[] { "User_Username" });
-            DropIndex("Users", new[] { "BanInfo_Username" });
-            DropIndex("Aliases", new[] { "Username" });
-            DropForeignKey("RoleUsers", "User_Username", "Users");
-            DropForeignKey("RoleUsers", "Role_Name", "Roles");
-            DropForeignKey("TagLinks", "Link_LinkID", "Links");
-            DropForeignKey("TagLinks", "Tag_Name", "Tags");
-            DropForeignKey("UserActivityLogItems", "Username", "Users");
-            DropForeignKey("TopicVisits", "Username", "Users");
-            DropForeignKey("TopicVisits", "TopicID", "Topics");
-            DropForeignKey("TopicFollows", "Username", "Users");
-            DropForeignKey("TopicFollows", "TopicID", "Topics");
-            DropForeignKey("Topics", "Username", "Users");
-            DropForeignKey("Topics", "BoardID", "Boards");
-            DropForeignKey("Replies", "Username", "Users");
-            DropForeignKey("Replies", "TopicID", "Topics");
-            DropForeignKey("Messages", "User_Username1", "Users");
-            DropForeignKey("Messages", "User_Username", "Users");
-            DropForeignKey("Messages", "ToUser_Username", "Users");
-            DropForeignKey("Messages", "FromUser_Username", "Users");
-            DropForeignKey("LinkVotes", "Username", "Users");
-            DropForeignKey("LinkVotes", "LinkID", "Links");
-            DropForeignKey("LinkComments", "Username", "Users");
-            DropForeignKey("LinkComments", "LinkID", "Links");
-            DropForeignKey("Links", "Username", "Users");
-            DropForeignKey("LinkClicks", "Username", "Users");
-            DropForeignKey("LinkClicks", "LinkID", "Links");
-            DropForeignKey("InviteCodes", "Username", "Users");
-            DropForeignKey("Ignores", "User_Username2", "Users");
-            DropForeignKey("Ignores", "User_Username1", "Users");
-            DropForeignKey("Ignores", "Ignores_Username", "Users");
-            DropForeignKey("Ignores", "User_Username", "Users");
-            DropForeignKey("Bans", "User_Username1", "Users");
-            DropForeignKey("Bans", "BanCreator_Username", "Users");
-            DropForeignKey("Bans", "User_Username", "Users");
-            DropForeignKey("Users", "BanInfo_Username", "Bans");
-            DropForeignKey("Aliases", "Username", "Users");
-            DropTable("RoleUsers");
-            DropTable("TagLinks");
-            DropTable("Variables");
-            DropTable("MadlibTemplates");
-            DropTable("LUEsers");
-            DropTable("Roles");
-            DropTable("UserActivityLogItems");
-            DropTable("TopicVisits");
-            DropTable("TopicFollows");
-            DropTable("Boards");
-            DropTable("Topics");
-            DropTable("Replies");
-            DropTable("Messages");
-            DropTable("Tags");
-            DropTable("LinkVotes");
-            DropTable("LinkComments");
-            DropTable("Links");
-            DropTable("LinkClicks");
-            DropTable("InviteCodes");
-            DropTable("Ignores");
-            DropTable("Bans");
-            DropTable("Users");
-            DropTable("Aliases");
+            DropIndex("dbo.RoleUsers", new[] { "User_Username" });
+            DropIndex("dbo.RoleUsers", new[] { "Role_Name" });
+            DropIndex("dbo.TagLinks", new[] { "Link_LinkID" });
+            DropIndex("dbo.TagLinks", new[] { "Tag_Name" });
+            DropIndex("dbo.UserActivityLogItems", new[] { "Username" });
+            DropIndex("dbo.TopicVisits", new[] { "Username" });
+            DropIndex("dbo.TopicVisits", new[] { "TopicID" });
+            DropIndex("dbo.TopicFollows", new[] { "Username" });
+            DropIndex("dbo.TopicFollows", new[] { "TopicID" });
+            DropIndex("dbo.Topics", new[] { "Username" });
+            DropIndex("dbo.Topics", new[] { "BoardID" });
+            DropIndex("dbo.Replies", new[] { "Username" });
+            DropIndex("dbo.Replies", new[] { "TopicID" });
+            DropIndex("dbo.Messages", new[] { "User_Username1" });
+            DropIndex("dbo.Messages", new[] { "User_Username" });
+            DropIndex("dbo.Messages", new[] { "ToUser_Username" });
+            DropIndex("dbo.Messages", new[] { "FromUser_Username" });
+            DropIndex("dbo.LinkVotes", new[] { "Username" });
+            DropIndex("dbo.LinkVotes", new[] { "LinkID" });
+            DropIndex("dbo.LinkComments", new[] { "Username" });
+            DropIndex("dbo.LinkComments", new[] { "LinkID" });
+            DropIndex("dbo.Links", new[] { "Username" });
+            DropIndex("dbo.LinkClicks", new[] { "Username" });
+            DropIndex("dbo.LinkClicks", new[] { "LinkID" });
+            DropIndex("dbo.InviteCodes", new[] { "Username" });
+            DropIndex("dbo.Ignores", new[] { "User_Username2" });
+            DropIndex("dbo.Ignores", new[] { "User_Username1" });
+            DropIndex("dbo.Ignores", new[] { "Ignores_Username" });
+            DropIndex("dbo.Ignores", new[] { "User_Username" });
+            DropIndex("dbo.Bans", new[] { "User_Username1" });
+            DropIndex("dbo.Bans", new[] { "BanCreator_Username" });
+            DropIndex("dbo.Bans", new[] { "User_Username" });
+            DropIndex("dbo.Users", new[] { "BanInfo_Username" });
+            DropIndex("dbo.Aliases", new[] { "Username" });
+            DropForeignKey("dbo.RoleUsers", "User_Username", "dbo.Users");
+            DropForeignKey("dbo.RoleUsers", "Role_Name", "dbo.Roles");
+            DropForeignKey("dbo.TagLinks", "Link_LinkID", "dbo.Links");
+            DropForeignKey("dbo.TagLinks", "Tag_Name", "dbo.Tags");
+            DropForeignKey("dbo.UserActivityLogItems", "Username", "dbo.Users");
+            DropForeignKey("dbo.TopicVisits", "Username", "dbo.Users");
+            DropForeignKey("dbo.TopicVisits", "TopicID", "dbo.Topics");
+            DropForeignKey("dbo.TopicFollows", "Username", "dbo.Users");
+            DropForeignKey("dbo.TopicFollows", "TopicID", "dbo.Topics");
+            DropForeignKey("dbo.Topics", "Username", "dbo.Users");
+            DropForeignKey("dbo.Topics", "BoardID", "dbo.Boards");
+            DropForeignKey("dbo.Replies", "Username", "dbo.Users");
+            DropForeignKey("dbo.Replies", "TopicID", "dbo.Topics");
+            DropForeignKey("dbo.Messages", "User_Username1", "dbo.Users");
+            DropForeignKey("dbo.Messages", "User_Username", "dbo.Users");
+            DropForeignKey("dbo.Messages", "ToUser_Username", "dbo.Users");
+            DropForeignKey("dbo.Messages", "FromUser_Username", "dbo.Users");
+            DropForeignKey("dbo.LinkVotes", "Username", "dbo.Users");
+            DropForeignKey("dbo.LinkVotes", "LinkID", "dbo.Links");
+            DropForeignKey("dbo.LinkComments", "Username", "dbo.Users");
+            DropForeignKey("dbo.LinkComments", "LinkID", "dbo.Links");
+            DropForeignKey("dbo.Links", "Username", "dbo.Users");
+            DropForeignKey("dbo.LinkClicks", "Username", "dbo.Users");
+            DropForeignKey("dbo.LinkClicks", "LinkID", "dbo.Links");
+            DropForeignKey("dbo.InviteCodes", "Username", "dbo.Users");
+            DropForeignKey("dbo.Ignores", "User_Username2", "dbo.Users");
+            DropForeignKey("dbo.Ignores", "User_Username1", "dbo.Users");
+            DropForeignKey("dbo.Ignores", "Ignores_Username", "dbo.Users");
+            DropForeignKey("dbo.Ignores", "User_Username", "dbo.Users");
+            DropForeignKey("dbo.Bans", "User_Username1", "dbo.Users");
+            DropForeignKey("dbo.Bans", "BanCreator_Username", "dbo.Users");
+            DropForeignKey("dbo.Bans", "User_Username", "dbo.Users");
+            DropForeignKey("dbo.Users", "BanInfo_Username", "dbo.Bans");
+            DropForeignKey("dbo.Aliases", "Username", "dbo.Users");
+            DropTable("dbo.RoleUsers");
+            DropTable("dbo.TagLinks");
+            DropTable("dbo.Variables");
+            DropTable("dbo.MadlibTemplates");
+            DropTable("dbo.LUEsers");
+            DropTable("dbo.Roles");
+            DropTable("dbo.UserActivityLogItems");
+            DropTable("dbo.TopicVisits");
+            DropTable("dbo.TopicFollows");
+            DropTable("dbo.Boards");
+            DropTable("dbo.Topics");
+            DropTable("dbo.Replies");
+            DropTable("dbo.Messages");
+            DropTable("dbo.Tags");
+            DropTable("dbo.LinkVotes");
+            DropTable("dbo.LinkComments");
+            DropTable("dbo.Links");
+            DropTable("dbo.LinkClicks");
+            DropTable("dbo.InviteCodes");
+            DropTable("dbo.Ignores");
+            DropTable("dbo.Bans");
+            DropTable("dbo.Users");
+            DropTable("dbo.Aliases");
         }
     }
 }
