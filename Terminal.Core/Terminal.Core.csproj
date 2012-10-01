@@ -63,11 +63,26 @@
     <Reference Include="Microsoft.Web.Mvc">
       <HintPath>..\packages\Mvc3Futures.3.0.20105.0\lib\Microsoft.Web.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.9\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="Ninject.Web.Common">
       <HintPath>..\packages\Ninject.Web.Common.3.0.0.7\lib\net40-full\Ninject.Web.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="SignalR">
+      <HintPath>..\packages\SignalR.Server.0.5.3\lib\net40\SignalR.dll</HintPath>
+    </Reference>
+    <Reference Include="SignalR.Hosting.AspNet">
+      <HintPath>..\packages\SignalR.Hosting.AspNet.0.5.3\lib\net40\SignalR.Hosting.AspNet.dll</HintPath>
+    </Reference>
+    <Reference Include="SignalR.Hosting.Common">
+      <HintPath>..\packages\SignalR.Hosting.Common.0.5.3\lib\net40\SignalR.Hosting.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="SignalR.Ninject">
+      <HintPath>..\packages\SignalR.Ninject.0.5.0\lib\net40\SignalR.Ninject.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -108,6 +123,7 @@
     <Compile Include="Data\Entities\Alias.cs" />
     <Compile Include="Data\Entities\Ban.cs" />
     <Compile Include="Data\Entities\Board.cs" />
+    <Compile Include="Data\Entities\ChannelStatus.cs" />
     <Compile Include="Data\Entities\Ignore.cs" />
     <Compile Include="Data\Entities\InviteCode.cs" />
     <Compile Include="Data\Entities\Link.cs" />
@@ -126,8 +142,11 @@
     <Compile Include="Data\Entities\User.cs" />
     <Compile Include="Data\Entities\UserActivityLogItem.cs" />
     <Compile Include="Data\Entities\Variable.cs" />
+    <Compile Include="Data\Repositories\Interfaces\IChannelStatusRepository.cs" />
+    <Compile Include="Data\Repositories\Objects\ChannelStatusRepository.cs" />
     <Compile Include="Enums\DisplayMode.cs" />
     <Compile Include="Enums\Month.cs" />
+    <Compile Include="ExtensionMethods\EnumerableExtensions.cs" />
     <Compile Include="ExtensionMethods\GenericExtensions.cs" />
     <Compile Include="ExtensionMethods\ListExtentions.cs" />
     <Compile Include="ExtensionMethods\IntExtensions.cs" />
@@ -136,6 +155,7 @@
       <DependentUpon>201203020443380_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\Entities\Migrations\Configuration.cs" />
+    <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Objects\ApiDisplayItem.cs" />
     <Compile Include="Objects\ApiResult.cs" />
     <Compile Include="Objects\CollectionPage.cs" />
@@ -218,6 +238,11 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery-1.8.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.8.2.js" />
+    <Content Include="Scripts\jquery-1.8.2.min.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

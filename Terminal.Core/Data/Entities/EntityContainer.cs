@@ -28,6 +28,7 @@
         public DbSet<UserActivityLogItem> UserActivityLog { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Variable> Variables { get; set; }
+        public DbSet<ChannelStatus> ChannelStatuses { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

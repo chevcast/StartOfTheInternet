@@ -1,10 +1,9 @@
 ﻿namespace Terminal.Core.Data.Entities
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
     using Terminal.Core.ExtensionMethods;
-    using System.ComponentModel.DataAnnotations;
 
     public class User
     {
@@ -46,6 +45,7 @@
         public virtual ICollection<Topic> Topics { get; set; }
         public virtual ICollection<UserActivityLogItem> UserActivityLog { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
+        public virtual ICollection<ChannelStatus> ChannelStatuses { get; set; }
 
 
         public bool IsModeratorOrAdministrator()

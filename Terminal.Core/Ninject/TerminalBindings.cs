@@ -11,6 +11,7 @@ using System.Data.EntityClient;
 using System.Web;
 using Ninject.Web.Common;
 using Terminal.Core.Data;
+using SignalR;
 
 namespace Terminal.Core.Ninject
 {
@@ -40,6 +41,8 @@ namespace Terminal.Core.Ninject
                 Bind<TerminalApi>().ToSelf().InSingletonScope();
 
             Bind<IDataBucket>().To<DataBucket>();
+
+            //GlobalHost.DependencyResolver = new SignalR.Ninject.NinjectDependencyResolver(this.Kernel);
         }
 
         /// <summary>

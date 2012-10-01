@@ -116,6 +116,17 @@ namespace Terminal.Core.Data
             }
         }
 
+        private IChannelStatusRepository _channelStatusRepository;
+        public IChannelStatusRepository ChannelStatusRepository
+        {
+            get
+            {
+                if (_channelStatusRepository == null)
+                    _channelStatusRepository = new ChannelStatusRepository(_dataContext);
+                return _channelStatusRepository;
+            }
+        }
+
         public void SaveChanges()
         {
             _dataContext.SaveChanges();

@@ -17,6 +17,7 @@ namespace Terminal.Core.Data
         ITopicRepository TopicRepository { get; }
         IUserRepository UserRepository { get; }
         IVariableRepository VariableRepository { get; }
+        IChannelStatusRepository ChannelStatusRepository { get; }
 
         void SaveChanges();
     }
