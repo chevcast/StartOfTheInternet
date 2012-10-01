@@ -41,8 +41,6 @@ namespace Terminal.Core.Ninject
                 Bind<TerminalApi>().ToSelf().InSingletonScope();
 
             Bind<IDataBucket>().To<DataBucket>();
-
-            //GlobalHost.DependencyResolver = new SignalR.Ninject.NinjectDependencyResolver(this.Kernel);
         }
 
         /// <summary>

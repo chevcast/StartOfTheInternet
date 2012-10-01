@@ -11,6 +11,7 @@ namespace Terminal.MvcUI.App_Start
     using Ninject;
     using Ninject.Web.Common;
     using Terminal.Core.Ninject;
+    using SignalR;
 
     public static class NinjectWebCommon 
     {
@@ -45,6 +46,9 @@ namespace Terminal.MvcUI.App_Start
             kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
             
             RegisterServices(kernel);
+
+            GlobalHost.DependencyResolver = new SignalR.Ninject.NinjectDependencyResolver(kernel);
+
             return kernel;
         }
 
