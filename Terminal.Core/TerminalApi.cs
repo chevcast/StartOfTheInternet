@@ -385,6 +385,8 @@ namespace Terminal.Core
                     commandResult.WriteLine();
                     commandResult.WriteLine("Type \"COMMAND -?\" for details on individual commands.");
                     commandResult.WriteLine();
+                    commandResult.WriteLine("Note: Typing \"cancel\" will cancel out of any prompts you ar in.");
+                    commandResult.WriteLine();
                     commandResult.WriteLine(DisplayMode.Dim | DisplayMode.DontType, new string('-', AppSettings.DividerLength));
                     commandResult.WriteLine();
                     var aliases = defaultAliases;

@@ -1,8 +1,8 @@
 @ForeColor: #ccc;
+@OpacityColor: #000;
 @BackColor: #000;
 
-body
-{
+body {
     background: @BackColor;
     color: @ForeColor;
     font-family: Courier New;
@@ -10,41 +10,43 @@ body
     margin: 0;
 }
 
-.transmit
-{
+.transmit {
     cursor: pointer;
 }
 
-.backgroundImage
-{
+.backgroundImage {
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     position: fixed;
     z-index: 0;
-    opacity: .35;
-    filter: alpha(opacity=35);
-    -moz-opacity: .35;
+    opacity: .15;
+    filter: alpha(opacity=15);
+    -moz-opacity: .15;
 }
 
-#frame
-{
-    border: none;
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-    padding: 15px;
-    margin: 0;
-    position: relative;
+
+#frame {
+    top: 0;
+    left: 0;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
 }
 
-#frame > .opacityFrame {
-	position: fixed;
-}
+    #frame > .opacityFrame {
+        position: fixed;
+    }
 
-.opacityFrame
-{
-    background: @ForeColor;
+    #frame .column {
+        padding: 15px;
+        overflow: auto;
+        height: 500px;
+    }
+
+.opacityFrame {
+    background: @OpacityColor;
     opacity: .1;
     filter: alpha(opacity=1);
     -moz-opacity: .1;
@@ -58,8 +60,7 @@ body
     -moz-border-radius: 10px;
 }
 
-.subFrame
-{
+.subFrame {
     position: relative;
     height: 100%;
     width: 100%;
@@ -73,21 +74,18 @@ body
     scrollbar-darkshadow-color: @ForeColor;
 }
 
-#terminalDisplay
-{
+#terminalDisplay {
     padding-right: 10px;
     margin-bottom: 15px;
     padding-right: 10px;
 }
 
-#contextDisplay
-{
+#contextDisplay {
     float: left;
     margin-top: 4px;
 }
 
-#Cli
-{
+#Cli {
     width: 75%;
     background: transparent;
     color: @ForeColor;
@@ -96,10 +94,14 @@ body
     outline: none;
     resize: none;
     border: none;
+    box-shadow: none;
 }
 
-code
-{
+pre {
+    background-color: #111;
+}
+
+code {
     background-color: #111;
     color: lightness #fff;
     padding-left: 3px;
@@ -108,53 +110,46 @@ code
     -moz-border-radius: 10px;
 }
 
-pre > code
-{
-    display: inline-block;
+pre > code {
+    display: block;
     max-height: 500px;
     max-width: 90%;
     overflow: auto;
     padding: 15px;
+    background-color: #111;
 }
 
-img
-{
+img {
     border: none;
 }
 
-.quote
-{
+.quote {
     border: solid 1px @ForeColor;
     background: lightness(@BackColor, 1%);
     padding: 10px;
     display: inline-block;
 }
 
-.inverted
-{
+.inverted {
     color: @BackColor;
     background: @ForeColor;
 }
 
-.dim
-{
-	opacity: .35;
+.dim {
+    opacity: .35;
     filter: alpha(opacity=35);
     -moz-opacity: .35;
 }
 
-.italics
-{
+.italics {
     font-style: italic;
 }
 
-.bold
-{
+.bold {
     font-weight: bold;
 }
 
-a:link, a:visited, a:hover
-{
+a:link, a:visited, a:hover {
     color: @ForeColor;
     font-weight: bold;
 }
@@ -164,53 +159,50 @@ a:link, a:visited, a:hover
     width: 5px;
     height: 5px;
 }
- 
+
 ::-webkit-scrollbar-button:vertical {
     display: none;
 }
- 
+
 /* Turn on single button up on top, and down on bottom */
 ::-webkit-scrollbar-button:start:decrement,
 ::-webkit-scrollbar-button:end:increment {
     display: none;
 }
- 
+
 /* Turn off the down area up on top, and up area on bottom */
 ::-webkit-scrollbar-button:vertical:start:increment,
 ::-webkit-scrollbar-button:vertical:end:decrement {
     display: none;
 }
- 
+
 /* Place The scroll down button at the bottom */
-::-webkit-scrollbar-button:vertical:increment 
-{
-    display: none;   
+::-webkit-scrollbar-button:vertical:increment {
+    display: none;
 }
- 
+
 /* Place The scroll up button at the up */
 ::-webkit-scrollbar-button:vertical:decrement {
     display: none;
 }
- 
+
 ::-webkit-scrollbar-track:vertical {
     display: none;
 }
- 
+
 /* Top area above thumb and below up button */
 ::-webkit-scrollbar-track-piece:vertical:start {
-    
 }
- 
+
 /* Bottom area below thumb and down button */
 ::-webkit-scrollbar-track-piece:vertical:end {
-    
 }
- 
+
 /* Track below and above */
 ::-webkit-scrollbar-track-piece {
     background-color: @BackColor;
 }
- 
+
 /* The thumb itself */
 ::-webkit-scrollbar-thumb:vertical {
     background-color: @ForeColor;
@@ -224,12 +216,12 @@ a:link, a:visited, a:hover
     cursor: pointer;
     min-width: 5px;
 }
- 
+
 /* Corner */
 ::-webkit-scrollbar-corner {
     display: none;
 }
- 
+
 /* Resizer */
 ::-webkit-scrollbar-resizer {
     background-color: @ForeColor;
