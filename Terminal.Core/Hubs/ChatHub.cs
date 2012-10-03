@@ -26,7 +26,7 @@ namespace Terminal.Core.Hubs
             {
                 var connectionId = Guid.Parse(Context.ConnectionId);
                 var user = _dataBucket.UserRepository.GetUser(username);
-                if (user.ChannelStatuses.All(x => x.ConnectionId != connectionId))
+                if (!user.ChannelStatuses.Any())
                 {
                     var channelStatus = new ChannelStatus
                     {
