@@ -71,7 +71,13 @@
                     callback();
                 }
             });
-            sound.load();
+            try{
+                sound.load();
+            }
+            catch (err) {
+                console.log('Sound failed to load.');
+                callback();
+            }
         });
     }
 
