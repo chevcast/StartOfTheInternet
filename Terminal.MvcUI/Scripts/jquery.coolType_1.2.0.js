@@ -126,8 +126,10 @@
         {
             clearInterval(blinkId);
             showCaret();
-            if (settings.playSound && sound != null)
-                sound.play({ volume: settings.volume });
+            try {
+                if (settings.playSound && sound != null)
+                    sound.play({ volume: settings.volume });
+            } catch (err) { }
             var intervalId = setInterval(function ()
             {
                 var char = text.substr(index, 1);
@@ -142,8 +144,10 @@
                 else
                 {
                     clearInterval(intervalId);
-                    if (settings.playSound && sound != null)
-                        sound.stop();
+                    try {
+                        if (settings.playSound && sound != null)
+                            sound.stop();
+                    } catch (err) { }
                     var blinkId = setInterval(blinkCaret, settings.caretBlinkSpeed);
                     setTimeout(function ()
                     {
