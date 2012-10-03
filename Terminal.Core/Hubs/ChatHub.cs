@@ -35,8 +35,8 @@ namespace Terminal.Core.Hubs
                     };
                     user.ChannelStatuses.Add(channelStatus);
                     _dataBucket.SaveChanges();
+                    Clients.writeLine(string.Format("{0} has joined.", user.Username));
                 }
-                Clients.writeLine(string.Format("{0} has joined.", user.Username));
                 //var connectedUsers = _dataBucket.ChannelStatusRepository.GetChannelStatuses("Default").Select(x => x.User.Username).Distinct();
                 //Caller.loadUsers(connectedUsers);
             }
