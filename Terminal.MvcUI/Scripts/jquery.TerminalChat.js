@@ -42,7 +42,7 @@
             .append($chatCli)
             .appendTo($chatContainer);
 
-        $.connection.hub.start(function () {
+        $.connection.hub.start({ transport: 'longPolling' }, function () {
             //chatHub.connectUser(settings.username);
         });
 
