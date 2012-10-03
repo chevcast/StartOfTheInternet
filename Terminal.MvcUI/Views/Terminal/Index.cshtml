@@ -6,7 +6,9 @@
     ViewBag.Title = Model.Title;
 }
 <script type="text/javascript">
-    var rootPath = '@Url.Content("~")';
+    var rootPath = '@Url.Content("~")',
+        username = '@User.Identity.Name';
+
     soundManager.url = rootPath + 'Content/SoundManager2/';
     //soundManager.useHTML5Audio = true;
     soundManager.allowScriptAccess = 'always';
@@ -14,36 +16,36 @@
         @if (DateTime.Now.Month == (int)Month.October)
         {
             <text>
-        soundManager.onready(function () {
-            soundManager.createSound({
-                id: 'halloween',
-                url: rootPath + 'Content/sounds/TheDarkeningGround.mp3',
-                autoLoad: true,
-                autoPlay: true,
-                stream: true,
-                volume: 75
-            });
-        });
-        Setup(rootPath + 'Content/sounds/typewriter.mp3');
-        StopButton('halloween');
+                soundManager.onready(function () {
+                    soundManager.createSound({
+                        id: 'halloween',
+                        url: rootPath + 'Content/sounds/TheDarkeningGround.mp3',
+                        autoLoad: true,
+                        autoPlay: true,
+                        stream: true,
+                        volume: 75
+                    });
+                });
+                Setup(rootPath + 'Content/sounds/typewriter.mp3');
+                StopButton('halloween');
             </text>
         }
         else if (DateTime.Now.Month == (int)Month.December)
         {
             <text>
-        soundManager.onready(function () {
-            soundManager.createSound({
-                id: 'xmas',
-                url: rootPath + 'Content/sounds/Maenam.mp3',
-                autoLoad: true,
-                autoPlay: true,
-                stream: true,
-                volume: 75
-            });
-        });
-        Setup(rootPath + 'Content/sounds/techtyping.mp3');
-        StopButton('xmas');
-        $(document).snowfall({ flakeIndex: 9000, minSize: 1, maxSize: 5, round: true, flakeCount: 100 });
+                soundManager.onready(function () {
+                    soundManager.createSound({
+                        id: 'xmas',
+                        url: rootPath + 'Content/sounds/Maenam.mp3',
+                        autoLoad: true,
+                        autoPlay: true,
+                        stream: true,
+                        volume: 75
+                    });
+                });
+                Setup(rootPath + 'Content/sounds/techtyping.mp3');
+                StopButton('xmas');
+                $(document).snowfall({ flakeIndex: 9000, minSize: 1, maxSize: 5, round: true, flakeCount: 100 });
             </text>
         }
         else
@@ -91,7 +93,7 @@
 
     function Setup(soundFile) {
         $(window).resize(function () {
-            $('.column').height($(window).height() - 50);
+            $('#terminal, #chat').height($(window).height() - 75);
         }).resize();
 
         $.coolType.setup(
@@ -100,13 +102,21 @@
             playSound: true,
             speed: 25,
             onSoundLoaded: function () {
-                $('#commandForm').TerminalClient(
+                $('#commandForm').terminalClient(
                 {
                     elementToScroll: '#terminal',
-                    apiUrl: '@Url.Action("Index", "Api")'
+                    apiUrl: '@Url.Action("Index", "Api")',
+                    loggedinCallback: function (username) {
+                        $(document).trigger('userLoggedIn', username);
+                    },
+                    loggedoutCallback: function () {
+                        $(document).trigger('userLoggedOut');
+                    }
                 });
             }
         });
+
+        $('#chat').terminalChat();
     }
 </script>
 <img class="backgroundImage" src="@Url.Content("~/content/tunnel.jpg")">
@@ -115,40 +125,45 @@
     </div>
     <div class="subFrame">
         <div class="row-fluid">
-            <div id="terminal" class="span8 column">
-                @using (Html.BeginForm("Index", "Terminal", FormMethod.Post, new { id = "commandForm" }))
-                {
-                    <div>
-                        @Html.Serialize("CommandContext", Model.CommandContext)
-                        <div id="terminalDisplay">
-                            <noscript>
-                                @Html.Raw(Model.Display)
-                            </noscript>
+            <div class="span8 column">
+                <div class="opacityFrame"></div>
+                <div id="terminal" class="subFrame">
+                    @using (Html.BeginForm("Index", "Terminal", FormMethod.Post, new { id = "commandForm" }))
+                    {
+                        <div>
+                            @Html.Serialize("CommandContext", Model.CommandContext)
+                            <div id="terminalDisplay">
+                                <noscript>
+                                    @Html.Raw(Model.Display)
+                                </noscript>
+                            </div>
+                            @Html.HiddenFor(x => x.Display)
+                            <div id="notifications">
+                                <noscript>
+                                    @Html.Raw(Model.Notifications)
+                                </noscript>
+                            </div>
+                            @Html.HiddenFor(x => x.Notifications)
+                            <div id="loading">
+                            </div>
+                            <span id="contextDisplay"><span id="context">
+                                <noscript>@Model.ContextText</noscript>
+                            </span>&gt;&nbsp;</span>
+                            @if (Model.PasswordField)
+                            {
+                                @Html.PasswordFor(x => x.Cli, new { autofocus = "autofocus", autocomplete = "off" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(x => x.Cli, new { autofocus = "autofocus", autocomplete = "off" })
+                            }
                         </div>
-                        @Html.HiddenFor(x => x.Display)
-                        <div id="notifications">
-                            <noscript>
-                                @Html.Raw(Model.Notifications)
-                            </noscript>
-                        </div>
-                        @Html.HiddenFor(x => x.Notifications)
-                        <div id="loading">
-                        </div>
-                        <span id="contextDisplay"><span id="context">
-                            <noscript>@Model.ContextText</noscript>
-                        </span>&gt;&nbsp;</span>
-                        @if (Model.PasswordField)
-                        {
-                            @Html.PasswordFor(x => x.Cli, new { autofocus = "autofocus", autocomplete = "off" })
-                        }
-                        else
-                        {
-                            @Html.TextBoxFor(x => x.Cli, new { autofocus = "autofocus", autocomplete = "off" })
-                        }
-                    </div>
-                }
+                    }
+                </div>
             </div>
-            <div id="chat" class="span3 column">
+            <div class="span3 column">
+                <div class="opacityFrame"></div>
+                <div id="chat" class="subFrame"></div>
             </div>
         </div>
     </div>

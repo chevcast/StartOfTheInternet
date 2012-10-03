@@ -18,28 +18,55 @@ namespace Terminal.Core.Hubs
             _dataBucket = dataBucket;
         }
 
-        public void Connect(string username)
+        public void ConnectUser(string username)
         {
-            var user = _dataBucket.UserRepository.GetUser(username);
-            var channelStatus = new ChannelStatus
+            if (username.IsNullOrEmpty())
+                Caller.writeLine("You must be logged in to chat.");
+            else
             {
-                ConnectionId = Guid.Parse(Context.ConnectionId),
-                ChannelName = "Default"
-            };
-            user.ChannelStatuses.Add(channelStatus);
-            _dataBucket.SaveChanges();
-            Clients.joinUser(user.Username);
-            var connectedUsers = _dataBucket.ChannelStatusRepository.GetChannelStatuses("Default").Select(x => x.User.Username).Distinct();
-            Caller.loadUsers(connectedUsers);
+                var connectionId = Guid.Parse(Context.ConnectionId);
+                var user = _dataBucket.UserRepository.GetUser(username);
+                if (user.ChannelStatuses.All(x => x.ConnectionId != connectionId))
+                {
+                    var channelStatus = new ChannelStatus
+                    {
+                        ConnectionId = connectionId,
+                        ChannelName = "Default"
+                    };
+                    user.ChannelStatuses.Add(channelStatus);
+                    _dataBucket.SaveChanges();
+                }
+                Clients.writeLine(string.Format("{0} has joined.", user.Username));
+                //var connectedUsers = _dataBucket.ChannelStatusRepository.GetChannelStatuses("Default").Select(x => x.User.Username).Distinct();
+                //Caller.loadUsers(connectedUsers);
+            }
+        }
+
+        public void Send(string text)
+        {
+            var channelStatus = _dataBucket.ChannelStatusRepository.GetChannelStatus(Guid.Parse(Context.ConnectionId));
+            if (channelStatus != null)
+                Clients.writeLine(string.Format("{0}: {1}", channelStatus.User.Username, text));
+            else
+                Caller.writeLine("You are not logged in.");
+        }
+
+        public void DisconnectUser()
+        {
+            var channel = _dataBucket.ChannelStatusRepository.GetChannelStatus(Guid.Parse(Context.ConnectionId));
+            if (channel != null)
+            {
+                var user = channel.User;
+                _dataBucket.ChannelStatusRepository.DeleteChannelStatus(channel);
+                _dataBucket.SaveChanges();
+                Clients.writeLine(string.Format("{0} has left.", user.Username));
+            }
         }
 
         public Task Disconnect()
         {
-            var channel = _dataBucket.ChannelStatusRepository.GetChannelStatus(Guid.Parse(Context.ConnectionId));
-            var user = channel.User;
-            _dataBucket.ChannelStatusRepository.DeleteChannelStatus(channel);
-            _dataBucket.SaveChanges();
-            return Clients.removeUser(user.Username);
+            DisconnectUser();
+            return null;
         }
     }
 }

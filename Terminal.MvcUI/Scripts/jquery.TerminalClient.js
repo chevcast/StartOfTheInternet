@@ -10,6 +10,9 @@
     var settings;
     var cliHistory = new Array();
     var historyIndex = 0;
+    var loggedinCallback;
+    var loggedoutCallback;
+    var currentUser;
 
     function SendCommand(commandString)
     {
@@ -61,6 +64,13 @@
             window.close();
         if (apiResult.EditText != null)
             $cli.val(apiResult.EditText).elastic().focus();
+        if (apiResult.CurrentUser != null && currentUser == null && loggedinCallback)
+            loggedinCallback(apiResult.CurrentUser);
+        else if (apiResult.CurrentUser == null && currentUser != null && loggedoutCallback)
+            loggedoutCallback();
+
+        currentUser = apiResult.CurrentUser;
+
         if (apiResult.DisplayItems.length > 0)
         {
             $terminalDisplay.append('<br />');
@@ -169,7 +179,7 @@
     }
 
     $.fn.extend({
-        TerminalClient: function (options)
+        terminalClient: function (options)
         {
             $commandForm = this;
 
@@ -182,6 +192,9 @@
                 elementToScroll: document,
                 apiUrl: '/api/',
             }, options);
+
+            loggedinCallback = settings.loggedinCallback;
+            loggedoutCallback = settings.loggedoutCallback;
 
             $terminalDisplay = $(settings.terminalDisplayElement);
             $notifications = $(settings.notificationsElement);

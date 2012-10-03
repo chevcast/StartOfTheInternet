@@ -1,4 +1,4 @@
-@ForeColor: #ccc;
+@ForeColor: #f7941d;
 @OpacityColor: #000;
 @BackColor: #000;
 
@@ -40,10 +40,14 @@ body {
     }
 
     #frame .column {
+		margin: 15px;
         padding: 15px;
-        overflow: auto;
-        height: 500px;
+		position: relative;
     }
+
+#terminal, #chat {
+	overflow: auto;
+}
 
 .opacityFrame {
     background: @OpacityColor;
@@ -85,7 +89,7 @@ body {
     margin-top: 4px;
 }
 
-#Cli {
+#Cli, input.cli {
     width: 75%;
     background: transparent;
     color: @ForeColor;
@@ -94,7 +98,7 @@ body {
     outline: none;
     resize: none;
     border: none;
-    box-shadow: none;
+    box-shadow: none !important;
 }
 
 pre {

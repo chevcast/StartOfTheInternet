@@ -12,6 +12,7 @@ namespace Terminal.MvcUI.App_Start
     using Ninject.Web.Common;
     using Terminal.Core.Ninject;
     using SignalR;
+    using System.Web.Routing;
 
     public static class NinjectWebCommon 
     {
@@ -47,8 +48,6 @@ namespace Terminal.MvcUI.App_Start
             
             RegisterServices(kernel);
 
-            GlobalHost.DependencyResolver = new SignalR.Ninject.NinjectDependencyResolver(kernel);
-
             return kernel;
         }
 
@@ -59,6 +58,8 @@ namespace Terminal.MvcUI.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             kernel.Load(new TerminalBindings(true));
+            GlobalHost.DependencyResolver = new SignalR.Ninject.NinjectDependencyResolver(kernel);
+            RouteTable.Routes.MapHubs();
         }        
     }
 }
