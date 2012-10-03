@@ -11,7 +11,7 @@ namespace Terminal.Core.Settings
     public static class RoleTemplates
     {
         /// <summary>
-        /// Returns only the visitor role.
+        /// Available only to logged out users.
         /// </summary>
         public static string[] Visitor
         {
@@ -19,7 +19,7 @@ namespace Terminal.Core.Settings
         }
 
         /// <summary>
-        /// Returns only the user role.
+        /// Available only to logged in users.
         /// </summary>
         public static string[] OnlyUsers
         {
@@ -27,11 +27,27 @@ namespace Terminal.Core.Settings
         }
 
         /// <summary>
-        /// Returns the moderator and user roles.
+        /// Available only to moderators.
         /// </summary>
-        public static string[] ModsAndUsers
+        public static string[] Moderators
         {
-            get { return new string[] { "User", "Moderator" }; }
+            get { return new string[] { "Moderator" }; }
+        }
+
+        /// <summary>
+        /// Available only to administrators.
+        /// </summary>
+        public static string[] Administrators
+        {
+            get { return new string[] { "Administrator" }; }
+        }
+
+        /// <summary>
+        /// Available to moderators and administrators.
+        /// </summary>
+        public static string[] ModsAndAdmins
+        {
+            get { return new string[] { "Moderator", "Administrator" }; }
         }
 
         /// <summary>
