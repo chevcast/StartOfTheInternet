@@ -27,7 +27,7 @@ namespace Terminal.Core.Hubs
                 var connectionId = Guid.Parse(Context.ConnectionId);
                 var user = _dataBucket.UserRepository.GetUser(username);
                 if (!user.ChannelStatuses.Any())
-                    Clients.writeLine(string.Format("{0} has joined.", user.Username));
+                    Clients.joinUser(user.Username);
                 var channelStatus = new ChannelStatus
                 {
                     ConnectionId = connectionId,
@@ -44,9 +44,9 @@ namespace Terminal.Core.Hubs
         {
             var channelStatus = _dataBucket.ChannelStatusRepository.GetChannelStatus(Guid.Parse(Context.ConnectionId));
             if (channelStatus != null)
-                Clients.writeLine(string.Format("{0}: {1}", channelStatus.User.Username, text));
+                Clients.writeLine(channelStatus.User.Username, text);
             else
-                Caller.writeLine("You are not logged in.");
+                Caller.message("You are not logged in.");
         }
 
         public void DisconnectUser()
@@ -58,7 +58,7 @@ namespace Terminal.Core.Hubs
                 _dataBucket.ChannelStatusRepository.DeleteChannelStatus(channel);
                 _dataBucket.SaveChanges();
                 if (!user.ChannelStatuses.Any())
-                    Clients.writeLine(string.Format("{0} has left.", user.Username));
+                    Clients.leaveUser(user.Username);
             }
         }
 

@@ -12,15 +12,27 @@
 
         var writeLine = function (text) {
             $('<div>')
-                .text(text)
+                .html(text)
                 .appendTo($chatDisplay);
+            $chatContainer.scrollTo('100%', 0, { axis: 'y' });
         };
 
         var chatHub = $.signalR.chatHub;
 
-        chatHub.writeLine = function (text) {
+        chatHub.joinUser = function (username) {
+            writeLine('<b>' + username + '</b> has joined.');
+        };
+
+        chatHub.leaveUser = function (username) {
+            writeLine('<b>' + username + '</b> has left.');
+        };
+
+        chatHub.message = function (text) {
             writeLine(text);
-            $chatContainer.scrollTo('100%', 0, { axis: 'y' });
+        };
+
+        chatHub.writeLine = function (username, text) {
+            writeLine('<b>{' + username + '}</b>&nbsp;' + text);
         };
 
         $chatDisplay = $('<div>').appendTo($chatContainer);
@@ -31,8 +43,11 @@
                e.stopPropagation();
                var key = e.keyCode ? e.keyCode : e.charCode;
                if (key == 13) {
-                   chatHub.send($(this).val());
-                   $(this).val('');
+                   var text = $(this).val();
+                   if (text.length > 0) {
+                       chatHub.send(text);
+                       $(this).val('');
+                   }
                }
            });
 
