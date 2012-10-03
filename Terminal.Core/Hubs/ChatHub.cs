@@ -27,16 +27,14 @@ namespace Terminal.Core.Hubs
                 var connectionId = Guid.Parse(Context.ConnectionId);
                 var user = _dataBucket.UserRepository.GetUser(username);
                 if (!user.ChannelStatuses.Any())
-                {
-                    var channelStatus = new ChannelStatus
-                    {
-                        ConnectionId = connectionId,
-                        ChannelName = "Default"
-                    };
-                    user.ChannelStatuses.Add(channelStatus);
-                    _dataBucket.SaveChanges();
                     Clients.writeLine(string.Format("{0} has joined.", user.Username));
-                }
+                var channelStatus = new ChannelStatus
+                {
+                    ConnectionId = connectionId,
+                    ChannelName = "Default"
+                };
+                user.ChannelStatuses.Add(channelStatus);
+                _dataBucket.SaveChanges();
                 //var connectedUsers = _dataBucket.ChannelStatusRepository.GetChannelStatuses("Default").Select(x => x.User.Username).Distinct();
                 //Caller.loadUsers(connectedUsers);
             }
@@ -59,12 +57,16 @@ namespace Terminal.Core.Hubs
                 var user = channel.User;
                 _dataBucket.ChannelStatusRepository.DeleteChannelStatus(channel);
                 _dataBucket.SaveChanges();
-                Clients.writeLine(string.Format("{0} has left.", user.Username));
+                if (!user.ChannelStatuses.Any())
+                    Clients.writeLine(string.Format("{0} has left.", user.Username));
             }
         }
 
         public Task Disconnect()
         {
+            // If the user simply refreshed the page then we want to let the connect event add another channelstatus entity
+            // before we delete the current one. This way the "user left" message will not appear.
+            System.Threading.Thread.Sleep(3000);
             DisconnectUser();
             return null;
         }

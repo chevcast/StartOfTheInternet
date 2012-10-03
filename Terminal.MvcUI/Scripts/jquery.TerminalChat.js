@@ -46,6 +46,9 @@
             // Temporary workaround to interact with terminal client.
             $(document).bind('userLoggedIn', function (e, username) { chatHub.connectUser(username); });
             $(document).bind('userLoggedOut', function () { chatHub.disconnectUser(); });
+
+            if (settings.callback)
+                settings.callback();
         });
     };
 })(jQuery);

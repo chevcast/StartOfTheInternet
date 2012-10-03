@@ -96,27 +96,29 @@
             $('#terminal, #chat').height($(window).height() - 75);
         }).resize();
 
-        $.coolType.setup(
-        {
-            soundFile: soundFile,
-            playSound: true,
-            speed: 25,
-            onSoundLoaded: function () {
-                $('#commandForm').terminalClient(
+        $('#chat').terminalChat({
+            callback: function () {
+                $.coolType.setup(
                 {
-                    elementToScroll: '#terminal',
-                    apiUrl: '@Url.Action("Index", "Api")',
-                    loggedinCallback: function (username) {
-                        $(document).trigger('userLoggedIn', username);
-                    },
-                    loggedoutCallback: function () {
-                        $(document).trigger('userLoggedOut');
+                    soundFile: soundFile,
+                    playSound: true,
+                    speed: 25,
+                    onSoundLoaded: function () {
+                        $('#commandForm').terminalClient(
+                        {
+                            elementToScroll: '#terminal',
+                            apiUrl: '@Url.Action("Index", "Api")',
+                            loggedinCallback: function (username) {
+                                $(document).trigger('userLoggedIn', username);
+                            },
+                            loggedoutCallback: function () {
+                                $(document).trigger('userLoggedOut');
+                            }
+                        });
                     }
                 });
             }
         });
-
-        $('#chat').terminalChat();
     }
 </script>
 <img class="backgroundImage" src="@Url.Content("~/content/tunnel.jpg")">
