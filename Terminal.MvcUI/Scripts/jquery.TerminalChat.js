@@ -43,12 +43,9 @@
             .appendTo($chatContainer);
 
         $.connection.hub.start({ transport: 'longPolling' }, function () {
-            //chatHub.connectUser(settings.username);
+            // Temporary workaround to interact with terminal client.
+            $(document).bind('userLoggedIn', function (e, username) { chatHub.connectUser(username); });
+            $(document).bind('userLoggedOut', function () { chatHub.disconnectUser(); });
         });
-
-        // Temporary workaround to interact with terminal client.
-        $(document).bind('userLoggedIn', function (e, username) { chatHub.connectUser(username); });
-        $(document).bind('userLoggedOut', function () { chatHub.disconnectUser(); });
-
     };
 })(jQuery);
