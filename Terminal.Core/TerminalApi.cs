@@ -430,6 +430,8 @@ namespace Terminal.Core
                         new BBTag("replycount", "<span id='replycount-${topicId}'>", "</span>", new BBAttribute("topicId", "")),
                         new BBTag("topicbody", "<div id='topicbody-${topicId}'>", "</div>", new BBAttribute("topicId", "")),
                         new BBTag("topicmaxpages", "<span id='topicmaxpages-${topicId}'>", "</span>", new BBAttribute("topicId", "")),
+                        new BBTag("editedbyuser", "<span id='editedbyuser-${topicId}'>", "</span>", new BBAttribute("topicId", "")),
+                        new BBTag("editedbydate", "<span id='editedbydate-${topicId}'>", "</span>", new BBAttribute("topicId", ""))
                     });
 
                     displayItem.Text = masterParser.ToHtml(displayItem.Text, false);
@@ -464,6 +466,8 @@ namespace Terminal.Core
                         new BBTag("replycount", "", "", new BBAttribute("topicId", "")),
                         new BBTag("topicbody", "", "", new BBAttribute("topicId", "")),
                         new BBTag("topicmaxpages", "", "", new BBAttribute("topicId", "")),
+                        new BBTag("editedbyuser", "", "", new BBAttribute("topicId", "")),
+                        new BBTag("editedbydate", "", "", new BBAttribute("topicId", ""))
                     });
 
                     displayItem.Text = masterParser.ToHtml(displayItem.Text, false);
