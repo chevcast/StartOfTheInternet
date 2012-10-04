@@ -97,6 +97,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\Objects\ABOUT.cs" />
     <Compile Include="Commands\Objects\CLS.cs" />
     <Compile Include="Commands\Interfaces\ICommand.cs" />
     <Compile Include="Commands\Objects\BOARDS.cs" />

@@ -345,35 +345,16 @@ namespace Terminal.Core
         /// <returns>A CommandResult option containing properties relevant to how data should be processed by the UI.</returns>
         private CommandResult DisplayHelp(IEnumerable<ICommand> commands, string[] args, CommandResult commandResult)
         {
-            var options = new OptionSet();
-            options.Add(
-                "?|help",
-                "Show help information.",
-                x =>
-                {
-                    HelpUtility.WriteHelpInformation(
-                        commandResult,
-                        "HELP",
-                        "[Option]",
-                        "Displays help information.",
-                        options
-                    );
-                }
-            );
             try
             {
                 if (args != null)
                 {
-                    var parsedArgs = options.Parse(args);
-                    if (parsedArgs.Count == args.Length)
-                    {
-                        var commandName = parsedArgs.First();
+                        var commandName = args.First();
                         var command = commands.SingleOrDefault(x => x.Name.Is(commandName));
                         if (command != null)
                             command.Invoke(new string[] { "-help" });
                         else
                             commandResult.WriteLine("'{0}' is not a recognized command.", commandName);
-                    }
                 }
                 else
                 {

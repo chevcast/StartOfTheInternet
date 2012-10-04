@@ -75,6 +75,7 @@ namespace Terminal.Core.Ninject
             Bind<ICommand>().To<STATS>();
             Bind<ICommand>().To<TOPIC>();
             Bind<ICommand>().To<USER>();
+            Bind<ICommand>().To<ABOUT>();
         }
     }
 }

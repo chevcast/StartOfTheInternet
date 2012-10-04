@@ -1,15 +1,18 @@
 ﻿using Mono.Options;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Terminal.Core.Commands.Interfaces;
-using Terminal.Core.Objects;
+using Terminal.Core.Enums;
 using Terminal.Core.Settings;
 using Terminal.Core.Utilities;
 
 namespace Terminal.Core.Commands.Objects
 {
-    public class CLS : ICommand
+    public class ABOUT : ICommand
     {
-        public CommandResult CommandResult { get; set; }
+        public Core.Objects.CommandResult CommandResult { get; set; }
 
         public IEnumerable<ICommand> AvailableCommands { get; set; }
 
@@ -20,7 +23,7 @@ namespace Terminal.Core.Commands.Objects
 
         public string Name
         {
-            get { return "CLS"; }
+            get { return "ABOUT"; }
         }
 
         public string Parameters
@@ -30,7 +33,7 @@ namespace Terminal.Core.Commands.Objects
 
         public string Description
         {
-            get { return "Clears the screen."; }
+            get { return "Display information about the SOTI terminal project."; }
         }
 
         public bool ShowHelp
@@ -47,20 +50,25 @@ namespace Terminal.Core.Commands.Objects
                 x => HelpUtility.WriteHelpInformation(this, options)
             );
 
-            if (args == null)
+            if (args != null)
             {
-                CommandResult.ClearScreen = true;
-                CommandResult.CommandContext.Deactivate();
-            }
-            else
                 try
                 {
                     options.Parse(args);
                 }
                 catch (OptionException ex)
                 {
-                    CommandResult.WriteLine(ex.Message);
+                    CommandResult.WriteLine(ex.ToString());
                 }
+            }
+            else
+            {
+                CommandResult.WriteLine("The SOTI project is an open-source web terminal project which is maintained on Github.");
+                CommandResult.WriteLine(DisplayMode.Parse | DisplayMode.DontType, "[url]https://github.com/Chevex/StartOfTheInternet[/url]");
+                CommandResult.WriteLine();
+                CommandResult.WriteLine("For more information about the project, how to get involved, or how to compile your own version of SOTI on your own computer visit the SOTI wiki.");
+                CommandResult.WriteLine(DisplayMode.Parse | DisplayMode.DontType, "[url]https://github.com/Chevex/StartOfTheInternet/wiki[/url]");
+            }
         }
     }
 }

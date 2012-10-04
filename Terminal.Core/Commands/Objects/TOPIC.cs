@@ -209,13 +209,7 @@ namespace Terminal.Core.Commands.Objects
                     {
                         if (showHelp)
                         {
-                            HelpUtility.WriteHelpInformation(
-                                CommandResult,
-                                Name,
-                                Parameters,
-                                Description,
-                                options
-                            );
+                            HelpUtility.WriteHelpInformation(this, options);
                         }
                         else if (replyToTopic)
                         {

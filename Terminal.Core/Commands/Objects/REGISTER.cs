@@ -62,16 +62,7 @@ namespace Terminal.Core.Commands.Objects
             options.Add(
                 "?|help",
                 "Show help information.",
-                x =>
-                {
-                    HelpUtility.WriteHelpInformation(
-                        CommandResult,
-                        Name,
-                        Parameters,
-                        Description,
-                        options
-                    );
-                }
+                x => HelpUtility.WriteHelpInformation(this, options)
             );
             options.Add(
                 "LUE|lue",
