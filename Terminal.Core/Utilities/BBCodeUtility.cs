@@ -31,6 +31,7 @@ namespace Terminal.Core.Utilities
         {
             var parser = new BBCodeParser(new[]
                 {
+                    new BBTag("transmit", "<span class='transmit' transmit='${transmit}'>", "</span>", new BBAttribute("transmit", "")),
                     new BBTag("code", "<pre><code>", "</code></pre>"), 
                     new BBTag("color", "<span style='color: ${color}; border-color: ${color};'>", "</span>", new BBAttribute("color", "")), 
                     new BBTag("img", "", "", true, true, content =>
