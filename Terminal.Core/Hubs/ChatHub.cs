@@ -51,11 +51,12 @@ namespace Terminal.Core.Hubs
 
         public void DisconnectUser()
         {
-            var channel = _dataBucket.ChannelStatusRepository.GetChannelStatus(Guid.Parse(Context.ConnectionId));
-            if (channel != null)
+            var channelStatus = _dataBucket.ChannelStatusRepository.GetChannelStatus(Guid.Parse(Context.ConnectionId));
+            var fiveMinutesAgo = DateTime.UtcNow.AddMinutes(-5);
+            if (channelStatus != null)
             {
-                var user = channel.User;
-                _dataBucket.ChannelStatusRepository.DeleteChannelStatus(channel);
+                var user = channelStatus.User;
+                _dataBucket.ChannelStatusRepository.DeleteChannelStatus(channelStatus);
                 _dataBucket.SaveChanges();
                 if (!user.ChannelStatuses.Any())
                     Clients.leaveUser(user.Username);
