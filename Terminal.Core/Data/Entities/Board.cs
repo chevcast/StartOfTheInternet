@@ -14,6 +14,7 @@
         public bool Locked { get; set; }
         public bool Anonymous { get; set; }
         public bool AllTopics { get; set; }
+        public bool MembersOnly { get; set; }
 
         public virtual ICollection<Topic> Topics { get; set; }
 

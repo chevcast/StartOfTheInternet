@@ -136,6 +136,10 @@
     <Compile Include="Data\Entities\Migrations\201210011420340_channel-status-entity.Designer.cs">
       <DependentUpon>201210011420340_channel-status-entity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\Entities\Migrations\201210050420237_Add MembersOnly property to board.cs" />
+    <Compile Include="Data\Entities\Migrations\201210050420237_Add MembersOnly property to board.Designer.cs">
+      <DependentUpon>201210050420237_Add MembersOnly property to board.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\Entities\Reply.cs" />
     <Compile Include="Data\Entities\Role.cs" />
     <Compile Include="Data\Entities\Tag.cs" />
@@ -244,6 +248,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Data\Entities\Migrations\201210011420340_channel-status-entity.resx">
       <DependentUpon>201210011420340_channel-status-entity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\Entities\Migrations\201210050420237_Add MembersOnly property to board.resx">
+      <DependentUpon>201210050420237_Add MembersOnly property to board.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
