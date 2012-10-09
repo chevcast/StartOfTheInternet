@@ -430,7 +430,8 @@ namespace Terminal.Core
                         new BBTag("topicreplycount", "<span id='topicreplycount'>", "</span>"),
                         new BBTag("topicbody", "<div id='topicbody'>", "</div>"),
                         new BBTag("topicmaxpages", "<span id='topicmaxpages'>", "</span>"),
-                        new BBTag("topiceditedby", "<span id='topiceditedby'>", "</span>")
+                        new BBTag("topiceditedby", "<span id='topiceditedby'>", "</span>"),
+                        new BBTag("replyeditedby", "<span id='replyeditedby'>", "</span>")
                     });
 
                     displayItem.Text = masterParser.ToHtml(displayItem.Text, false);
@@ -465,7 +466,8 @@ namespace Terminal.Core
                         new BBTag("topicreplycount", "", ""),
                         new BBTag("topicbody", "", ""),
                         new BBTag("topicmaxpages", "", ""),
-                        new BBTag("topiceditedby", "", "")
+                        new BBTag("topiceditedby", "", ""),
+                        new BBTag("replyeditedby", "", "")
                     });
 
                     displayItem.Text = masterParser.ToHtml(displayItem.Text, false);
