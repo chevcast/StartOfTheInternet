@@ -424,14 +424,14 @@ namespace Terminal.Core
                     var masterParser = new BBCodeParser(new[]
                     {
                         new BBTag("transmit", "<span class='transmit' transmit='${transmit}'>", "</span>", new BBAttribute("transmit", "")),
-                        new BBTag("topicboardid", "<span id='topicboardid-${topicId}'>", "</span>", new BBAttribute("topicId", "")),
-                        new BBTag("topicstatus", "<span id='topicstatus-${topicId}'>", "</span>", new BBAttribute("topicId", "")),
-                        new BBTag("topictitle", "<span id='topictitle-${topicId}'>", "</span>", new BBAttribute("topicId", "")),
-                        new BBTag("replycount", "<span id='replycount-${topicId}'>", "</span>", new BBAttribute("topicId", "")),
-                        new BBTag("topicbody", "<div id='topicbody-${topicId}'>", "</div>", new BBAttribute("topicId", "")),
-                        new BBTag("topicmaxpages", "<span id='topicmaxpages-${topicId}'>", "</span>", new BBAttribute("topicId", "")),
-                        new BBTag("editedbyuser", "<span id='editedbyuser-${topicId}'>", "</span>", new BBAttribute("topicId", "")),
-                        new BBTag("editedbydate", "<span id='editedbydate-${topicId}'>", "</span>", new BBAttribute("topicId", ""))
+                        new BBTag("topicboardid", "<span id='topicboardid'>", "</span>"),
+                        new BBTag("topicstatus", "<span id='topicstatus-${topicId}'>", "</span>"),
+                        new BBTag("topictitle", "<span id='topictitle-${topicId}'>", "</span>"),
+                        new BBTag("topicreplycount", "<span id='replycount-${topicId}'>", "</span>"),
+                        new BBTag("topicbody", "<div id='topicbody-${topicId}'>", "</div>"),
+                        new BBTag("topicmaxpages", "<span id='topicmaxpages-${topicId}'>", "</span>"),
+                        new BBTag("topiceditedbyuser", "<span id='editedbyuser-${topicId}'>", "</span>"),
+                        new BBTag("topiceditedbydate", "<span id='editedbydate-${topicId}'>", "</span>"),
                     });
 
                     displayItem.Text = masterParser.ToHtml(displayItem.Text, false);
@@ -459,15 +459,15 @@ namespace Terminal.Core
                 {
                     var masterParser = new BBCodeParser(new[]
                     {
-                        new BBTag("transmit", "", "", new BBAttribute("transmit", "")),
-                        new BBTag("topicboardid", "", "", new BBAttribute("topicId", "")),
-                        new BBTag("topicstatus", "", "", new BBAttribute("topicId", "")),
-                        new BBTag("topictitle", "", "", new BBAttribute("topicId", "")),
-                        new BBTag("replycount", "", "", new BBAttribute("topicId", "")),
-                        new BBTag("topicbody", "", "", new BBAttribute("topicId", "")),
-                        new BBTag("topicmaxpages", "", "", new BBAttribute("topicId", "")),
-                        new BBTag("editedbyuser", "", "", new BBAttribute("topicId", "")),
-                        new BBTag("editedbydate", "", "", new BBAttribute("topicId", ""))
+                        new BBTag("transmit", "", ""),
+                        new BBTag("topicboardid", "", ""),
+                        new BBTag("topicstatus", "", ""),
+                        new BBTag("topictitle", "", ""),
+                        new BBTag("replycount", "", ""),
+                        new BBTag("topicbody", "", ""),
+                        new BBTag("topicmaxpages", "", ""),
+                        new BBTag("editedbyuser", "", ""),
+                        new BBTag("editedbydate", "", ""),
                     });
 
                     displayItem.Text = masterParser.ToHtml(displayItem.Text, false);

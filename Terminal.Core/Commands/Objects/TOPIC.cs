@@ -667,20 +667,22 @@ namespace Terminal.Core.Commands.Objects
                         status.Append("[STICKY] ");
                     if (topic.Locked)
                         status.Append("[LOCKED] ");
-                    CommandResult.WriteLine(DisplayMode.Inverted | DisplayMode.DontType, "{{[transmit=BOARD][topicboardid={1}]{0}[/topicboardid][/transmit]}} > {{[transmit=TOPIC]{1}[/transmit]}} [topicstatus={1}]{2}[/topicstatus][topictitle={1}]{3}[/topictitle]", topic.BoardID, topic.TopicID, status, topic.Title);
+                    CommandResult.WriteLine(DisplayMode.Inverted | DisplayMode.DontType, "{{[transmit=BOARD][topicboardid]{0}[/topicboardid][/transmit]}} > {{[transmit=TOPIC]{1}[/transmit]}} [topicstatus]{2}[/topicstatus][topictitle]{3}[/topictitle]", topic.BoardID, topic.TopicID, status, topic.Title);
                     var topicAuthor = topic.Board.Anonymous && (!CommandResult.IsUserLoggedIn || (!CommandResult.CurrentUser.IsModeratorOrAdministrator() && topic.Username != CommandResult.CurrentUser.Username)) ? "Anon" : topic.Username;
-                    CommandResult.WriteLine(DisplayMode.Italics | DisplayMode.DontType, "Posted by [transmit=USER]{0}[/transmit] on {1} | [replycount={3}]{2}[/replycount] replies", topicAuthor, topic.PostedDate.TimePassed(), topicPage.TotalItems, topic.TopicID);
+                    CommandResult.WriteLine(DisplayMode.Italics | DisplayMode.DontType, "Posted by [transmit=USER]{0}[/transmit] on {1} | [topicreplycount]{2}[/topicreplycount] replies", topicAuthor, topic.PostedDate.TimePassed(), topicPage.TotalItems, topic.TopicID);
+                    var editedByContent = string.Empty;
                     if (topic.EditedBy != null)
                     {
                         var editedBy = topic.Board.Anonymous && (!CommandResult.IsUserLoggedIn || (!CommandResult.CurrentUser.IsModeratorOrAdministrator() && topic.EditedBy != CommandResult.CurrentUser.Username)) ? "Anon" : topic.EditedBy;
-                        CommandResult.WriteLine(DisplayMode.Italics | DisplayMode.DontType, "[Edited by [transmit=USER][editedbyuser={2}]{0}[/editedbyuser][/transmit] [editedbydate={2}]{1}[/editedbydate]]", editedBy, topic.LastEdit.TimePassed(), topic.TopicID);
+                        editedByContent = string.Format("[Edited by [transmit=USER]{0}[/transmit] {1}]", editedBy, topic.LastEdit.TimePassed(), topic.TopicID);
                     }
+                    CommandResult.WriteLine(DisplayMode.Italics | DisplayMode.DontType, "[topiceditedby]{0}[/topiceditedby]", editedByContent);
                     CommandResult.WriteLine();
-                    CommandResult.WriteLine(DisplayMode.Parse | DisplayMode.DontType, "[topicbody={0}]{1}[/topicbody]", topic.TopicID, topic.Body);
+                    CommandResult.WriteLine(DisplayMode.Parse | DisplayMode.DontType, "[topicbody]{1}[/topicbody]", topic.TopicID, topic.Body);
                     CommandResult.WriteLine();
                     CommandResult.WriteLine();
                     CommandResult.WriteLine();
-                    CommandResult.WriteLine(DisplayMode.DontType, "Page {0}/[topicmaxpages={2}]{1}[/topicmaxpages]", page, topicPage.TotalPages, topic.TopicID);
+                    CommandResult.WriteLine(DisplayMode.DontType, "Page {0}/[topicmaxpages]{1}[/topicmaxpages]", page, topicPage.TotalPages, topic.TopicID);
                     CommandResult.WriteLine();
                     CommandResult.WriteLine(DisplayMode.Dim | DisplayMode.DontType, new string('-', AppSettings.DividerLength));
                     CommandResult.WriteLine();
@@ -692,15 +694,16 @@ namespace Terminal.Core.Commands.Objects
                             displayMode |= DisplayMode.Dim;
                         var replyAuthor = reply.Topic.Board.Anonymous && (!CommandResult.IsUserLoggedIn || (!CommandResult.CurrentUser.IsModeratorOrAdministrator() && reply.Username != CommandResult.CurrentUser.Username)) ? "Anon" : reply.Username;
                         CommandResult.WriteLine(displayMode, "{{[transmit=-r=]{0}[/transmit]}} | Reply by [transmit=USER]{1}[/transmit] {2}", reply.ReplyID, replyAuthor, reply.PostedDate.TimePassed());
-                        CommandResult.WriteLine();
-                        CommandResult.WriteLine(displayMode | DisplayMode.Parse, "{0}", reply.Body);
-                        CommandResult.WriteLine();
+                        var replyEditedByContent = string.Empty;
                         if (reply.EditedBy != null)
                         {
                             var editedBy = reply.Topic.Board.Anonymous && (!CommandResult.IsUserLoggedIn || (!CommandResult.CurrentUser.IsModeratorOrAdministrator() && reply.EditedBy != CommandResult.CurrentUser.Username)) ? "Anon" : reply.EditedBy;
-                            CommandResult.WriteLine(displayMode | DisplayMode.Italics, "[Edited by [transmit=USER]{0}[/transmit] {1}]", editedBy, reply.LastEdit.TimePassed());
-                            CommandResult.WriteLine();
+                            replyEditedByContent = string.Format("[Edited by [transmit=USER]{0}[/transmit] {1}]", editedBy, reply.LastEdit.TimePassed());
                         }
+                        CommandResult.WriteLine(displayMode | DisplayMode.Italics, "[replyeditedby]{0}[/replyeditedby]", replyEditedByContent);
+                        CommandResult.WriteLine();
+                        CommandResult.WriteLine(displayMode | DisplayMode.Parse, "{0}", reply.Body);
+                        CommandResult.WriteLine();
                         CommandResult.WriteLine(DisplayMode.Dim | DisplayMode.DontType, new string('-', AppSettings.DividerLength));
                         CommandResult.WriteLine();
                     }
