@@ -100,7 +100,8 @@ namespace Terminal.Core.Commands.Objects
                     }
                     else
                         CommandResult.WriteLine("Invalid username or password.");
-                    CommandResult.CommandContext.Restore();
+                    if (CommandResult.CommandContext.Status == ContextStatus.Forced)
+                        CommandResult.CommandContext.Restore();
                 }
             }
         }
