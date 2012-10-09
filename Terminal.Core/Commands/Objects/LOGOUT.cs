@@ -85,7 +85,7 @@ namespace Terminal.Core.Commands.Objects
                     _dataBucket.UserRepository.UpdateUser(CommandResult.CurrentUser);
                     _dataBucket.SaveChanges();
                     CommandResult.WriteLine("You have been logged out.");
-                    CommandResult.CommandContext.Deactivate();
+                    CommandResult.CommandContext.Restore();
                     CommandResult.CurrentUser = null;
                 }
             }

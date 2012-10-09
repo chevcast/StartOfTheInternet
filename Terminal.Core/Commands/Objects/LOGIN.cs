@@ -100,7 +100,7 @@ namespace Terminal.Core.Commands.Objects
                     }
                     else
                         CommandResult.WriteLine("Invalid username or password.");
-                    CommandResult.CommandContext.Deactivate();
+                    CommandResult.CommandContext.Restore();
                 }
             }
         }
