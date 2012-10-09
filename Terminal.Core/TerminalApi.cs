@@ -425,13 +425,12 @@ namespace Terminal.Core
                     {
                         new BBTag("transmit", "<span class='transmit' transmit='${transmit}'>", "</span>", new BBAttribute("transmit", "")),
                         new BBTag("topicboardid", "<span id='topicboardid'>", "</span>"),
-                        new BBTag("topicstatus", "<span id='topicstatus-${topicId}'>", "</span>"),
-                        new BBTag("topictitle", "<span id='topictitle-${topicId}'>", "</span>"),
-                        new BBTag("topicreplycount", "<span id='replycount-${topicId}'>", "</span>"),
-                        new BBTag("topicbody", "<div id='topicbody-${topicId}'>", "</div>"),
-                        new BBTag("topicmaxpages", "<span id='topicmaxpages-${topicId}'>", "</span>"),
-                        new BBTag("topiceditedbyuser", "<span id='editedbyuser-${topicId}'>", "</span>"),
-                        new BBTag("topiceditedbydate", "<span id='editedbydate-${topicId}'>", "</span>"),
+                        new BBTag("topicstatus", "<span id='topicstatus'>", "</span>"),
+                        new BBTag("topictitle", "<span id='topictitle'>", "</span>"),
+                        new BBTag("topicreplycount", "<span id='topicreplycount'>", "</span>"),
+                        new BBTag("topicbody", "<div id='topicbody'>", "</div>"),
+                        new BBTag("topicmaxpages", "<span id='topicmaxpages'>", "</span>"),
+                        new BBTag("topiceditedby", "<span id='topiceditedby'>", "</span>")
                     });
 
                     displayItem.Text = masterParser.ToHtml(displayItem.Text, false);
@@ -463,11 +462,10 @@ namespace Terminal.Core
                         new BBTag("topicboardid", "", ""),
                         new BBTag("topicstatus", "", ""),
                         new BBTag("topictitle", "", ""),
-                        new BBTag("replycount", "", ""),
+                        new BBTag("topicreplycount", "", ""),
                         new BBTag("topicbody", "", ""),
                         new BBTag("topicmaxpages", "", ""),
-                        new BBTag("editedbyuser", "", ""),
-                        new BBTag("editedbydate", "", ""),
+                        new BBTag("topiceditedby", "", "")
                     });
 
                     displayItem.Text = masterParser.ToHtml(displayItem.Text, false);
