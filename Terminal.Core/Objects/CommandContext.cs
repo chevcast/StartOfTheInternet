@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Terminal.Core.Enums;
 
 namespace Terminal.Core.Objects
@@ -45,6 +43,8 @@ namespace Terminal.Core.Objects
         public List<string> CurrentSearchTerms { get; set; }
 
         public string CurrentSortOrder { get; set; }
+
+        public Action SetContextCallback { get; set; }
 
         /// <summary>
         /// The current status of the context.
@@ -90,6 +90,8 @@ namespace Terminal.Core.Objects
             Command = command;
             Args = args;
             Text = text;
+            if (SetContextCallback != null)
+                SetContextCallback();
         }
 
         /// <summary>

@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Ninject.Modules;
-using Terminal.Core.Commands.Objects;
-using Terminal.Core.Commands.Interfaces;
-using Terminal.Core.Data.Entities;
-using Terminal.Core.Settings;
-using System.Data.EntityClient;
-using System.Web;
+﻿using Ninject.Modules;
 using Ninject.Web.Common;
+using Terminal.Core.Commands.Interfaces;
+using Terminal.Core.Commands.Objects;
 using Terminal.Core.Data;
-using SignalR;
+using Terminal.Core.Data.Entities;
 
 namespace Terminal.Core.Ninject
 {

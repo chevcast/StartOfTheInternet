@@ -119,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
+    <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\RSSController.cs" />
     <Compile Include="Controllers\TerminalController.cs" />
