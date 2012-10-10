@@ -65,7 +65,7 @@ namespace Terminal.Core.Commands.Objects
             if (args == null)
             {
                 CommandResult.ScrollToBottom = false;
-                CommandResult.CommandContext.Deactivate();
+                CommandResult.DeactivateContext();
                 CommandResult.ClearScreen = true;
                 CommandResult.WriteLine(DisplayMode.Inverted, "Available Discussion Boards");
                 var boards = _dataBucket.BoardRepository.GetBoards(CommandResult.UserLoggedAndModOrAdmin());

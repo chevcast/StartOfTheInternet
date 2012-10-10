@@ -50,7 +50,7 @@ namespace Terminal.Core.Commands.Objects
             if (args == null)
             {
                 CommandResult.ClearScreen = true;
-                CommandResult.CommandContext.Deactivate();
+                CommandResult.DeactivateContext();
             }
             else
                 try

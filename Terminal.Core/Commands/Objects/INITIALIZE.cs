@@ -57,7 +57,7 @@ namespace Terminal.Core.Commands.Objects
             {
                 if (CommandResult.CurrentUser == null)
                 {
-                    CommandResult.CommandContext.Deactivate();
+                    CommandResult.DeactivateContext();
                     //CommandResult.WriteLine(DisplayMode.DontType | DisplayMode.DontWrap, AppSettings.Logo);
                     //CommandResult.WriteLine();
                     //CommandResult.WriteLine("Type HELP to begin.");

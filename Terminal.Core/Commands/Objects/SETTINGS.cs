@@ -141,13 +141,13 @@ namespace Terminal.Core.Commands.Objects
                             {
                                 CommandResult.WriteLine("Type your new password.");
                                 CommandResult.PasswordField = true;
-                                CommandResult.CommandContext.SetPrompt(Name, args, "NEW PASSWORD");
+                                CommandResult.SetPrompt(Name, args, "NEW PASSWORD");
                             }
                             else if (CommandResult.CommandContext.PromptData.Length == 1)
                             {
                                 CommandResult.WriteLine("Confirm your new password.");
                                 CommandResult.PasswordField = true;
-                                CommandResult.CommandContext.SetPrompt(Name, args, "CONFIRM PASSWORD");
+                                CommandResult.SetPrompt(Name, args, "CONFIRM PASSWORD");
                             }
                             else if (CommandResult.CommandContext.PromptData.Length == 2)
                             {
@@ -162,7 +162,7 @@ namespace Terminal.Core.Commands.Objects
                                 }
                                 else
                                     CommandResult.WriteLine("Passwords did not match.");
-                                CommandResult.CommandContext.Restore();
+                                CommandResult.RestoreContext();
                             }
                         }
                         else if (setTimeZone)
@@ -177,7 +177,7 @@ namespace Terminal.Core.Commands.Objects
                                 }
                                 CommandResult.WriteLine();
                                 CommandResult.WriteLine("Enter time zone ID.");
-                                CommandResult.CommandContext.SetPrompt(Name, args, "CHANGE TIME ZONE");
+                                CommandResult.SetPrompt(Name, args, "CHANGE TIME ZONE");
                             }
                             else if (CommandResult.CommandContext.PromptData.Length == 1)
                             {
@@ -192,22 +192,22 @@ namespace Terminal.Core.Commands.Objects
                                         _dataBucket.UserRepository.UpdateUser(CommandResult.CurrentUser);
                                         _dataBucket.SaveChanges();
                                         CommandResult.WriteLine("'{0}' successfully set as your current time zone.", timeZone.Id);
-                                        CommandResult.CommandContext.Restore();
+                                        CommandResult.RestoreContext();
                                     }
                                     else
                                     {
                                         CommandResult.WriteLine("'{0}' does not match any available time zone ID.", timeZoneId);
-                                        CommandResult.CommandContext.Restore();
+                                        CommandResult.RestoreContext();
                                         CommandResult.WriteLine("Enter time zone ID.");
-                                        CommandResult.CommandContext.SetPrompt(Name, args, "CHANGE TIME ZONE");
+                                        CommandResult.SetPrompt(Name, args, "CHANGE TIME ZONE");
                                     }
                                 }
                                 else
                                 {
                                     CommandResult.WriteLine("'{0}' is not a valid time zone ID.", promptData);
-                                    CommandResult.CommandContext.Restore();
+                                    CommandResult.RestoreContext();
                                     CommandResult.WriteLine("Enter time zone ID.");
-                                    CommandResult.CommandContext.SetPrompt(Name, args, "CHANGE TIME ZONE");
+                                    CommandResult.SetPrompt(Name, args, "CHANGE TIME ZONE");
                                 }
                             }
                         }

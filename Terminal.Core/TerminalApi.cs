@@ -19,6 +19,8 @@ using Terminal.Core.Data;
 
 namespace Terminal.Core
 {
+    public delegate void TerminalEventHandler(CommandResult commandResult);
+
     /// <summary>
     /// The terminal core is the entry point to Terminal.Core.
     /// Pass in a command string adn Terminal.Core will parse it and execute it.
@@ -110,6 +112,8 @@ namespace Terminal.Core
             }
         }
 
+        public TerminalEvents TerminalEvents { get; set; }
+
         #endregion
 
         #region Constructors
@@ -127,6 +131,7 @@ namespace Terminal.Core
             _commands = commands;
             _dataBucket = dataBucket;
             _commandContext = new CommandContext();
+            TerminalEvents = new TerminalEvents();
         }
 
         #endregion
@@ -182,12 +187,12 @@ namespace Terminal.Core
             var availableRoles = _currentUser != null ? _currentUser.Roles.Select(x => x.Name).ToArray() : new string[] { "Visitor" };
 
             // Create command result.
-            var commandResult = new CommandResult
+            var commandResult = new CommandResult(TerminalEvents)
             {
                 Command = commandName.ToUpper(),
                 CurrentUser = _currentUser,
                 CommandContext = _commandContext,
-                IPAddress = _ipAddress
+                IPAddress = _ipAddress,
             };
 
             // Obtain all commands for the roles the user is a part of.
@@ -215,7 +220,7 @@ namespace Terminal.Core
             var command = commands.SingleOrDefault(x => x.Name.Is(commandName));
 
             if (commandName.Is("INITIALIZE"))
-                _commandContext.Deactivate();
+                commandResult.DeactivateContext();
 
             // Perform different behaviors based on the current command context.
             switch (_commandContext.Status)
@@ -283,7 +288,7 @@ namespace Terminal.Core
                     }
                     else
                     {
-                        commandResult.CommandContext.Restore();
+                        commandResult.RestoreContext();
                         commandResult.WriteLine("Action canceled.");
                     }
                     break;

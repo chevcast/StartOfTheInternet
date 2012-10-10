@@ -139,7 +139,7 @@ namespace Terminal.Core.Commands.Objects
                             if (CommandResult.CommandContext.PromptData == null)
                             {
                                 CommandResult.WriteLine("Are you sure you want to delete all {0} messages? (Y/N)", sent ? "sent" : "received");
-                                CommandResult.CommandContext.SetPrompt(Name, args, string.Format("DELETE {0} CONFIRM", sent ? "SENT" : "RECEIVED"));
+                                CommandResult.SetPrompt(Name, args, string.Format("DELETE {0} CONFIRM", sent ? "SENT" : "RECEIVED"));
                             }
                             else if (CommandResult.CommandContext.PromptData.Length == 1)
                             {
@@ -158,13 +158,13 @@ namespace Terminal.Core.Commands.Objects
                                     }
                                     CommandResult.WriteLine("All {0} messages for '{1}' have been deleted.", sent ? "sent" : "received", username);
                                     CommandResult.CommandContext.PromptData = null;
-                                    CommandResult.CommandContext.Restore();
+                                    CommandResult.RestoreContext();
                                 }
                                 else
                                 {
                                     CommandResult.WriteLine("{0} messages were not deleted.", sent ? "Sent" : "Received");
                                     CommandResult.CommandContext.PromptData = null;
-                                    CommandResult.CommandContext.Restore();
+                                    CommandResult.RestoreContext();
                                 }
                             }
                         }
@@ -234,7 +234,7 @@ namespace Terminal.Core.Commands.Objects
                 CommandResult.WriteLine(DisplayMode.DontType, "Page {0}/{1}", page, messagesPage.TotalPages);
                 CommandResult.WriteLine();
                 CommandResult.CommandContext.CurrentPage = page;
-                CommandResult.CommandContext.Set(ContextStatus.Passive, Name, sent ? new string[] { "-s" } : null, sent ? "SENT" : "INBOX");
+                CommandResult.SetContext(ContextStatus.Passive, Name, sent ? new string[] { "-s" } : null, sent ? "SENT" : "INBOX");
             }
             else
                 CommandResult.WriteLine("There is no user with username '{0}'.", username);

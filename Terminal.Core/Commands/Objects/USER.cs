@@ -164,7 +164,7 @@ namespace Terminal.Core.Commands.Objects
                                         if (CommandResult.CommandContext.PromptData == null)
                                         {
                                             CommandResult.WriteLine("Type the details of your warning to '{0}'.", user.Username);
-                                            CommandResult.CommandContext.SetPrompt(Name, args, string.Format("{0} WARNING", user.Username));
+                                            CommandResult.SetPrompt(Name, args, string.Format("{0} WARNING", user.Username));
                                         }
                                         else if (CommandResult.CommandContext.PromptData.Length == 1)
                                         {
@@ -194,7 +194,7 @@ namespace Terminal.Core.Commands.Objects
                                             });
                                             _dataBucket.UserRepository.UpdateUser(user);
                                             _dataBucket.SaveChanges();
-                                            CommandResult.CommandContext.Restore();
+                                            CommandResult.RestoreContext();
                                             CommandResult.WriteLine("Warning successfully issued to '{0}'.", user.Username);
                                         }
                                     }
@@ -231,7 +231,7 @@ namespace Terminal.Core.Commands.Objects
                                                     CommandResult.WriteLine("5 = One Month");
                                                     CommandResult.WriteLine("6 = One Year");
                                                     CommandResult.WriteLine("7 = 42 Years");
-                                                    CommandResult.CommandContext.SetPrompt(Name, args, string.Format("{0} BAN SEVERITY", user.Username));
+                                                    CommandResult.SetPrompt(Name, args, string.Format("{0} BAN SEVERITY", user.Username));
                                                 }
                                                 else if (CommandResult.CommandContext.PromptData.Length == 1)
                                                 {
@@ -242,7 +242,7 @@ namespace Terminal.Core.Commands.Objects
                                                         if (banType >= 1 && banType <= 7)
                                                         {
                                                             CommandResult.WriteLine("Type a reason for this ban.");
-                                                            CommandResult.CommandContext.SetPrompt(Name, args, string.Format("{0} BAN REASON", user.Username));
+                                                            CommandResult.SetPrompt(Name, args, string.Format("{0} BAN REASON", user.Username));
                                                         }
                                                         else
                                                             CommandResult.WriteLine("'{0}' is not a valid ban type.", banType);
@@ -303,7 +303,7 @@ namespace Terminal.Core.Commands.Objects
                                                             });
                                                             _dataBucket.UserRepository.UpdateUser(CommandResult.CurrentUser);
                                                             _dataBucket.SaveChanges();
-                                                            CommandResult.CommandContext.Restore();
+                                                            CommandResult.RestoreContext();
                                                             CommandResult.WriteLine("'{0}' banned successfully.", user.Username);
                                                         }
                                                         else

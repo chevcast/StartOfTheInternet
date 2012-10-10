@@ -14,13 +14,16 @@ namespace Terminal.Core.Objects
     /// </summary>
     public class CommandResult
     {
+        private TerminalEvents _terminalEvents;
+
         /// <summary>
         /// Set default values for certain properties.
         /// </summary>
-        public CommandResult()
+        public CommandResult(TerminalEvents terminalEvents)
         {
             DisplayItems = new List<DisplayItem>();
             ScrollToBottom = true;
+            _terminalEvents = terminalEvents;
         }
 
         /// <summary>
@@ -132,6 +135,107 @@ namespace Terminal.Core.Objects
                 Text = string.Format(text, args),
                 DisplayMode = displayMode
             });
+        }
+
+        /// <summary>
+        /// Sets up a prompt where all data from the command line will be dumped into the PromptData collection.
+        /// </summary>
+        /// <param name="command">The command to be set as the contexted command.</param>
+        /// <param name="args">The arguments to be set as the contexted arguments.</param>
+        /// <param name="text">The custom text to display next to the command line.</param>
+        public void SetPrompt(string command, string[] args, string text)
+        {
+            CommandContext.Prompt = true;
+            SetContext(ContextStatus.Forced, command, args, text);
+        }
+
+        /// <summary>
+        /// Set the current command context.
+        /// </summary>
+        /// <param name="status">The status of the context you are setting.</param>
+        /// <param name="command">The command to be set as the contexted command.</param>
+        /// <param name="args">The arguments to be set as the contexted arguments.</param>
+        /// <param name="text">The custom text to display next to the command line.</param>
+        public void SetContext(ContextStatus status, string command, string[] args, string text)
+        {
+            if (_terminalEvents.OnBeforeSetContext != null)
+                _terminalEvents.OnBeforeSetContext(this);
+            if (CommandContext.Status == ContextStatus.Passive)
+                if (status == ContextStatus.Forced)
+                    BackupContext();
+            CommandContext.Status = status;
+            CommandContext.Command = command;
+            CommandContext.Args = args;
+            CommandContext.Text = text;
+            if (_terminalEvents.OnSetContext != null)
+                _terminalEvents.OnSetContext(this);
+        }
+
+        /// <summary>
+        /// Save the current command context as the previous command context.
+        /// </summary>
+        private void BackupContext()
+        {
+            if (_terminalEvents.OnBeforeBackupContext != null)
+                _terminalEvents.OnBeforeBackupContext(this);
+            CommandContext.PreviousContext = new CommandContext
+            {
+                Status = CommandContext.Status,
+                Command = CommandContext.Command,
+                Args = CommandContext.Args,
+                Text = CommandContext.Text,
+                Prompt = CommandContext.Prompt,
+                PromptData = CommandContext.PromptData,
+                PreviousContext = CommandContext.PreviousContext
+            };
+            if (_terminalEvents.OnBackupContext != null)
+                _terminalEvents.OnBackupContext(this);
+        }
+
+        /// <summary>
+        /// Restore the current command context to the state of the previous command context.
+        /// </summary>
+        public void RestoreContext()
+        {
+            if (CommandContext.PreviousContext != null)
+            {
+                if (_terminalEvents.OnBeforeRestoreContext != null)
+                    _terminalEvents.OnBeforeRestoreContext(this);
+                CommandContext.Status = CommandContext.PreviousContext.Status;
+                CommandContext.Command = CommandContext.PreviousContext.Command;
+                CommandContext.Args = CommandContext.PreviousContext.Args;
+                CommandContext.Text = CommandContext.PreviousContext.Text;
+                CommandContext.Prompt = CommandContext.PreviousContext.Prompt;
+                CommandContext.PromptData = CommandContext.PreviousContext.PromptData;
+                CommandContext.PreviousContext = CommandContext.PreviousContext.PreviousContext;
+                if (_terminalEvents.OnRestoreContext != null)
+                    _terminalEvents.OnRestoreContext(this);
+            }
+            else
+            {
+                DeactivateContext();
+            }
+        }
+
+        /// <summary>
+        /// Disable the current command context.
+        /// </summary>
+        public void DeactivateContext()
+        {
+            if (_terminalEvents.OnBeforeDeactivateContext != null)
+                _terminalEvents.OnBeforeDeactivateContext(this);
+            CommandContext.Status = ContextStatus.Disabled;
+            CommandContext.Command = null;
+            CommandContext.Args = null;
+            CommandContext.Text = null;
+            CommandContext.Prompt = false;
+            CommandContext.PromptData = null;
+            CommandContext.CurrentPage = 0;
+            CommandContext.CurrentLinkTags = null;
+            CommandContext.CurrentSearchTerms = null;
+            CommandContext.CurrentSortOrder = null;
+            if (_terminalEvents.OnDeactivateContext != null)
+                _terminalEvents.OnDeactivateContext(this);
         }
 
         #endregion

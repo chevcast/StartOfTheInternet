@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Microsoft.Web.Mvc;
+using SignalR;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Terminal.Core;
 using System.Net.Mime;
-using Terminal.Core.Objects;
+using System.Web.Mvc;
+using System.Web.Security;
+using Terminal.Core;
+using Terminal.Core.Data;
 using Terminal.Core.Enums;
 using Terminal.Core.ExtensionMethods;
-using System.Web.Script.Serialization;
-using System.Web.Security;
-using Microsoft.Web.Mvc;
+using Terminal.Core.Objects;
+using Terminal.MvcUI.Hubs;
 
 namespace Terminal.MvcUI.Controllers
 {
@@ -18,11 +18,12 @@ namespace Terminal.MvcUI.Controllers
     public class ApiController : Controller
     {
         private TerminalApi _terminalApi;
-        private CommandContext _commandContext;
+        private IDataBucket _dataBucket;
 
-        public ApiController(TerminalApi terminalApi)
+        public ApiController(TerminalApi terminalApi, IDataBucket dataBucket)
         {
             _terminalApi = terminalApi;
+            _dataBucket = dataBucket;
         }
 
         protected override void OnException(ExceptionContext filterContext)
@@ -38,6 +39,18 @@ namespace Terminal.MvcUI.Controllers
         {
             _terminalApi.Username = User.Identity.IsAuthenticated ? User.Identity.Name : null;
             _terminalApi.IPAddress = Request.UserHostAddress;
+
+            _terminalApi.TerminalEvents.OnSetContext += new TerminalEventHandler(x =>
+                {
+                    if (x.CommandContext.Command.Is("topic"))
+                    {
+                        var topicId = x.CommandContext.Args[0].ToInt();
+                        var hubContext = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
+                        var user = _dataBucket.UserRepository.GetUser(_terminalApi.Username);
+                        hubContext.Clients.message(string.Format("Listening for updates to topic {0}", topicId));
+                    }
+                });
+
             _terminalApi.CommandContext = commandContext;
             _terminalApi.ParseAsHtml = parseAsHtml;
             var commandResult = _terminalApi.ExecuteCommand(cli);

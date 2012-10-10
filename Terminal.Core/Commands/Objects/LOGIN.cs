@@ -82,13 +82,13 @@ namespace Terminal.Core.Commands.Objects
                 if (args.IsNullOrEmpty())
                 {
                     CommandResult.WriteLine("Enter your username.");
-                    CommandResult.CommandContext.Set(ContextStatus.Forced, Name, args, "Username");
+                    CommandResult.SetContext(ContextStatus.Forced, Name, args, "Username");
                 }
                 else if (args.Length == 1)
                 {
                     CommandResult.WriteLine("Enter your password.");
                     CommandResult.PasswordField = true;
-                    CommandResult.CommandContext.Set(ContextStatus.Forced, Name, args, "Password");
+                    CommandResult.SetContext(ContextStatus.Forced, Name, args, "Password");
                 }
                 else if (args.Length == 2)
                 {
@@ -101,7 +101,7 @@ namespace Terminal.Core.Commands.Objects
                     else
                         CommandResult.WriteLine("Invalid username or password.");
                     if (CommandResult.CommandContext.Status == ContextStatus.Forced)
-                        CommandResult.CommandContext.Restore();
+                        CommandResult.RestoreContext();
                 }
             }
         }

@@ -119,7 +119,7 @@ namespace Terminal.Core.Commands.Objects
                     if (parsedArgs == null || parsedArgs.Count == 0)
                     {
                         CommandResult.WriteLine("Enter your desired username. (no spaces. sorry.)");
-                        CommandResult.CommandContext.Set(ContextStatus.Forced, Name, args, "Username");
+                        CommandResult.SetContext(ContextStatus.Forced, Name, args, "Username");
                     }
                     else if (parsedArgs.Count == 1)
                     {
@@ -129,20 +129,20 @@ namespace Terminal.Core.Commands.Objects
                             {
                                 CommandResult.WriteLine("Enter your desired password.");
                                 CommandResult.PasswordField = true;
-                                CommandResult.CommandContext.Set(ContextStatus.Forced, Name, args, "Password");
+                                CommandResult.SetContext(ContextStatus.Forced, Name, args, "Password");
                             }
                             else
                             {
                                 CommandResult.WriteLine("Username already exists.");
                                 CommandResult.WriteLine("Enter a different username.");
-                                CommandResult.CommandContext.Set(ContextStatus.Forced, Name, null, "Username");
+                                CommandResult.SetContext(ContextStatus.Forced, Name, null, "Username");
                             }
                         }
                         else
                         {
                             CommandResult.WriteLine("Username must be between 3 and 15 characters.");
                             CommandResult.WriteLine("Enter a different username.");
-                            CommandResult.CommandContext.Set(ContextStatus.Forced, Name, null, "Username");
+                            CommandResult.SetContext(ContextStatus.Forced, Name, null, "Username");
                         }
                     }
                     else if (parsedArgs.Count == 2)
@@ -153,20 +153,20 @@ namespace Terminal.Core.Commands.Objects
                             {
                                 CommandResult.WriteLine("Re-enter your desired password.");
                                 CommandResult.PasswordField = true;
-                                CommandResult.CommandContext.Set(ContextStatus.Forced, Name, args, "Confirm Password");
+                                CommandResult.SetContext(ContextStatus.Forced, Name, args, "Confirm Password");
                             }
                             else
                             {
                                 CommandResult.WriteLine("Username already exists.");
                                 CommandResult.WriteLine("Enter your desired username.");
-                                CommandResult.CommandContext.Set(ContextStatus.Forced, Name, null, "Username");
+                                CommandResult.SetContext(ContextStatus.Forced, Name, null, "Username");
                             }
                         }
                         else
                         {
                             CommandResult.WriteLine("Username must be between 3 and 15 characters.");
                             CommandResult.WriteLine("Enter a different username.");
-                            CommandResult.CommandContext.Set(ContextStatus.Forced, Name, null, "Username");
+                            CommandResult.SetContext(ContextStatus.Forced, Name, null, "Username");
                         }
                     }
                     else if (parsedArgs.Count == 3)
@@ -262,28 +262,28 @@ namespace Terminal.Core.Commands.Objects
                                     //STATS.Invoke(new string[] { "-users" });
                                     CommandResult.WriteLine();
                                     CommandResult.WriteLine("You are now logged in as {0}.", CommandResult.CurrentUser.Username);
-                                    CommandResult.CommandContext.Deactivate();
+                                    CommandResult.DeactivateContext();
                                 }
                                 else
                                 {
                                     CommandResult.WriteLine("Passwords did not match.");
                                     CommandResult.WriteLine("Enter your desired password.");
                                     CommandResult.PasswordField = true;
-                                    CommandResult.CommandContext.Set(ContextStatus.Forced, Name, new string[] { parsedArgs[0] }, "Password");
+                                    CommandResult.SetContext(ContextStatus.Forced, Name, new string[] { parsedArgs[0] }, "Password");
                                 }
                             }
                             else
                             {
                                 CommandResult.WriteLine("Username already exists.");
                                 CommandResult.WriteLine("Enter your desired username.");
-                                CommandResult.CommandContext.Set(ContextStatus.Forced, Name, null, "Username");
+                                CommandResult.SetContext(ContextStatus.Forced, Name, null, "Username");
                             }
                         }
                         else
                         {
                             CommandResult.WriteLine("Username must be between 3 and 15 characters.");
                             CommandResult.WriteLine("Enter a different username.");
-                            CommandResult.CommandContext.Set(ContextStatus.Forced, Name, null, "Username");
+                            CommandResult.SetContext(ContextStatus.Forced, Name, null, "Username");
                         }
                     }
                 }
@@ -293,7 +293,7 @@ namespace Terminal.Core.Commands.Objects
                         CommandResult.WriteLine("Your LL username could not be verified.");
                     else
                         CommandResult.WriteLine("You did not supply a valid invite code.");
-                    CommandResult.CommandContext.Deactivate();
+                    CommandResult.DeactivateContext();
                 }
             }
             else if (registrationStatus.Equals("Invite-Only", StringComparison.InvariantCultureIgnoreCase))
@@ -301,12 +301,12 @@ namespace Terminal.Core.Commands.Objects
                 if (lue)
                 {
                     CommandResult.WriteLine("What is your LL username? (This is for verification only)");
-                    CommandResult.CommandContext.SetPrompt(Name, args, "LL Username");
+                    CommandResult.SetPrompt(Name, args, "LL Username");
                 }
                 else
                 {
                     CommandResult.WriteLine("Enter your invite code.");
-                    CommandResult.CommandContext.SetPrompt(Name, args, "Invite Code");
+                    CommandResult.SetPrompt(Name, args, "Invite Code");
                 }
             }
             else if (registrationStatus.Equals("Closed", StringComparison.InvariantCultureIgnoreCase))

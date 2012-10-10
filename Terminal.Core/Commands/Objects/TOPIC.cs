@@ -230,7 +230,7 @@ namespace Terminal.Core.Commands.Objects
                                                     CommandResult.WriteLine("Type your reply.");
                                                     if (replyId != null)
                                                         CommandResult.EditText = string.Format("[quote]{0}[/quote]\r\n\r\n", replyId);
-                                                    CommandResult.CommandContext.SetPrompt(Name, args, string.Format("{0} REPLY", topicId));
+                                                    CommandResult.SetPrompt(Name, args, string.Format("{0} REPLY", topicId));
                                                 }
                                                 else
                                                 {
@@ -251,7 +251,7 @@ namespace Terminal.Core.Commands.Objects
                                                     CommandResult.CommandContext.PromptData = null;
                                                     //var TOPIC = AvailableCommands.SingleOrDefault(x => x.Name.Is("TOPIC"));
                                                     //TOPIC.Invoke(new string[] { topicId.ToString(), "last" });
-                                                    CommandResult.CommandContext.Restore();
+                                                    CommandResult.RestoreContext();
                                                     CommandResult.WriteLine("Reply successfully posted.");
                                                 }
                                             }
@@ -292,13 +292,13 @@ namespace Terminal.Core.Commands.Objects
                                                     {
                                                         CommandResult.WriteLine("Edit the topic title.");
                                                         CommandResult.EditText = topic.Title;
-                                                        CommandResult.CommandContext.SetPrompt(Name, args, string.Format("{0} EDIT Title", topicId));
+                                                        CommandResult.SetPrompt(Name, args, string.Format("{0} EDIT Title", topicId));
                                                     }
                                                     else if (CommandResult.CommandContext.PromptData.Length == 1)
                                                     {
                                                         CommandResult.WriteLine("Edit the topic body.");
                                                         CommandResult.EditText = topic.Body;
-                                                        CommandResult.CommandContext.SetPrompt(Name, args, string.Format("{0} EDIT Body", topicId));
+                                                        CommandResult.SetPrompt(Name, args, string.Format("{0} EDIT Body", topicId));
                                                     }
                                                     else if (CommandResult.CommandContext.PromptData.Length == 2)
                                                     {
@@ -314,7 +314,7 @@ namespace Terminal.Core.Commands.Objects
                                                         _dataBucket.SaveChanges();
                                                         CommandResult.CommandContext.PromptData = null;
                                                         CommandResult.WriteLine("Topic '{0}' was edited successfully.", topicId);
-                                                        CommandResult.CommandContext.Restore();
+                                                        CommandResult.RestoreContext();
                                                     }
                                                 }
                                                 else
@@ -343,7 +343,7 @@ namespace Terminal.Core.Commands.Objects
                                                         {
                                                             CommandResult.WriteLine("Edit the reply body.");
                                                             CommandResult.EditText = reply.Body;
-                                                            CommandResult.CommandContext.SetPrompt(Name, args, string.Format("{0} EDIT Reply {1}", topicId, replyId));
+                                                            CommandResult.SetPrompt(Name, args, string.Format("{0} EDIT Reply {1}", topicId, replyId));
                                                         }
                                                         else if (CommandResult.CommandContext.PromptData.Length == 1)
                                                         {
@@ -358,7 +358,7 @@ namespace Terminal.Core.Commands.Objects
                                                             _dataBucket.SaveChanges();
                                                             CommandResult.CommandContext.PromptData = null;
                                                             CommandResult.WriteLine("Reply '{0}' was edited successfully.", replyId);
-                                                            CommandResult.CommandContext.Restore();
+                                                            CommandResult.RestoreContext();
                                                         }
                                                     }
                                                     else
@@ -399,7 +399,7 @@ namespace Terminal.Core.Commands.Objects
                                                     if (CommandResult.CommandContext.PromptData == null)
                                                     {
                                                         CommandResult.WriteLine("Are you sure you want to delete the topic titled \"{0}\"? (Y/N)", topic.Title);
-                                                        CommandResult.CommandContext.SetPrompt(Name, args, string.Format("{0} DELETE CONFIRM", topicId));
+                                                        CommandResult.SetPrompt(Name, args, string.Format("{0} DELETE CONFIRM", topicId));
                                                     }
                                                     else if (CommandResult.CommandContext.PromptData.Length == 1)
                                                     {
@@ -415,16 +415,16 @@ namespace Terminal.Core.Commands.Objects
                                                                 && CommandResult.CommandContext.PreviousContext.Status == ContextStatus.Passive)
                                                             {
                                                                 CommandResult.ClearScreen = true;
-                                                                CommandResult.CommandContext.Deactivate();
+                                                                CommandResult.DeactivateContext();
                                                             }
                                                             else
-                                                                CommandResult.CommandContext.Restore();
+                                                                CommandResult.RestoreContext();
                                                         }
                                                         else
                                                         {
                                                             CommandResult.WriteLine("Topic '{0}' was not deleted.", topicId);
                                                             CommandResult.CommandContext.PromptData = null;
-                                                            CommandResult.CommandContext.Restore();
+                                                            CommandResult.RestoreContext();
                                                         }
                                                     }
                                                 }
@@ -716,7 +716,7 @@ namespace Terminal.Core.Commands.Objects
                     }
                     CommandResult.WriteLine(DisplayMode.DontType, "Page {0}/{1}", page, topicPage.TotalPages);
                     CommandResult.CommandContext.CurrentPage = page;
-                    CommandResult.CommandContext.Set(ContextStatus.Passive, Name, new string[] { topicId.ToString() }, string.Format("{0}", topicId));
+                    CommandResult.SetContext(ContextStatus.Passive, Name, new string[] { topicId.ToString() }, string.Format("{0}", topicId));
                 }
                 else
                     CommandResult.WriteLine("Topic '{0}' is for moderators only.", topicId);

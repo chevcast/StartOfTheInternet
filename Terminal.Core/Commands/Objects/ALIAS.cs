@@ -106,7 +106,7 @@ namespace Terminal.Core.Commands.Objects
                                     if (CommandResult.CommandContext.PromptData == null)
                                     {
                                         CommandResult.WriteLine("Type the value that should be sent to the terminal when you use your new alias.");
-                                        CommandResult.CommandContext.SetPrompt(Name, args, string.Format("{0} VALUE", newAlias.ToUpper()));
+                                        CommandResult.SetPrompt(Name, args, string.Format("{0} VALUE", newAlias.ToUpper()));
                                     }
                                     else if (CommandResult.CommandContext.PromptData.Length == 1)
                                     {
@@ -118,7 +118,7 @@ namespace Terminal.Core.Commands.Objects
                                         });
                                         _dataBucket.SaveChanges();
                                         CommandResult.WriteLine("Alias '{0}' was successfully defined.", newAlias.ToUpper());
-                                        CommandResult.CommandContext.Restore();
+                                        CommandResult.RestoreContext();
                                     }
                                 }
                                 else

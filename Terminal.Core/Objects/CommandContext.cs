@@ -44,8 +44,6 @@ namespace Terminal.Core.Objects
 
         public string CurrentSortOrder { get; set; }
 
-        public Action SetContextCallback { get; set; }
-
         /// <summary>
         /// The current status of the context.
         /// 
@@ -61,92 +59,5 @@ namespace Terminal.Core.Objects
         /// Stores the previous command context when the Backup method is called.
         /// </summary>
         public CommandContext PreviousContext { get; set; }
-
-        /// <summary>
-        /// Sets up a prompt where all data from the command line will be dumped into the PromptData collection.
-        /// </summary>
-        /// <param name="command">The command to be set as the contexted command.</param>
-        /// <param name="args">The arguments to be set as the contexted arguments.</param>
-        /// <param name="text">The custom text to display next to the command line.</param>
-        public void SetPrompt(string command, string[] args, string text)
-        {
-            Prompt = true;
-            Set(ContextStatus.Forced, command, args, text);
-        }
-
-        /// <summary>
-        /// Set the current command context.
-        /// </summary>
-        /// <param name="status">The status of the context you are setting.</param>
-        /// <param name="command">The command to be set as the contexted command.</param>
-        /// <param name="args">The arguments to be set as the contexted arguments.</param>
-        /// <param name="text">The custom text to display next to the command line.</param>
-        public void Set(ContextStatus status, string command, string[] args, string text)
-        {
-            if (Status == ContextStatus.Passive)
-                if (status == ContextStatus.Forced)
-                    Backup();
-            Status = status;
-            Command = command;
-            Args = args;
-            Text = text;
-            if (SetContextCallback != null)
-                SetContextCallback();
-        }
-
-        /// <summary>
-        /// Save the current command context as the previous command context.
-        /// </summary>
-        private void Backup()
-        {
-            PreviousContext = new CommandContext
-            {
-                Status = Status,
-                Command = Command,
-                Args = Args,
-                Text = Text,
-                Prompt = Prompt,
-                PromptData = PromptData,
-                PreviousContext = PreviousContext
-            };
-        }
-
-        /// <summary>
-        /// Restore the current command context to the state of the previous command context.
-        /// </summary>
-        public void Restore()
-        {
-            if (PreviousContext != null)
-            {
-                Status = PreviousContext.Status;
-                Command = PreviousContext.Command;
-                Args = PreviousContext.Args;
-                Text = PreviousContext.Text;
-                Prompt = PreviousContext.Prompt;
-                PromptData = PreviousContext.PromptData;
-                PreviousContext = PreviousContext.PreviousContext;
-            }
-            else
-            {
-                Deactivate();
-            }
-        }
-
-        /// <summary>
-        /// Disable the current command context.
-        /// </summary>
-        public void Deactivate()
-        {
-            Status = ContextStatus.Disabled;
-            Command = null;
-            Args = null;
-            Text = null;
-            Prompt = false;
-            PromptData = null;
-            CurrentPage = 0;
-            CurrentLinkTags = null;
-            CurrentSearchTerms = null;
-            CurrentSortOrder = null;
-        }
     }
 }

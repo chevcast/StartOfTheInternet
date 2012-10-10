@@ -154,6 +154,7 @@
     <Compile Include="Objects\CollectionPage.cs" />
     <Compile Include="Objects\ForumStats.cs" />
     <Compile Include="Objects\DisplayItem.cs" />
+    <Compile Include="Objects\TerminalEvents.cs" />
     <Compile Include="Objects\TopicUpdate.cs" />
     <Compile Include="Objects\UserStats.cs" />
     <Compile Include="Data\DataBucket.cs" />

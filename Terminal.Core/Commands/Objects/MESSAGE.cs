@@ -134,7 +134,7 @@ namespace Terminal.Core.Commands.Objects
                                             if (CommandResult.CommandContext.PromptData == null)
                                             {
                                                 CommandResult.WriteLine("Write the body of your message.");
-                                                CommandResult.CommandContext.SetPrompt(Name, args, string.Format("{0} REPLY Body", messageId));
+                                                CommandResult.SetPrompt(Name, args, string.Format("{0} REPLY Body", messageId));
                                             }
                                             else if (CommandResult.CommandContext.PromptData.Length == 1)
                                             {
@@ -153,7 +153,7 @@ namespace Terminal.Core.Commands.Objects
                                                 });
                                                 _dataBucket.SaveChanges();
                                                 CommandResult.WriteLine("Reply sent succesfully.");
-                                                CommandResult.CommandContext.Restore();
+                                                CommandResult.RestoreContext();
                                             }
                                         }
                                         else
@@ -219,7 +219,7 @@ namespace Terminal.Core.Commands.Objects
                             if (CommandResult.CommandContext.PromptData == null)
                             {
                                 CommandResult.WriteLine("Type the name of the recipient.");
-                                CommandResult.CommandContext.SetPrompt(Name, args, "USERNAME");
+                                CommandResult.SetPrompt(Name, args, "USERNAME");
                             }
                             else if (CommandResult.CommandContext.PromptData.Length == 1)
                             {
@@ -227,20 +227,20 @@ namespace Terminal.Core.Commands.Objects
                                 if (user != null)
                                 {
                                     CommandResult.WriteLine("Type the subject of your message.");
-                                    CommandResult.CommandContext.SetPrompt(Name, args, "SUBJECT");
+                                    CommandResult.SetPrompt(Name, args, "SUBJECT");
                                 }
                                 else
                                 {
                                     CommandResult.WriteLine("'{0}' is not a valid username.", CommandResult.CommandContext.PromptData[0]);
                                     CommandResult.WriteLine("Re-type the name of the recipient.");
                                     CommandResult.CommandContext.PromptData = null;
-                                    CommandResult.CommandContext.SetPrompt(Name, args, "USERNAME");
+                                    CommandResult.SetPrompt(Name, args, "USERNAME");
                                 }
                             }
                             else if (CommandResult.CommandContext.PromptData.Length == 2)
                             {
                                 CommandResult.WriteLine("Type the body of your message.");
-                                CommandResult.CommandContext.SetPrompt(Name, args, "BODY");
+                                CommandResult.SetPrompt(Name, args, "BODY");
                             }
                             else if (CommandResult.CommandContext.PromptData.Length == 3)
                             {
@@ -254,7 +254,7 @@ namespace Terminal.Core.Commands.Objects
                                 });
                                 _dataBucket.SaveChanges();
                                 CommandResult.WriteLine("Message sent succesfully.");
-                                CommandResult.CommandContext.Restore();
+                                CommandResult.RestoreContext();
                             }
                         }
                         else
@@ -318,7 +318,7 @@ namespace Terminal.Core.Commands.Objects
                     CommandResult.WriteLine();
                     CommandResult.WriteLine(DisplayMode.Parse | DisplayMode.DontType, message.Body);
                     CommandResult.ClearScreen = true;
-                    CommandResult.CommandContext.Set(ContextStatus.Passive, Name, new string[] { messageId.ToString() }, string.Format("{0}", messageId));
+                    CommandResult.SetContext(ContextStatus.Passive, Name, new string[] { messageId.ToString() }, string.Format("{0}", messageId));
                     if (message.Recipient.Is(CommandResult.CurrentUser.Username))
                     {
                         message.MessageRead = true;

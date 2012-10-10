@@ -173,12 +173,12 @@ namespace Terminal.Core.Commands.Objects
                                                 if (CommandResult.CommandContext.PromptData == null)
                                                 {
                                                     CommandResult.WriteLine("Create a title for your topic.");
-                                                    CommandResult.CommandContext.SetPrompt(Name, args, string.Format("{0} NEW TOPIC Title", boardId));
+                                                    CommandResult.SetPrompt(Name, args, string.Format("{0} NEW TOPIC Title", boardId));
                                                 }
                                                 else if (CommandResult.CommandContext.PromptData.Length == 1)
                                                 {
                                                     CommandResult.WriteLine("Create the body for your topic.");
-                                                    CommandResult.CommandContext.SetPrompt(Name, args, string.Format("{0} NEW TOPIC Body", boardId));
+                                                    CommandResult.SetPrompt(Name, args, string.Format("{0} NEW TOPIC Body", boardId));
                                                 }
                                                 else if (CommandResult.CommandContext.PromptData.Length == 2)
                                                 {
@@ -198,7 +198,7 @@ namespace Terminal.Core.Commands.Objects
                                                     };
                                                     _dataBucket.TopicRepository.AddTopic(topic);
                                                     _dataBucket.SaveChanges();
-                                                    CommandResult.CommandContext.Restore();
+                                                    CommandResult.RestoreContext();
                                                     var TOPIC = AvailableCommands.SingleOrDefault(x => x.Name.Is("TOPIC"));
                                                     TOPIC.Invoke(new string[] { topic.TopicID.ToString() });
                                                     CommandResult.WriteLine("New topic succesfully posted.");
@@ -330,7 +330,7 @@ namespace Terminal.Core.Commands.Objects
                     }
                     CommandResult.WriteLine(DisplayMode.DontType, "Page {0}/{1}", page, boardPage.TotalPages);
                     CommandResult.CommandContext.CurrentPage = page;
-                    CommandResult.CommandContext.Set(ContextStatus.Passive, Name, new string[] { boardId.ToString() }, string.Format("{0}", boardId));
+                    CommandResult.SetContext(ContextStatus.Passive, Name, new string[] { boardId.ToString() }, string.Format("{0}", boardId));
                 }
                 else
                     CommandResult.WriteLine("Board '{0}' is for moderators only.", boardId);
