@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Terminal.Core.Data.Entities;
-using Terminal.Core.ExtensionMethods;
 
 namespace Terminal.Core.Data.Repositories
 {

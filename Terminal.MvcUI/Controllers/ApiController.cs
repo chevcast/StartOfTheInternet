@@ -1,7 +1,7 @@
 ﻿using Microsoft.Web.Mvc;
 using SignalR;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mime;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -12,7 +12,6 @@ using Terminal.Core.ExtensionMethods;
 using Terminal.Core.Objects;
 using Terminal.MvcUI.Data;
 using Terminal.MvcUI.Hubs;
-using System.Linq;
 
 namespace Terminal.MvcUI.Controllers
 {

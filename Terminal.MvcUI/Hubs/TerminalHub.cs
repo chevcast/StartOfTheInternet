@@ -1,11 +1,7 @@
 ﻿using SignalR.Hubs;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Terminal.Core.Data;
-using Terminal.Core.Data.Entities;
-using Terminal.Core.ExtensionMethods;
 using System.Linq;
+using System.Threading.Tasks;
+using Terminal.Core.ExtensionMethods;
 using Terminal.MvcUI.Data;
 
 namespace Terminal.MvcUI.Hubs
