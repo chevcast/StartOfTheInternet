@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Terminal.Core.Data.Entities;
-using Terminal.Core.Data.Repositories.Interfaces;
-using Terminal.Core.Data.Repositories.Objects;
+using Terminal.Core.Data.Repositories;
 
 namespace Terminal.Core.Data
 {
@@ -16,6 +15,8 @@ namespace Terminal.Core.Data
         {
             _dataContext = dataContext;
         }
+
+        #region Repositories
 
         private IAliasRepository _aliasRepository;
         public IAliasRepository AliasRepository
@@ -116,20 +117,31 @@ namespace Terminal.Core.Data
             }
         }
 
-        private IChannelStatusRepository _channelStatusRepository;
-        public IChannelStatusRepository ChannelStatusRepository
-        {
-            get
-            {
-                if (_channelStatusRepository == null)
-                    _channelStatusRepository = new ChannelStatusRepository(_dataContext);
-                return _channelStatusRepository;
-            }
-        }
+        #endregion
 
         public void SaveChanges()
         {
             _dataContext.SaveChanges();
         }
+
+        public void Dispose()
+        {
+            _dataContext.Dispose();
+        }
+    }
+
+    public interface IDataBucket : IDisposable
+    {
+        IAliasRepository AliasRepository { get; }
+        IBanRepository BanRepository { get; }
+        IBoardRepository BoardRepository { get; }
+        IInviteCodeRepository InviteCodeRepository { get; }
+        IMessageRepository MessageRepository { get; }
+        IReplyRepository ReplyRepository { get; }
+        ITopicRepository TopicRepository { get; }
+        IUserRepository UserRepository { get; }
+        IVariableRepository VariableRepository { get; }
+
+        void SaveChanges();
     }
 }

@@ -109,7 +109,7 @@
                             elementToScroll: '#terminal',
                             apiUrl: '@Url.Action("Index", "Api")',
                             loggedinCallback: function (username) {
-                                $(document).trigger('userLoggedIn', username);
+                                $(document).trigger('userLoggedIn');
                             },
                             loggedoutCallback: function () {
                                 $(document).trigger('userLoggedOut');

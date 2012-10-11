@@ -17,21 +17,21 @@
             $chatContainer.scrollTo('100%', 0, { axis: 'y' });
         };
 
-        var chatHub = $.signalR.chatHub;
+        var terminalHub = $.signalR.terminalHub;
 
-        chatHub.joinUser = function (username) {
+        terminalHub.joinUser = function (username) {
             writeLine('<b>' + username + '</b> has joined.');
         };
 
-        chatHub.leaveUser = function (username) {
+        terminalHub.leaveUser = function (username) {
             writeLine('<b>' + username + '</b> has left.');
         };
 
-        chatHub.message = function (text) {
+        terminalHub.message = function (text) {
             writeLine(text);
         };
 
-        chatHub.writeLine = function (username, text) {
+        terminalHub.writeLine = function (username, text) {
             writeLine('<b>{' + username + '}</b>&nbsp;' + text);
         };
 
@@ -45,7 +45,7 @@
                if (key == 13) {
                    var text = $(this).val();
                    if (text.length > 0) {
-                       chatHub.send(text);
+                       terminalHub.send(text);
                        $(this).val('');
                    }
                }
@@ -58,9 +58,20 @@
             .appendTo($chatContainer);
 
         $.connection.hub.start({ transport: 'longPolling' }, function () {
-            // Temporary workaround to interact with terminal client.
-            $(document).bind('userLoggedIn', function (e, username) { chatHub.connectUser(username); });
-            $(document).bind('userLoggedOut', function () { chatHub.disconnectUser(); });
+            $(document).bind('userLoggedIn', function () {
+                $.ajax({
+                    url: '/Api/ConnectUser',
+                    data: { connectionId: $.connection.hub.id },
+                    type: 'post'
+                });
+            });
+            $(document).bind('userLoggedOut', function () { terminalHub.disconnectUser(); });
+
+            $.ajax({
+                url: '/Api/ConnectUser',
+                data: { connectionId: $.connection.hub.id },
+                type: 'post'
+            });
 
             if (settings.callback)
                 settings.callback();

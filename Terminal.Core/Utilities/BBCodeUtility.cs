@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
-using System.Text.RegularExpressions;
-using Terminal.Core.ExtensionMethods;
-using Terminal.Core.Settings;
-using Terminal.Core.Data.Entities;
+﻿using CodeKicker.BBCode;
+using System;
 using System.Drawing;
+using System.Linq;
 using System.Net;
-using System.IO;
-using CodeKicker.BBCode;
-using Terminal.Core.Data.Repositories.Interfaces;
+using Terminal.Core.Data.Entities;
+using Terminal.Core.Data.Repositories;
+using Terminal.Core.ExtensionMethods;
 
 namespace Terminal.Core.Utilities
 {

@@ -10,20 +10,24 @@ using Terminal.Core.Data;
 using Terminal.Core.Enums;
 using Terminal.Core.ExtensionMethods;
 using Terminal.Core.Objects;
+using Terminal.MvcUI.Data;
 using Terminal.MvcUI.Hubs;
+using System.Linq;
 
 namespace Terminal.MvcUI.Controllers
 {
     [ValidateInput(false)]
     public class ApiController : Controller
     {
-        private TerminalApi _terminalApi;
-        private IDataBucket _dataBucket;
+        TerminalApi _terminalApi;
+        IDataBucket _dataBucket;
+        UIContext _uiContext;
 
-        public ApiController(TerminalApi terminalApi, IDataBucket dataBucket)
+        public ApiController(TerminalApi terminalApi, IDataBucket dataBucket, UIContext uiContext)
         {
             _terminalApi = terminalApi;
             _dataBucket = dataBucket;
+            _uiContext = uiContext;
         }
 
         protected override void OnException(ExceptionContext filterContext)
@@ -45,7 +49,7 @@ namespace Terminal.MvcUI.Controllers
                     if (x.CommandContext.Command.Is("topic"))
                     {
                         var topicId = x.CommandContext.Args[0].ToInt();
-                        var hubContext = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
+                        var hubContext = GlobalHost.ConnectionManager.GetHubContext<TerminalHub>();
                         var user = _dataBucket.UserRepository.GetUser(_terminalApi.Username);
                         hubContext.Clients.message(string.Format("Listening for updates to topic {0}", topicId));
                     }
@@ -102,11 +106,6 @@ namespace Terminal.MvcUI.Controllers
             return Json(apiResult);
         }
 
-        public string GetSessionId()
-        {
-            return Session.SessionID;
-        }
-
         public JsonResult Metadata()
         {
             var metadata = new
@@ -140,6 +139,35 @@ namespace Terminal.MvcUI.Controllers
             };
 
             return Json(metadata, JsonRequestBehavior.AllowGet);
+        }
+
+        public void ConnectUser(string connectionId)
+        {
+            var username = User.Identity.IsAuthenticated ? User.Identity.Name : null;
+
+            var signalRConnection = _uiContext.SignalRConnections
+                .SingleOrDefault(x => x.ConnectionId == connectionId);
+
+            if (signalRConnection == null)
+            {
+                signalRConnection = new SignalRConnection
+                {
+                    ConnectionId = connectionId,
+                    SessionId = Session.SessionID,
+                    Username = username
+                };
+                _uiContext.SignalRConnections.Add(signalRConnection);
+            }
+            else
+                signalRConnection.Username = username;
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var hubContext = GlobalHost.ConnectionManager.GetHubContext<TerminalHub>();
+                hubContext.Clients.joinUser(signalRConnection.Username);
+            }
+
+            _uiContext.SaveChanges();
         }
     }
 }

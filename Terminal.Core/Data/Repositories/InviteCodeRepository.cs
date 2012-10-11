@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Terminal.Core;
-using Terminal.Core.Data.Repositories.Interfaces;
 using Terminal.Core.Data.Entities;
 
-namespace Terminal.Core.Data.Repositories.Objects
+namespace Terminal.Core.Data.Repositories
 {
     public class InviteCodeRepository : IInviteCodeRepository
     {
@@ -39,5 +38,13 @@ namespace Terminal.Core.Data.Repositories.Objects
         {
             return _entityContainer.InviteCodes.Where(x => x.Username.ToUpper() == username.ToUpper());
         }
+    }
+
+    public interface IInviteCodeRepository
+    {
+        void AddInviteCode(InviteCode inviteCode);
+        void DeleteInviteCode(InviteCode inviteCode);
+        InviteCode GetInviteCode(string code);
+        IEnumerable<InviteCode> GetInviteCodes(string username);
     }
 }
