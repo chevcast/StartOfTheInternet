@@ -222,7 +222,6 @@
     <Content Include="Scripts\jquery-ui-1.9-RC1.min.js" />
     <Content Include="Scripts\jquery.signalR-0.5.3.js" />
     <Content Include="Scripts\jquery.signalR-0.5.3.min.js" />
-    <Content Include="Scripts\jquery.TerminalChat.js" />
     <Content Include="Styles\prettify.less" />
     <Content Include="Styles\Terminal.less" />
     <Content Include="Content\tunnel.jpg" />
