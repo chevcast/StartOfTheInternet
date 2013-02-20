@@ -1,5 +1,4 @@
-@ForeColor: #ccc;
-@OpacityColor: #555;
+@ForeColor: #bbb;
 @BackColor: #000;
 
 body {
@@ -37,35 +36,6 @@ body {
 
 #terminal {
 	padding: 15px;
-}
-
-.opacityFrame {
-    background: @OpacityColor;
-    opacity: .1;
-    filter: alpha(opacity=1);
-    -moz-opacity: .1;
-    top: 0;
-    left: 0;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-}
-
-.subFrame {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    z-index: 2;
-    scrollbar-face-color: @ForeColor;
-    scrollbar-track-color: @BackColor;
-    scrollbar-highlight-color: @ForeColor;
-    scrollbar-3dlight-color: @ForeColor;
-    scrollbar-arrow-color: @BackColor;
-    scrollbar-shadow-color: @ForeColor;
-    scrollbar-darkshadow-color: @ForeColor;
 }
 
 #terminalDisplay {
