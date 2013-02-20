@@ -121,7 +121,6 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Data\SignalRConnection.cs" />
     <Compile Include="Data\UIContext.cs" />
-    <Compile Include="Hubs\TerminalHub.cs" />
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\RSSController.cs" />
     <Compile Include="Controllers\TerminalController.cs" />

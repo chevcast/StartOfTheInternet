@@ -93,28 +93,23 @@
 
     function Setup(soundFile) {
         $(window).resize(function () {
-            $('#terminal, #chat').height($(window).height() - 75);
+            $('#terminal').height($(window).height() - 75);
         }).resize();
 
-        $('#chat').terminalChat({
-            callback: function () {
-                $.coolType.setup(
+        $.coolType.setup({
+            soundFile: soundFile,
+            playSound: true,
+            speed: 25,
+            onSoundLoaded: function () {
+                $('#commandForm').terminalClient(
                 {
-                    soundFile: soundFile,
-                    playSound: true,
-                    speed: 25,
-                    onSoundLoaded: function () {
-                        $('#commandForm').terminalClient(
-                        {
-                            elementToScroll: '#terminal',
-                            apiUrl: '@Url.Action("Index", "Api")',
-                            loggedinCallback: function (username) {
-                                $(document).trigger('userLoggedIn');
-                            },
-                            loggedoutCallback: function () {
-                                $(document).trigger('userLoggedOut');
-                            }
-                        });
+                    elementToScroll: '#terminal',
+                    apiUrl: '@Url.Action("Index", "Api")',
+                    loggedinCallback: function (username) {
+                        $(document).trigger('userLoggedIn');
+                    },
+                    loggedoutCallback: function () {
+                        $(document).trigger('userLoggedOut');
                     }
                 });
             }
@@ -125,48 +120,37 @@
 <div id="frame">
     <div class="opacityFrame">
     </div>
-    <div class="subFrame">
-        <div class="row-fluid">
-            <div class="span8 column">
-                <div class="opacityFrame"></div>
-                <div id="terminal" class="subFrame">
-                    @using (Html.BeginForm("Index", "Terminal", FormMethod.Post, new { id = "commandForm" }))
-                    {
-                        <div>
-                            @Html.Serialize("CommandContext", Model.CommandContext)
-                            <div id="terminalDisplay">
-                                <noscript>
-                                    @Html.Raw(Model.Display)
-                                </noscript>
-                            </div>
-                            @Html.HiddenFor(x => x.Display)
-                            <div id="notifications">
-                                <noscript>
-                                    @Html.Raw(Model.Notifications)
-                                </noscript>
-                            </div>
-                            @Html.HiddenFor(x => x.Notifications)
-                            <div id="loading">
-                            </div>
-                            <span id="contextDisplay"><span id="context">
-                                <noscript>@Model.ContextText</noscript>
-                            </span>&gt;&nbsp;</span>
-                            @if (Model.PasswordField)
-                            {
-                                @Html.PasswordFor(x => x.Cli, new { autofocus = "autofocus", autocomplete = "off" })
-                            }
-                            else
-                            {
-                                @Html.TextBoxFor(x => x.Cli, new { autofocus = "autofocus", autocomplete = "off" })
-                            }
-                        </div>
-                    }
+    <div id="terminal" class="subFrame">
+        @using (Html.BeginForm("Index", "Terminal", FormMethod.Post, new { id = "commandForm" }))
+        {
+            <div>
+                @Html.Serialize("CommandContext", Model.CommandContext)
+                <div id="terminalDisplay">
+                    <noscript>
+                        @Html.Raw(Model.Display)
+                    </noscript>
                 </div>
+                @Html.HiddenFor(x => x.Display)
+                <div id="notifications">
+                    <noscript>
+                        @Html.Raw(Model.Notifications)
+                    </noscript>
+                </div>
+                @Html.HiddenFor(x => x.Notifications)
+                <div id="loading">
+                </div>
+                <span id="contextDisplay"><span id="context">
+                    <noscript>@Model.ContextText</noscript>
+                </span>&gt;&nbsp;</span>
+                @if (Model.PasswordField)
+                {
+                    @Html.PasswordFor(x => x.Cli, new { autofocus = "autofocus", autocomplete = "off" })
+                }
+                else
+                {
+                    @Html.TextBoxFor(x => x.Cli, new { autofocus = "autofocus", autocomplete = "off" })
+                }
             </div>
-            <div class="span3 column">
-                <div class="opacityFrame"></div>
-                <div id="chat" class="subFrame"></div>
-            </div>
-        </div>
+        }
     </div>
 </div>

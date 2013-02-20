@@ -11,7 +11,6 @@ using Terminal.Core.Enums;
 using Terminal.Core.ExtensionMethods;
 using Terminal.Core.Objects;
 using Terminal.MvcUI.Data;
-using Terminal.MvcUI.Hubs;
 
 namespace Terminal.MvcUI.Controllers
 {
@@ -42,18 +41,6 @@ namespace Terminal.MvcUI.Controllers
         {
             _terminalApi.Username = User.Identity.IsAuthenticated ? User.Identity.Name : null;
             _terminalApi.IPAddress = Request.UserHostAddress;
-
-            _terminalApi.TerminalEvents.OnSetContext += new TerminalEventHandler(x =>
-                {
-                    if (x.CommandContext.Command.Is("topic"))
-                    {
-                        var topicId = x.CommandContext.Args[0].ToInt();
-                        var hubContext = GlobalHost.ConnectionManager.GetHubContext<TerminalHub>();
-                        var user = _dataBucket.UserRepository.GetUser(_terminalApi.Username);
-                        hubContext.Clients.message(string.Format("Listening for updates to topic {0}", topicId));
-                    }
-                });
-
             _terminalApi.CommandContext = commandContext;
             _terminalApi.ParseAsHtml = parseAsHtml;
             var commandResult = _terminalApi.ExecuteCommand(cli);
@@ -159,12 +146,6 @@ namespace Terminal.MvcUI.Controllers
             }
             else
                 signalRConnection.Username = username;
-
-            if (User.Identity.IsAuthenticated)
-            {
-                var hubContext = GlobalHost.ConnectionManager.GetHubContext<TerminalHub>();
-                hubContext.Clients.joinUser(signalRConnection.Username);
-            }
 
             _uiContext.SaveChanges();
         }
