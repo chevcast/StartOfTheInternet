@@ -92,10 +92,6 @@
     }
 
     function Setup(soundFile) {
-        $(window).resize(function () {
-            $('#terminal').height($(window).height() - 75);
-        }).resize();
-
         $.coolType.setup({
             soundFile: soundFile,
             playSound: true,
@@ -103,7 +99,7 @@
             onSoundLoaded: function () {
                 $('#commandForm').terminalClient(
                 {
-                    elementToScroll: '#terminal',
+                    elementToScroll: document,
                     apiUrl: '@Url.Action("Index", "Api")',
                     loggedinCallback: function (username) {
                         $(document).trigger('userLoggedIn');
@@ -118,9 +114,7 @@
 </script>
 <img class="backgroundImage" src="@Url.Content("~/content/skull.jpg")">
 <div id="frame">
-    <div class="opacityFrame">
-    </div>
-    <div id="terminal" class="subFrame">
+    <div id="terminal">
         @using (Html.BeginForm("Index", "Terminal", FormMethod.Post, new { id = "commandForm" }))
         {
             <div>
