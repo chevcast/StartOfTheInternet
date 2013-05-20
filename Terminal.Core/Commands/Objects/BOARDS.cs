@@ -30,7 +30,7 @@ namespace Terminal.Core.Commands.Objects
 
         public string[] Roles
         {
-            get { return RoleTemplates.Everyone; }
+            get { return RoleTemplates.AllLoggedIn; }
         }
 
         public string Name

@@ -18,7 +18,7 @@ namespace Terminal.Core.Commands.Objects
 
         public string[] Roles
         {
-            get { return RoleTemplates.Everyone; }
+            get { return RoleTemplates.AllLoggedIn; }
         }
 
         public string Name
@@ -33,7 +33,7 @@ namespace Terminal.Core.Commands.Objects
 
         public string Description
         {
-            get { return "Display information about the SOTI terminal project."; }
+            get { return "Display information about the Omega Directive."; }
         }
 
         public bool ShowHelp

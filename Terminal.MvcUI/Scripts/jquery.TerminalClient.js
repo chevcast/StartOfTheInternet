@@ -114,7 +114,7 @@
                     nextLine();
                 },
                 {
-                    speed: 1,
+                    speed: 15,
                     insertBefore: '<span class="' + $lineContainer.attr('class') + '">',
                     insertAfter: '</span>',
                     playSound: !displayItem.Mute
