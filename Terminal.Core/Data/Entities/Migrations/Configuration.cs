@@ -22,9 +22,20 @@ namespace Terminal.Core.Data.Entities.Migrations
                 context.Variables.Add(
                     new Variable { Name = "Registration", Value = "Open" }
                 );
+                context.SaveChanges();
             }
 
-            if (context.Users.Find("Admin") == null)
+            if (!context.Roles.Any())
+            {
+                context.Roles.Add(new Role { Name = "Administrator" });
+                context.Roles.Add(new Role { Name = "Moderator" });
+                context.Roles.Add(new Role { Name = "User" });
+                context.SaveChanges();
+            }
+
+            if (!context.Users.Any())
+            {
+                var adminRole = context.Roles.Find("Administrator");
                 context.Users.Add(
                     new User
                     {
@@ -34,10 +45,7 @@ namespace Terminal.Core.Data.Entities.Migrations
                         JoinDate = DateTime.Now,
                         LastLogin = DateTime.Now,
                         Sound = true,
-                        Roles = new List<Role>
-                        {
-                            new Role { Name = "Administrator" }
-                        },
+                        Roles = new List<Role> { adminRole },
                         Aliases = new List<Alias>
                         {
                             new Alias { Shortcut = "lb", Command = "BOARDS" },
@@ -48,58 +56,82 @@ namespace Terminal.Core.Data.Entities.Migrations
                         }
                     }
                 );
+                context.SaveChanges();
+            }
 
-            context.Roles.AddOrUpdate(
-                new Role { Name = "Moderator" },
-                new Role { Name = "User" }
-            );
-
-            context.Boards.AddOrUpdate(
-                new Board
+            if (!context.Boards.Any())
+            {
+                context.Boards.Add(new Board
                 {
                     BoardID = -1,
                     Name = "Negative",
                     Description = "Only negative discussion is allowed. Express your inner pessimist.",
                     Hidden = true,
                     AllTopics = true
-                },
-                new Board
+                });
+                context.Boards.Add(new Board
                 {
                     BoardID = 0,
                     Name = "All Topics",
                     Description = "Read-Only board that shows all topics from all boards.",
                     Locked = true,
                     AllTopics = true
-                },
-                new Board
+                });
+                context.Boards.Add(new Board
                 {
                     BoardID = 1,
                     Name = "General",
-                    Description = "Discussion of anything and everything since time began.",
+                    Description = "Any topic goes. This is a place for resistance members to talk about anything, Ingress-related or not.",
                     AllTopics = true
-                },
-                new Board
+                });
+                context.Boards.Add(new Board
                 {
-                    BoardID = 10,
+                    BoardID = 2,
+                    Name = "Utah Resistance",
+                    Description = "Talk about Ingress strategy in Utah.",
+                    AllTopics = true
+                });
+                context.Boards.Add(new Board
+                {
+                    BoardID = 3,
+                    Name = "Salt Lake Resistance",
+                    Description = "Talk about Ingress strategy in Salt Lake County.",
+                    AllTopics = true
+                });
+                context.Boards.Add(new Board
+                {
+                    BoardID = 4,
+                    Name = "Utah County Resistance",
+                    Description = "Talk about Ingress strategy in Utah County.",
+                    AllTopics = true
+                });
+                context.Boards.Add(new Board
+                {
+                    BoardID = 69,
+                    Name = "NSFW",
+                    Description = "If you must post NSFW content then post it here."
+                });
+                context.Boards.Add(new Board
+                {
+                    BoardID = 70,
                     Name = "Moderators",
                     Description = "This board is for moderators only.",
                     ModsOnly = true
-                },
-                new Board
+                });
+                context.Boards.Add(new Board
                 {
-                    BoardID = 69,
-                    Name = "NSFW / NLS",
-                    Description = "The back-alley of the internet."
-                },
-                new Board
+                    BoardID = 71,
+                    Name = "Board Suggestions",
+                    Description = "Want a board for your area/group? Suggest it here and we'll try to make it happen :D",
+                });
+                context.Boards.Add(new Board
                 {
-                    BoardID = 4,
-                    Name = "Anonymous",
-                    Description = "An anonymous board where nobody has a face.",
-                    Anonymous = true,
-                    AllTopics = true
-                }
-            );
+                    BoardID = 72,
+                    Name = "Site Feedback",
+                    Description = "We are currently working on a new version of the site but feel free to report any issues here and we will do our best to take care of them.",
+                });
+                context.SaveChanges();
+            }
         }
     }
 }

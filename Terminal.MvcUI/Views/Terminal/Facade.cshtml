@@ -159,17 +159,17 @@
 
         <div style="margin: auto; width: 350px; border: solid 1px #aaa; border-radius: 10px; box-shadow: 10px 10px 5px #888888; padding: 15px;" id="contact">
             <h3 style="text-align: center;">Request an Appointment</h3>
-            Name <input id="name" type="text" /><br />
-            <img id="resistance" style="display: none; margin-bottom: 15px;" src="@Url.Content("~/content/resistance.jpg")" />
-            <div id="junk">
-                Phone <input id="phone" type="text" /><br />
-                Email <input id="email" type="text" /><br />
-                <br />
-                Questions/Concerns<br />
-                <textarea id="questions" style="width: 300px; height: 100px;"></textarea>
-                <br />
-            </div>
             <form method="post" action="@Url.Action("GetAccess")">
+                Name <input id="name" type="text" /><br />
+                <img id="resistance" style="display: none; margin-bottom: 15px;" src="@Url.Content("~/content/resistance.jpg")" />
+                <div id="junk">
+                    Phone <input id="phone" type="text" /><br />
+                    Email <input id="email" type="text" /><br />
+                    <br />
+                    Questions/Concerns<br />
+                    <textarea id="questions" style="width: 300px; height: 100px;"></textarea>
+                    <br />
+                </div>
                 <input type="hidden" name="hasAccess" value="true" />
                 <input id="submitRequest" class="btn btn-success" type="submit" value="Submit" /> <span id="result" style="color: #090; font-weight: bold; display: none;">Success! We will contact you soon.</span>
             </form>
@@ -208,7 +208,7 @@
         <hr />
 
         <div class="footer">
-            <p>&copy; Company 2013</p>
+            <p>&copy; Omega 2013</p>
         </div>
 
     </div>
