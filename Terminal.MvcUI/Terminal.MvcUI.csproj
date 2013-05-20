@@ -134,6 +134,8 @@
     <Content Include="Content\background.jpg" />
     <Content Include="Content\background_xmas.jpg" />
     <Content Include="Content\background_halloween.jpg" />
+    <Content Include="Content\omega.jpg" />
+    <Content Include="Content\omega.png" />
     <Content Include="Styles\bootstrap-responsive.css" />
     <Content Include="Styles\bootstrap-responsive.min.css" />
     <Content Include="Styles\bootstrap.css" />
