@@ -3,7 +3,7 @@ namespace Terminal.Core.Data.Entities.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class initialcreate : DbMigration
+    public partial class InitialCreate : DbMigration
     {
         public override void Up()
         {
@@ -90,17 +90,6 @@ namespace Terminal.Core.Data.Entities.Migrations
                 .Index(t => t.Ignores_Username)
                 .Index(t => t.User_Username1)
                 .Index(t => t.User_Username2);
-            
-            CreateTable(
-                "dbo.InviteCodes",
-                c => new
-                    {
-                        Code = c.String(nullable: false, maxLength: 128),
-                        Username = c.String(maxLength: 128),
-                    })
-                .PrimaryKey(t => t.Code)
-                .ForeignKey("dbo.Users", t => t.Username)
-                .Index(t => t.Username);
             
             CreateTable(
                 "dbo.LinkClicks",
@@ -253,6 +242,7 @@ namespace Terminal.Core.Data.Entities.Migrations
                         Locked = c.Boolean(nullable: false),
                         Anonymous = c.Boolean(nullable: false),
                         AllTopics = c.Boolean(nullable: false),
+                        MembersOnly = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.BoardID);
             
@@ -305,6 +295,27 @@ namespace Terminal.Core.Data.Entities.Migrations
                         Name = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.Name);
+            
+            CreateTable(
+                "dbo.ChannelStatus",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        ConnectionId = c.Guid(nullable: false),
+                        ChannelName = c.String(),
+                        User_Username = c.String(maxLength: 128),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Users", t => t.User_Username)
+                .Index(t => t.User_Username);
+            
+            CreateTable(
+                "dbo.InviteCodes",
+                c => new
+                    {
+                        Code = c.String(nullable: false, maxLength: 128),
+                    })
+                .PrimaryKey(t => t.Code);
             
             CreateTable(
                 "dbo.LUEsers",
@@ -367,6 +378,7 @@ namespace Terminal.Core.Data.Entities.Migrations
             DropIndex("dbo.RoleUsers", new[] { "Role_Name" });
             DropIndex("dbo.TagLinks", new[] { "Link_LinkID" });
             DropIndex("dbo.TagLinks", new[] { "Tag_Name" });
+            DropIndex("dbo.ChannelStatus", new[] { "User_Username" });
             DropIndex("dbo.UserActivityLogItems", new[] { "Username" });
             DropIndex("dbo.TopicVisits", new[] { "Username" });
             DropIndex("dbo.TopicVisits", new[] { "TopicID" });
@@ -387,7 +399,6 @@ namespace Terminal.Core.Data.Entities.Migrations
             DropIndex("dbo.Links", new[] { "Username" });
             DropIndex("dbo.LinkClicks", new[] { "Username" });
             DropIndex("dbo.LinkClicks", new[] { "LinkID" });
-            DropIndex("dbo.InviteCodes", new[] { "Username" });
             DropIndex("dbo.Ignores", new[] { "User_Username2" });
             DropIndex("dbo.Ignores", new[] { "User_Username1" });
             DropIndex("dbo.Ignores", new[] { "Ignores_Username" });
@@ -401,6 +412,7 @@ namespace Terminal.Core.Data.Entities.Migrations
             DropForeignKey("dbo.RoleUsers", "Role_Name", "dbo.Roles");
             DropForeignKey("dbo.TagLinks", "Link_LinkID", "dbo.Links");
             DropForeignKey("dbo.TagLinks", "Tag_Name", "dbo.Tags");
+            DropForeignKey("dbo.ChannelStatus", "User_Username", "dbo.Users");
             DropForeignKey("dbo.UserActivityLogItems", "Username", "dbo.Users");
             DropForeignKey("dbo.TopicVisits", "Username", "dbo.Users");
             DropForeignKey("dbo.TopicVisits", "TopicID", "dbo.Topics");
@@ -421,7 +433,6 @@ namespace Terminal.Core.Data.Entities.Migrations
             DropForeignKey("dbo.Links", "Username", "dbo.Users");
             DropForeignKey("dbo.LinkClicks", "Username", "dbo.Users");
             DropForeignKey("dbo.LinkClicks", "LinkID", "dbo.Links");
-            DropForeignKey("dbo.InviteCodes", "Username", "dbo.Users");
             DropForeignKey("dbo.Ignores", "User_Username2", "dbo.Users");
             DropForeignKey("dbo.Ignores", "User_Username1", "dbo.Users");
             DropForeignKey("dbo.Ignores", "Ignores_Username", "dbo.Users");
@@ -436,6 +447,8 @@ namespace Terminal.Core.Data.Entities.Migrations
             DropTable("dbo.Variables");
             DropTable("dbo.MadlibTemplates");
             DropTable("dbo.LUEsers");
+            DropTable("dbo.InviteCodes");
+            DropTable("dbo.ChannelStatus");
             DropTable("dbo.Roles");
             DropTable("dbo.UserActivityLogItems");
             DropTable("dbo.TopicVisits");
@@ -449,7 +462,6 @@ namespace Terminal.Core.Data.Entities.Migrations
             DropTable("dbo.LinkComments");
             DropTable("dbo.Links");
             DropTable("dbo.LinkClicks");
-            DropTable("dbo.InviteCodes");
             DropTable("dbo.Ignores");
             DropTable("dbo.Bans");
             DropTable("dbo.Users");

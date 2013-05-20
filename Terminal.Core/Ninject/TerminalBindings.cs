@@ -61,13 +61,13 @@ namespace Terminal.Core.Ninject
             Bind<ICommand>().To<LOGOUT>();
             Bind<ICommand>().To<MESSAGE>();
             Bind<ICommand>().To<MESSAGES>();
-            Bind<ICommand>().To<PROFILE>();
-            //Bind<ICommand>().To<REGISTER>();
+            Bind<ICommand>().To<REGISTER>();
             Bind<ICommand>().To<SETTINGS>();
             Bind<ICommand>().To<STATS>();
             Bind<ICommand>().To<TOPIC>();
             Bind<ICommand>().To<USER>();
             Bind<ICommand>().To<ABOUT>();
+            Bind<ICommand>().To<INVITE>();
         }
     }
 }

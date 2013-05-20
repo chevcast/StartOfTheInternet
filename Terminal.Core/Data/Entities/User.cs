@@ -32,7 +32,6 @@
         public virtual ICollection<Ban> BannedUsers { get; set; }
         public virtual ICollection<Ignore> IgnoredBy { get; set; }
         public virtual ICollection<Ignore> Ignores { get; set; }
-        public virtual ICollection<InviteCode> InviteCodes { get; set; }
         public virtual ICollection<LinkClick> LinkClicks { get; set; }
         public virtual ICollection<LinkComment> LinkComments { get; set; }
         public virtual ICollection<Link> Links { get; set; }

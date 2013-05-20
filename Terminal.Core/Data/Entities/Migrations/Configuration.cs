@@ -17,9 +17,12 @@ namespace Terminal.Core.Data.Entities.Migrations
 
         protected override void Seed(Terminal.Core.Data.Entities.EntityContainer context)
         {
-            context.Variables.AddOrUpdate(
-                new Variable { Name = "Registration", Value = "Open" }
-            );
+            if (context.Variables.Find("Registration") == null)
+            {
+                context.Variables.Add(
+                    new Variable { Name = "Registration", Value = "Open" }
+                );
+            }
 
             if (context.Users.Find("Admin") == null)
                 context.Users.Add(

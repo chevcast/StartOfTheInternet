@@ -5,13 +5,13 @@ namespace Terminal.Core.Data.Entities.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    public sealed partial class channelstatusentity : IMigrationMetadata
+    public sealed partial class InitialCreate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(channelstatusentity));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201210011420340_channel-status-entity"; }
+            get { return "201305200756346_Initial Create"; }
         }
         
         string IMigrationMetadata.Source

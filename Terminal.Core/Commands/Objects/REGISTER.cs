@@ -56,18 +56,11 @@ namespace Terminal.Core.Commands.Objects
 
         public void Invoke(string[] args)
         {
-            bool lue = false;
-
             var options = new OptionSet();
             options.Add(
                 "?|help",
                 "Show help information.",
                 x => HelpUtility.WriteHelpInformation(this, options)
-            );
-            options.Add(
-                "LUE|lue",
-                "Perform an LL specific registration.",
-                x => lue = x != null
             );
 
             List<string> parsedArgs = null;
@@ -87,45 +80,29 @@ namespace Terminal.Core.Commands.Objects
             if (registrationStatus.Equals("Open", StringComparison.InvariantCultureIgnoreCase) || CommandResult.CommandContext.PromptData != null)
             {
                 CommandResult.CommandContext.Prompt = false;
-                bool verified = false;
+                InviteCode inviteCode = null;
                 if (CommandResult.CommandContext.PromptData != null)
-                {
-                    if (lue)
-                    {
-                        var llUsername = CommandResult.CommandContext.PromptData[0];
-                        if (_dataBucket.UserRepository.GetLUEser(llUsername) == null)
-                        {
-                            var llApiUrl = string.Format(
-                                "http://boards.endoftheinter.net/scripts/login.php?username={0}&ip={1}",
-                                llUsername,
-                                CommandResult.IPAddress
-                            );
-                            var llResult = new WebClient().DownloadString(llApiUrl);
-                            var split = llResult.Split(':');
-                            verified = split[0] == "1" && split[1].ToUpper() == llUsername.ToUpper();
-                        }
-                        else
-                            CommandResult.WriteLine("The LL username '{0}' has already been used before.", llUsername);
-                    }
-                    else
-                    {
-                        var inviteCode = _dataBucket.InviteCodeRepository.GetInviteCode(CommandResult.CommandContext.PromptData[0]);
-                        verified = inviteCode != null && (inviteCode.User.BanInfo == null || DateTime.UtcNow > inviteCode.User.BanInfo.EndDate);
-                    }
-                }
+                    inviteCode = _dataBucket.InviteCodeRepository.GetInviteCode(CommandResult.CommandContext.PromptData[0]);
 
-                if (CommandResult.CommandContext.PromptData == null || verified)
+                if (CommandResult.CommandContext.PromptData == null || inviteCode != null)
                 {
-                    if (parsedArgs == null || parsedArgs.Count == 0)
+                    if (inviteCode != null)
+                    {
+                        if (parsedArgs == null)
+                            parsedArgs = new List<string> { inviteCode.Username };
+                        else
+                            parsedArgs.Insert(0, inviteCode.Username);
+                    }
+                    if ((parsedArgs == null || parsedArgs.Count == 0))
                     {
                         CommandResult.WriteLine("Enter your desired username. (no spaces. sorry.)");
                         CommandResult.SetContext(ContextStatus.Forced, Name, args, "Username");
                     }
                     else if (parsedArgs.Count == 1)
                     {
-                        if (parsedArgs[0].Length >= 3 && parsedArgs[0].Length <= 15)
+                        if (parsedArgs[0].Length >= 3 && parsedArgs[0].Length <= 30)
                         {
-                            if (!_dataBucket.UserRepository.CheckUserExists(args[0]))
+                            if (!_dataBucket.UserRepository.CheckUserExists(parsedArgs[0]))
                             {
                                 CommandResult.WriteLine("Enter your desired password.");
                                 CommandResult.PasswordField = true;
@@ -190,17 +167,8 @@ namespace Terminal.Core.Commands.Objects
                                     var role = _dataBucket.UserRepository.GetRole("User");
                                     user.Roles = new List<Role> { role };
 
-                                    if (lue)
-                                    {
-                                        var llUser = new LUEser { Username = CommandResult.CommandContext.PromptData[0] };
-                                        _dataBucket.UserRepository.AddLUEser(llUser);
-                                        user.Credits = 1000;
-                                    }
-                                    else if (CommandResult.CommandContext.PromptData != null)
-                                    {
-                                        var inviteCode = _dataBucket.InviteCodeRepository.GetInviteCode(CommandResult.CommandContext.PromptData[0]);
+                                    if (inviteCode != null)
                                         _dataBucket.InviteCodeRepository.DeleteInviteCode(inviteCode);
-                                    }
 
                                     _dataBucket.UserRepository.AddUser(user);
                                     _dataBucket.SaveChanges();
@@ -237,18 +205,6 @@ namespace Terminal.Core.Commands.Objects
                                                 Username = user.Username,
                                                 Shortcut = "m",
                                                 Command = "MESSAGE"
-                                            },
-                                            new Alias
-                                            {
-                                                Username = user.Username,
-                                                Shortcut = "ll",
-                                                Command = "LINKS"
-                                            },
-                                            new Alias
-                                            {
-                                                Username = user.Username,
-                                                Shortcut = "l",
-                                                Command = "LINK"
                                             }
                                         };
 
@@ -289,25 +245,14 @@ namespace Terminal.Core.Commands.Objects
                 }
                 else
                 {
-                    if (lue)
-                        CommandResult.WriteLine("Your LL username could not be verified.");
-                    else
-                        CommandResult.WriteLine("You did not supply a valid invite code.");
+                    CommandResult.WriteLine("You did not supply a valid invite code.");
                     CommandResult.DeactivateContext();
                 }
             }
             else if (registrationStatus.Equals("Invite-Only", StringComparison.InvariantCultureIgnoreCase))
             {
-                if (lue)
-                {
-                    CommandResult.WriteLine("What is your LL username? (This is for verification only)");
-                    CommandResult.SetPrompt(Name, args, "LL Username");
-                }
-                else
-                {
-                    CommandResult.WriteLine("Enter your invite code.");
-                    CommandResult.SetPrompt(Name, args, "Invite Code");
-                }
+                CommandResult.WriteLine("Enter your invite code.");
+                CommandResult.SetPrompt(Name, args, "Invite Code");
             }
             else if (registrationStatus.Equals("Closed", StringComparison.InvariantCultureIgnoreCase))
                 CommandResult.WriteLine("Registration is currently closed.");

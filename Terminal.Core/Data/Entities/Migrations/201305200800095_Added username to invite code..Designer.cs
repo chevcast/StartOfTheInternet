@@ -5,13 +5,13 @@ namespace Terminal.Core.Data.Entities.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    public sealed partial class initialcreate : IMigrationMetadata
+    public sealed partial class Addedusernametoinvitecode : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(initialcreate));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Addedusernametoinvitecode));
         
         string IMigrationMetadata.Id
         {
-            get { return "201210011406320_initial-create"; }
+            get { return "201305200800095_Added username to invite code."; }
         }
         
         string IMigrationMetadata.Source

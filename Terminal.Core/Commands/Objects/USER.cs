@@ -109,16 +109,6 @@ namespace Terminal.Core.Commands.Objects
                     "Remove the specified role from the user.",
                     x => removeRole = x
                 );
-                options.Add(
-                    "gc|giveCredits=",
-                    "Give the user some {amount} of credits.",
-                    x => giveCredits = x
-                );
-                options.Add(
-                    "gi|giveInvites=",
-                    "Give the user some {amount} of invites.",
-                    x => giveInvites = x
-                );
             }
 
             if (args == null)
@@ -451,67 +441,6 @@ namespace Terminal.Core.Commands.Objects
                                         }
                                         else
                                             CommandResult.WriteLine("There is no role '{0}'.", addRole);
-                                    }
-                                    else
-                                        CommandResult.WriteLine("There is no user with the username '{0}'.", parsedArgs[0]);
-                                }
-                                else
-                                    CommandResult.WriteLine("You must specify a username.");
-                            }
-                            if (giveCredits != null)
-                            {
-                                if (parsedArgs.Length == 1)
-                                {
-                                    var user = _dataBucket.UserRepository.GetUser(parsedArgs[0]);
-                                    if (user != null)
-                                    {
-                                        if (giveCredits.IsLong())
-                                        {
-                                            var creditsToGive = giveCredits.ToLong();
-                                            user.Credits += creditsToGive;
-                                            _dataBucket.UserRepository.UpdateUser(user);
-                                            _dataBucket.SaveChanges();
-                                            CommandResult.WriteLine("User '{0}' received {1} credits.", user.Username, creditsToGive);
-                                        }
-                                        else
-                                            CommandResult.WriteLine("You must enter a valid amount of credits.");
-                                    }
-                                    else
-                                        CommandResult.WriteLine("There is no user with the username '{0}'.", parsedArgs[0]);
-                                }
-                                else
-                                    CommandResult.WriteLine("You must specify a username.");
-                            }
-                            if (giveInvites != null)
-                            {
-                                if (parsedArgs.Length == 1)
-                                {
-                                    var user = _dataBucket.UserRepository.GetUser(parsedArgs[0]);
-                                    if (user != null)
-                                    {
-                                        if (giveInvites.IsLong())
-                                        {
-                                            var invitesToGive = giveInvites.ToLong();
-                                            var random = new Random();
-                                            for (int count = 0; count < invitesToGive; count++)
-                                            {
-                                                string code = random.Next(1 << 16).ToString("X4")
-                                                        + random.Next(1 << 16).ToString("X4")
-                                                        + random.Next(1 << 16).ToString("X4")
-                                                        + random.Next(1 << 16).ToString("X4");
-                                                var inviteCode = new InviteCode
-                                                {
-                                                    Code = code,
-                                                    Username = user.Username
-                                                };
-                                                _dataBucket.InviteCodeRepository.AddInviteCode(inviteCode);
-                                            }
-                                            _dataBucket.UserRepository.UpdateUser(user);
-                                            _dataBucket.SaveChanges();
-                                            CommandResult.WriteLine("User '{0}' received {1} invintes.", user.Username, invitesToGive);
-                                        }
-                                        else
-                                            CommandResult.WriteLine("You must enter a valid amount of invites.");
                                     }
                                     else
                                         CommandResult.WriteLine("There is no user with the username '{0}'.", parsedArgs[0]);

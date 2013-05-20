@@ -33,11 +33,6 @@ namespace Terminal.Core.Data.Repositories
         {
             return _entityContainer.InviteCodes.SingleOrDefault(x => x.Code.ToUpper() == code.ToUpper());
         }
-
-        public IEnumerable<InviteCode> GetInviteCodes(string username)
-        {
-            return _entityContainer.InviteCodes.Where(x => x.Username.ToUpper() == username.ToUpper());
-        }
     }
 
     public interface IInviteCodeRepository
@@ -45,6 +40,5 @@ namespace Terminal.Core.Data.Repositories
         void AddInviteCode(InviteCode inviteCode);
         void DeleteInviteCode(InviteCode inviteCode);
         InviteCode GetInviteCode(string code);
-        IEnumerable<InviteCode> GetInviteCodes(string username);
     }
 }

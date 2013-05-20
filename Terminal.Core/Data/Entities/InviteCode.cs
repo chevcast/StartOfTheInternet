@@ -8,7 +8,5 @@
     {
         public string Code { get; set; }
         public string Username { get; set; }
-
-        public virtual User User { get; set; }
     }
 }

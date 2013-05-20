@@ -1,5 +1,4 @@
-﻿(function ($)
-{
+﻿(function ($) {
     var $terminalDisplay;
     var $notifications;
     var $loading;
@@ -14,8 +13,7 @@
     var loggedoutCallback;
     var currentUser;
 
-    function SendCommand(commandString)
-    {
+    function SendCommand(commandString) {
         var apiUrl = $commandForm.data('apiUrl');
         var commandContext = $commandForm.data('commandContext');
         $cli.data('disablePost', true);
@@ -25,34 +23,28 @@
             type: 'post',
             data: { commandContext: commandContext, parseAsHtml: true, cli: commandString },
             url: apiUrl,
-            success: function (apiResult)
-            {
+            success: function (apiResult) {
                 ParseResult(apiResult);
             },
-            error: function (xhr, ajaxOptions, thrownError)
-            {
+            error: function (xhr, ajaxOptions, thrownError) {
                 $terminalDisplay.append('<div style="color:#f00;">' + xhr.responseText + '</div>');
                 $cli.data('disablePost', false);
             },
-            complete: function ()
-            {
+            complete: function () {
                 HideLoading();
             }
         });
     }
 
-    function ParseResult(apiResult)
-    {
+    function ParseResult(apiResult) {
         $commandForm.data('commandContext', apiResult.CommandContext);
         $context.text(apiResult.ContextText);
-        if (apiResult.PasswordField && !$cli.data('passwordField'))
-        {
+        if (apiResult.PasswordField && !$cli.data('passwordField')) {
             $cli.replaceWith('<input type="password" id="' + settings.cliElement.replace("#", "") + '" />');
             $cli = $(settings.cliElement);
             $cli.data('passwordField', true).focus();
         }
-        else if (!apiResult.PasswordField && $cli.data('passwordField'))
-        {
+        else if (!apiResult.PasswordField && $cli.data('passwordField')) {
             $cli.replaceWith('<textarea autocomplete="off" autofocus="autofocus" id="' + settings.cliElement.replace("#", "") + '"></textarea>');
             $cli = $(settings.cliElement);
             $cli.focus().elastic();
@@ -71,8 +63,7 @@
 
         currentUser = apiResult.CurrentUser;
 
-        if (apiResult.DisplayItems.length > 0)
-        {
+        if (apiResult.DisplayItems.length > 0) {
             $terminalDisplay.append('<br />');
             TypeLines(apiResult.DisplayItems, apiResult.ScrollToBottom);
         }
@@ -80,22 +71,18 @@
             $cli.data('disablePost', false);
     }
 
-    function TypeLines(displayItems, scrollToBottom)
-    {
+    function TypeLines(displayItems, scrollToBottom) {
         if (!$terminalDisplay.data('index'))
             $terminalDisplay.data('index', 0);
         var index = $terminalDisplay.data('index');
         var displayItem = displayItems[index];
-        var nextLine = function ()
-        {
+        var nextLine = function () {
             index++;
-            if (!(index >= displayItems.length))
-            {
+            if (!(index >= displayItems.length)) {
                 $terminalDisplay.data('index', index);
                 TypeLines(displayItems, scrollToBottom);
             }
-            else
-            {
+            else {
                 $terminalDisplay.data('index', 0);
                 $cli.data('disablePost', false);
 
@@ -103,14 +90,11 @@
                 prettyPrint();
             }
         };
-        if (!displayItem.DontType)
-        {
+        if (!displayItem.DontType) {
             var $lineContainer = $(displayItem.Text);
             var lineText = $lineContainer.text();
-            if (lineText.length > 0)
-            {
-                $terminalDisplay.coolType(lineText, function ()
-                {
+            if (lineText.length > 0) {
+                $terminalDisplay.coolType(lineText, function () {
                     nextLine();
                 },
                 {
@@ -120,14 +104,12 @@
                     playSound: !displayItem.Mute
                 });
             }
-            else
-            {
+            else {
                 $terminalDisplay.append('<br />');
                 nextLine();
             }
         }
-        else
-        {
+        else {
             $terminalDisplay.append(displayItem.Text + '<br />');
             nextLine();
         }
@@ -137,21 +119,17 @@
             $elementToScroll.scrollTo('0%', 0, { axis: 'y' });
     }
 
-    function DisplayLoading()
-    {
+    function DisplayLoading() {
         if (!$loading.data('numberOfLoadings'))
             $loading.data('numberOfLoadings', 0);
-        if ($loading.data('numberOfLoadings') == 0)
-        {
+        if ($loading.data('numberOfLoadings') == 0) {
             $loading.show()
                 .data('step', 0)
                 .data('intervalId',
-                setInterval(function ()
-                {
+                setInterval(function () {
                     var loadingText = "Loading";
                     var step = $loading.data('step');
-                    for (count = 0; count < step; count++)
-                    {
+                    for (count = 0; count < step; count++) {
                         loadingText += ".";
                     }
                     $loading.html(loadingText);
@@ -165,12 +143,10 @@
         $loading.data('numberOfLoadings', numberOfLoadings);
     }
 
-    function HideLoading()
-    {
+    function HideLoading() {
         var numberOfLoadings = $loading.data('numberOfLoadings') - 1;
         $loading.data('numberOfLoadings', numberOfLoadings);
-        if (numberOfLoadings == 0)
-        {
+        if (numberOfLoadings == 0) {
             clearInterval($loading.data('intervalId'));
             $loading.data('intervalId', null);
             $loading.html('');
@@ -179,8 +155,7 @@
     }
 
     $.fn.extend({
-        terminalClient: function (options)
-        {
+        terminalClient: function (options) {
             $commandForm = this;
 
             settings = $.extend({
@@ -205,14 +180,12 @@
 
             $commandForm.data('apiUrl', settings.apiUrl);
 
-            $('.transmit').on('click', function (e)
-            {
+            $('.transmit').on('click', function (e) {
                 $cli.focus();
                 var transmitValue = '';
-                if ($cli.val().length == 0)
-                {
+                if ($cli.val().length == 0) {
                     transmitValue = $(this).attr('transmit');
-                    if (transmitValue[transmitValue.length-1] != '=' && transmitValue.length > 0)
+                    if (transmitValue[transmitValue.length - 1] != '=' && transmitValue.length > 0)
                         transmitValue += ' ';
                 }
                 $cli.val($cli.val() + transmitValue + $(this).text());
@@ -220,29 +193,22 @@
 
             var $body = $('body');
 
-            $body.on('keydown', function (e)
-            {
-                if (!$body.data('dontHandle'))
-                {
+            $body.on('keydown', $cli, function (e) {
+                if (!$body.data('dontHandle')) {
                     var key = e.keyCode;
                     $cli.data('continueKeyPress', true);
-
-                    if ($cli.data('hasFocus') && !$cli.data('passwordField'))
-                    {
+                    if ($cli.data('hasFocus') && !$cli.data('passwordField')) {
                         var firstLine = $cli.val().indexOf('\n');
                         var lastLine = $cli.val().lastIndexOf('\n');
                         var cursor = $cli.getCursorPosition();
-                        if (e.shiftKey && key == 13)
-                        {
+                        if (e.shiftKey && key == 13) {
                             e.preventDefault();
                             $cli.data('continueKeyPress', false);
                             $cli.insertAtCaret('\n');
                             $elementToScroll.scrollTo($cli, 0, { axis: 'y' });
                         }
-                        else if (key == 38 && ((cursor < firstLine) || firstLine == -1))
-                        {
-                            if (historyIndex > 0)
-                            {
+                        else if (key == 38 && ((cursor < firstLine) || firstLine == -1)) {
+                            if (historyIndex > 0) {
                                 if (historyIndex == cliHistory.length)
                                     $cli.data('currentValue', $cli.val());
                                 historyIndex--;
@@ -250,10 +216,8 @@
                                 $cli.setCursorPosition(0);
                             }
                         }
-                        else if (key == 40 && ((cursor > lastLine) || firstLine == -1))
-                        {
-                            if (historyIndex < cliHistory.length)
-                            {
+                        else if (key == 40 && ((cursor > lastLine) || firstLine == -1)) {
+                            if (historyIndex < cliHistory.length) {
                                 historyIndex++;
                                 if (historyIndex == cliHistory.length)
                                     $cli.val($cli.data('currentValue'));
@@ -266,27 +230,21 @@
                 }
             });
 
-            $body.on('keypress', function (e)
-            {
-                if (!$body.data('dontHandle'))
-                {
-                    if ($cli.data('continueKeyPress'))
-                    {
+            $body.on('keypress', $cli, function (e) {
+                if (!$body.data('dontHandle')) {
+                    if ($cli.data('continueKeyPress')) {
                         var key = e.keyCode ? e.keyCode : e.charCode;
                         if (e.keyCode && e.charCode)
                             key = e.charCode;
-                        if (key != 13)
-                        {
+                        if (key != 13) {
                             var letter = String.fromCharCode(key);
-                            if ($cli.data('hasFocus') == false)
-                            {
+                            if ($cli.data('hasFocus') == false) {
                                 $elementToScroll.scrollTo($cli, 0, { axis: 'y' });
                                 $cli.focus().val($cli.val() + letter);
                                 e.preventDefault();
                             }
                         }
-                        else
-                        {
+                        else {
                             $commandForm.submit();
                             e.preventDefault();
                         }
@@ -296,13 +254,11 @@
                     $body.data('dontHandle', false);
             });
 
-            $cli.on('focus', function ()
-            {
+            $body.on('focus', settings.cliElement, function () {
                 $(this).data('hasFocus', true);
             });
 
-            $cli.on('blur', function ()
-            {
+            $body.on('blur', settings.cliElement, function () {
                 $(this).data('hasFocus', false);
             });
 
@@ -310,11 +266,9 @@
             $cli = $(settings.cliElement);
             $cli.focus().elastic();
 
-            $commandForm.submit(function (e)
-            {
+            $commandForm.submit(function (e) {
                 e.preventDefault();
-                if (!$cli.data('disablePost'))
-                {
+                if (!$cli.data('disablePost')) {
                     var cliText = $cli.val();
                     if (!$cli.data('passwordField'))
                         cliHistory[cliHistory.length] = cliText;
@@ -329,36 +283,30 @@
             return $commandForm;
         },
 
-        getCursorPosition: function ()
-        {
+        getCursorPosition: function () {
             var pos = 0;
             var input = this[0];
             // IE Support
-            if (document.selection)
-            {
+            if (document.selection) {
                 input.focus();
                 var sel = document.selection.createRange();
                 var selLen = document.selection.createRange().text.length;
                 sel.moveStart('character', -input.value.length);
                 pos = sel.text.length - selLen;
             }
-            // Firefox support
+                // Firefox support
             else if (input.selectionStart || input.selectionStart == '0')
                 pos = input.selectionStart;
 
             return pos;
         },
 
-        setCursorPosition: function (pos)
-        {
-            return this.each(function ()
-            {
-                if (this.setSelectionRange)
-                {
+        setCursorPosition: function (pos) {
+            return this.each(function () {
+                if (this.setSelectionRange) {
                     this.focus();
                     this.setSelectionRange(pos, pos);
-                } else if (this.createTextRange)
-                {
+                } else if (this.createTextRange) {
                     var range = this.createTextRange();
                     range.collapse(true);
                     range.moveEnd('character', pos);
@@ -368,8 +316,7 @@
             });
         },
 
-        elastic: function ()
-        {
+        elastic: function () {
             //      We will create a div clone of the textarea
             //      by copying these attributes from the textarea to the div.
             var mimics = [
@@ -396,11 +343,9 @@
                 'borderLeftColor'
             ];
 
-            return this.each(function ()
-            {
+            return this.each(function () {
                 // Elastic only works on textareas
-                if (this.type !== 'textarea')
-                {
+                if (this.type !== 'textarea') {
                     return false;
                 }
 
@@ -425,17 +370,14 @@
 
                 // Copy the essential styles (mimics) from the textarea to the twin
                 var i = mimics.length;
-                while (i--)
-                {
+                while (i--) {
                     $twin.css(mimics[i].toString(), $textarea.css(mimics[i].toString()));
                 }
 
                 // Updates the width of the twin. (solution for textareas with widths in percent)
-                function setTwinWidth()
-                {
+                function setTwinWidth() {
                     var curatedWidth = Math.floor(parseInt($textarea.width(), 10));
-                    if ($twin.width() !== curatedWidth)
-                    {
+                    if ($twin.width() !== curatedWidth) {
                         $twin.css({ 'width': curatedWidth + 'px' });
 
                         // Update height of textarea
@@ -444,19 +386,16 @@
                 }
 
                 // Sets a given height and overflow state on the textarea
-                function setHeightAndOverflow(height, overflow)
-                {
+                function setHeightAndOverflow(height, overflow) {
 
                     var curratedHeight = Math.floor(parseInt(height, 10));
-                    if ($textarea.height() !== curratedHeight)
-                    {
+                    if ($textarea.height() !== curratedHeight) {
                         $textarea.css({ 'height': curratedHeight + 'px', 'overflow': overflow });
                     }
                 }
 
                 // This function will update the height of the textarea if necessary 
-                function update(forced)
-                {
+                function update(forced) {
 
                     // Get curated content from the textarea.
                     var textareaContent = $textarea.val().replace(/&/g, '&amp;').replace(/ {2}/g, '&nbsp;').replace(/<|>/g, '&gt;').replace(/\n/g, '<br />');
@@ -464,25 +403,20 @@
                     // Compare curated content with curated twin.
                     var twinContent = $twin.html().replace(/<br>/ig, '<br />');
 
-                    if (forced || textareaContent + '&nbsp;' !== twinContent)
-                    {
+                    if (forced || textareaContent + '&nbsp;' !== twinContent) {
 
                         // Add an extra white space so new rows are added when you are at the end of a row.
                         $twin.html(textareaContent + '&nbsp;');
 
                         // Change textarea height if twin plus the height of one line differs more than 3 pixel from textarea height
-                        if (Math.abs($twin.height() + lineHeight - $textarea.height()) > 3)
-                        {
+                        if (Math.abs($twin.height() + lineHeight - $textarea.height()) > 3) {
 
                             var goalheight = $twin.height() + lineHeight;
-                            if (goalheight >= maxheight)
-                            {
+                            if (goalheight >= maxheight) {
                                 setHeightAndOverflow(maxheight, 'auto');
-                            } else if (goalheight <= minheight)
-                            {
+                            } else if (goalheight <= minheight) {
                                 setHeightAndOverflow(minheight, 'hidden');
-                            } else
-                            {
+                            } else {
                                 setHeightAndOverflow(goalheight, 'hidden');
                             }
 
@@ -496,8 +430,7 @@
                 $textarea.css({ 'overflow': 'hidden' });
 
                 // Update textarea size on keyup, change, cut and paste
-                $textarea.bind('keyup change cut paste', function ()
-                {
+                $textarea.bind('keyup change cut paste', function () {
                     update();
                 });
 
@@ -507,15 +440,11 @@
                 $textarea.bind('update', update);
 
                 // Compact textarea on blur
-                $textarea.bind('blur', function ()
-                {
-                    if ($twin.height() < maxheight)
-                    {
-                        if ($twin.height() > minheight)
-                        {
+                $textarea.bind('blur', function () {
+                    if ($twin.height() < maxheight) {
+                        if ($twin.height() > minheight) {
                             $textarea.height($twin.height());
-                        } else
-                        {
+                        } else {
                             $textarea.height(minheight);
                         }
                     }
@@ -531,19 +460,15 @@
 
         },
 
-        insertAtCaret: function (myValue)
-        {
-            return this.each(function (i)
-            {
-                if (document.selection)
-                {
+        insertAtCaret: function (myValue) {
+            return this.each(function (i) {
+                if (document.selection) {
                     this.focus();
                     sel = document.selection.createRange();
                     sel.text = myValue;
                     this.focus();
                 }
-                else if (this.selectionStart || this.selectionStart == '0')
-                {
+                else if (this.selectionStart || this.selectionStart == '0') {
                     var startPos = this.selectionStart;
                     var endPos = this.selectionEnd;
                     var scrollTop = this.scrollTop;
@@ -552,8 +477,7 @@
                     this.selectionStart = startPos + myValue.length;
                     this.selectionEnd = startPos + myValue.length;
                     this.scrollTop = scrollTop;
-                } else
-                {
+                } else {
                     this.value += myValue;
                     this.focus();
                 }
