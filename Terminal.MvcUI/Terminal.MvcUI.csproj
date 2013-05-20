@@ -142,6 +142,7 @@
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\omega.jpg" />
     <Content Include="Content\omega.png" />
+    <Content Include="Content\OmegaLattice.jpg" />
     <Content Include="Content\OmegaSystemsLogo.jpg" />
     <Content Include="Content\OrthodonticsJumbo.jpg" />
     <Content Include="Content\Resistance.jpg" />
