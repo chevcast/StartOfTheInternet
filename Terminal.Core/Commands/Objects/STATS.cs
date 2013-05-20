@@ -111,7 +111,7 @@ namespace Terminal.Core.Commands.Objects
 
                                 var displayMode = DisplayMode.DontType;
                                 CommandResult.WriteLine(displayMode, "There are {0} users registered.", userStats.TotalRegisteredUsers);
-                                CommandResult.WriteLine(displayMode, "{0} users are currently banned for various acts of faggotry.", userStats.TotalBannedUsers);
+                                CommandResult.WriteLine(displayMode, "{0} users are currently banned for various bad manners.", userStats.TotalBannedUsers);
                                 CommandResult.WriteLine();
                                 CommandResult.WriteLine(displayMode, "{0} users have registered within the last 24 hours.", userStats.NewUsersInTheLast24Hours);
                                 CommandResult.WriteLine(displayMode, "{0} users have registered within the last week.", userStats.NewUsersInTheLastWeek);
