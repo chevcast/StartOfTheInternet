@@ -205,7 +205,7 @@
 
             $commandForm.data('apiUrl', settings.apiUrl);
 
-            $('.transmit').live('click', function (e)
+            $('.transmit').on('click', function (e)
             {
                 $cli.focus();
                 var transmitValue = '';
@@ -220,7 +220,7 @@
 
             var $body = $('body');
 
-            $body.live('keydown', function (e)
+            $body.on('keydown', function (e)
             {
                 if (!$body.data('dontHandle'))
                 {
@@ -266,7 +266,7 @@
                 }
             });
 
-            $body.live('keypress', function (e)
+            $body.on('keypress', function (e)
             {
                 if (!$body.data('dontHandle'))
                 {
@@ -296,12 +296,12 @@
                     $body.data('dontHandle', false);
             });
 
-            $cli.live('focus', function ()
+            $cli.on('focus', function ()
             {
                 $(this).data('hasFocus', true);
             });
 
-            $cli.live('blur', function ()
+            $cli.on('blur', function ()
             {
                 $(this).data('hasFocus', false);
             });

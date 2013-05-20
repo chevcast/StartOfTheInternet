@@ -29,51 +29,62 @@ namespace Terminal.MvcUI.Controllers
 
         public ViewResult Index(string Cli, string Display, [Deserialize]CommandContext CommandContext)
         {
-            ModelState.Clear();
-            _terminalCore.Username = User.Identity.IsAuthenticated ? User.Identity.Name : null;
-            _terminalCore.IPAddress = Request.UserHostAddress;
-            _terminalCore.CommandContext = CommandContext;
-            _terminalCore.ParseAsHtml = true;
-            var commandResult = _terminalCore.ExecuteCommand(Cli);
-
-            if (commandResult.ClearScreen)
-                Display = null;
-
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated || Session["hasAccess"] != null)
             {
-                if (commandResult.CurrentUser == null)
-                    FormsAuthentication.SignOut();
+                ModelState.Clear();
+                _terminalCore.Username = User.Identity.IsAuthenticated ? User.Identity.Name : null;
+                _terminalCore.IPAddress = Request.UserHostAddress;
+                _terminalCore.CommandContext = CommandContext;
+                _terminalCore.ParseAsHtml = true;
+                var commandResult = _terminalCore.ExecuteCommand(Cli);
+
+                if (commandResult.ClearScreen)
+                    Display = null;
+
+                if (User.Identity.IsAuthenticated)
+                {
+                    if (commandResult.CurrentUser == null)
+                        FormsAuthentication.SignOut();
+                }
+                else
+                {
+                    if (commandResult.CurrentUser != null)
+                        FormsAuthentication.SetAuthCookie(commandResult.CurrentUser.Username, true);
+                }
+
+                var display = new StringBuilder();
+                foreach (var displayItem in commandResult.DisplayItems)
+                {
+                    display.Append(displayItem.Text);
+                    display.Append("<br />");
+                }
+
+                if (Display != null)
+                    Display += "<br />";
+
+                var viewModel = new TerminalViewModel
+                {
+                    Cli = commandResult.EditText,
+                    ContextText = commandResult.CommandContext.Command
+                    + (commandResult.CommandContext.Text.IsNullOrEmpty()
+                    ? null : string.Format(" {0}", _terminalCore.CommandContext.Text)),
+                    Display = Display + display.ToString(),
+                    PasswordField = commandResult.PasswordField,
+                    Notifications = string.Empty,
+                    Title = commandResult.TerminalTitle,
+                    CommandContext = commandResult.CommandContext
+                };
+
+                return View(viewModel);
             }
             else
-            {
-                if (commandResult.CurrentUser != null)
-                    FormsAuthentication.SetAuthCookie(commandResult.CurrentUser.Username, true);
-            }
+                return View("Facade");
+        }
 
-            var display = new StringBuilder();
-            foreach (var displayItem in commandResult.DisplayItems)
-            {
-                display.Append(displayItem.Text);
-                display.Append("<br />");
-            }
-
-            if (Display != null)
-                Display += "<br />";
-
-            var viewModel = new TerminalViewModel
-            {
-                Cli = commandResult.EditText,
-                ContextText = commandResult.CommandContext.Command
-                + (commandResult.CommandContext.Text.IsNullOrEmpty() 
-                ? null : string.Format(" {0}", _terminalCore.CommandContext.Text)),
-                Display = Display + display.ToString(),
-                PasswordField = commandResult.PasswordField,
-                Notifications = string.Empty,
-                Title = commandResult.TerminalTitle,
-                CommandContext = commandResult.CommandContext
-            };
-
-            return View(viewModel);
+        public RedirectToRouteResult GetAccess(bool hasAccess = false)
+        {
+            Session["hasAccess"] = hasAccess;
+            return RedirectToAction("Index");
         }
     }
 }

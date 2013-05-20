@@ -1,0 +1,235 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Omega Orthodontics</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="@Url.Content("~/content/bootstrap.css")" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 20px;
+            padding-bottom: 60px;
+        }
+
+        /* Custom container */
+        .container {
+            margin: 0 auto;
+            max-width: 1000px;
+        }
+
+            .container > hr {
+                margin: 60px 0;
+            }
+
+        /* Main marketing message and sign up button */
+        .jumbotron {
+            margin: 80px 0;
+            text-align: center;
+        }
+
+            .jumbotron h1 {
+                font-size: 100px;
+                line-height: 1;
+            }
+
+            .jumbotron .lead {
+                font-size: 24px;
+                line-height: 1.25;
+            }
+
+            .jumbotron .btn {
+                font-size: 21px;
+                padding: 14px 24px;
+            }
+
+        /* Supporting marketing content */
+        .marketing {
+            margin: 60px 0;
+        }
+
+            .marketing p + h4 {
+                margin-top: 28px;
+            }
+
+
+        /* Customize the navbar links to be fill the entire space of the .navbar */
+        .navbar .navbar-inner {
+            padding: 0;
+        }
+
+        .navbar .nav {
+            margin: 0;
+            display: table;
+            width: 100%;
+        }
+
+            .navbar .nav li {
+                display: table-cell;
+                width: 1%;
+                float: none;
+            }
+
+                .navbar .nav li a {
+                    font-weight: bold;
+                    text-align: center;
+                    border-left: 1px solid rgba(255,255,255,.75);
+                    border-right: 1px solid rgba(0,0,0,.1);
+                }
+
+                .navbar .nav li:first-child a {
+                    border-left: 0;
+                    border-radius: 3px 0 0 3px;
+                }
+
+                .navbar .nav li:last-child a {
+                    border-right: 0;
+                    border-radius: 0 3px 3px 0;
+                }
+    </style>
+    <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="../assets/ico/favicon.png">
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-2.0.0.min.js")"></script>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="masthead">
+            <img style="width: 250px;" src="@Url.Content("~/content/OmegaSystemsLogo.jpg")" />
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="container">
+                        <ul class="nav">
+                            <li class="active"><a href="#">Home</a></li>
+                            <li><a href="#services">Services</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- /.navbar -->
+        </div>
+        @*<img src="@Url.Content("~/content/OrthodonticsJumbo.jpg")" />*@
+        <!-- Jumbotron -->
+        <div class="jumbotron" style="background-image: url('@Url.Content("~/content/OrthodonticsJumbo.jpg")'); height: 340px; position: relative; margin-bottom: 20px;">
+            <a style="float: right; margin: 25px 25px 0 0;" class="btn btn-large btn-success" href="#contact">Contact Us Today</a>
+            <div style="height: 200px; width: 100%; position: absolute; top: 140px; left: 0; background-color: #fff; opacity: .5;"></div>
+            <div style="height: 163px; position: absolute; top: 140px; left: 0; padding: 17.5px; text-align: left;">
+                <h2 style="font-size: 55px; margin-bottom: 25px;">We Design New Smiles</h2>
+                <p class="lead">At Omega we don't want you to be self-conscious about your smile. We want the first thing that others notice about you to be your wonderful smile. Healthy and beautiful teeth are our specialty.</p>
+            </div>
+        </div>
+        <!-- Example row of columns -->
+        <div class="row-fluid" id="services">
+            <div class="span4">
+                <h2>Invisalign</h2>
+                <p>We care about both appearance and comfort at Omega. Our Invisalign services are the best in the business.</p>
+            </div>
+            <div class="span4">
+                <h2>Traditional Braces</h2>
+                <p>We understand that your time and money is important to you. We offer the best traditional braces on the market.</p>
+            </div>
+            <div class="span4">
+                <h2>General Dentistry</h2>
+                <p>We also offer a wide array of other services. To learn more simply contact us and one of our technitians will be happy to answer any questions!</p>
+            </div>
+        </div>
+
+        <hr />
+
+        <div style="margin: auto; width: 350px; border: solid 1px #aaa; border-radius: 10px; box-shadow: 10px 10px 5px #888888; padding: 15px;" id="contact">
+            <h3 style="text-align: center;">Request an Appointment</h3>
+            Name <input id="name" type="text" /><br />
+            <img id="resistance" style="display: none; margin-bottom: 15px;" src="@Url.Content("~/content/resistance.jpg")" />
+            <div id="junk">
+                Phone <input id="phone" type="text" /><br />
+                Email <input id="email" type="text" /><br />
+                <br />
+                Questions/Concerns<br />
+                <textarea id="questions" style="width: 300px; height: 100px;"></textarea>
+                <br />
+            </div>
+            <form method="post" action="@Url.Action("GetAccess")">
+                <input type="hidden" name="hasAccess" value="true" />
+                <input id="submitRequest" class="btn btn-success" type="submit" value="Submit" /> <span id="result" style="color: #090; font-weight: bold; display: none;">Success! We will contact you soon.</span>
+            </form>
+            <script type="text/javascript">
+                $(function () {
+                    $('#submitRequest').click(function (e) {
+                        if (!$(this).hasClass('btn-info')) {
+                            e.preventDefault();
+                            $('#name').val('');
+                            $('#phone').val('');
+                            $('#email').val('');
+                            $('#questions').val('');
+                            $('#result').fadeIn(function () {
+                                setTimeout(function () {
+                                    $('#result').fadeOut();
+                                }, 3000);
+                            });
+                        }
+                    });
+                    $('#name').keyup(function (e) {
+                        if ($(this).val().toUpperCase() === 'RESIST THE INGRESS') {
+                            $('#submitRequest').removeClass('btn-success').addClass('btn-info');
+                            $('#junk').slideUp();
+                            $('#resistance').slideDown();
+                        }
+                        else {
+                            $('#submitRequest').removeClass('btn-info').addClass('btn-success');
+                            $('#junk').slideDown();
+                            $('#resistance').slideUp();
+                        }
+                    });
+                });
+            </script>
+        </div>
+
+        <hr />
+
+        <div class="footer">
+            <p>&copy; Company 2013</p>
+        </div>
+
+    </div>
+    <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../assets/js/jquery.js"></script>
+    <script src="../assets/js/bootstrap-transition.js"></script>
+    <script src="../assets/js/bootstrap-alert.js"></script>
+    <script src="../assets/js/bootstrap-modal.js"></script>
+    <script src="../assets/js/bootstrap-dropdown.js"></script>
+    <script src="../assets/js/bootstrap-scrollspy.js"></script>
+    <script src="../assets/js/bootstrap-tab.js"></script>
+    <script src="../assets/js/bootstrap-tooltip.js"></script>
+    <script src="../assets/js/bootstrap-popover.js"></script>
+    <script src="../assets/js/bootstrap-button.js"></script>
+    <script src="../assets/js/bootstrap-collapse.js"></script>
+    <script src="../assets/js/bootstrap-carousel.js"></script>
+    <script src="../assets/js/bootstrap-typeahead.js"></script>
+
+</body>
+</html>

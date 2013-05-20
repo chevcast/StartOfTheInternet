@@ -64,7 +64,7 @@ namespace Terminal.Core.Commands.Objects
                     //    CommandResult.WriteLine(DisplayMode.DontWrap, line);
                     //}
                     //CommandResult.WriteLine();
-                    CommandResult.WriteLine("OMEGA LOCKDOWN ENACTED");
+                    CommandResult.WriteLine(DisplayMode.Inverted, "OMEGA LOCKDOWN ACTIVE");
                     CommandResult.WriteLine();
                     CommandResult.WriteLine("As per article 21 subsection D of the Omega Directive,");
                     CommandResult.WriteLine("only authorized agents are allowed beyond this point.");
